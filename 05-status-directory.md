@@ -67,6 +67,8 @@ ______________________________________________________________________
   plans/                  <- active initiatives. One file each. THE ONLY HOT DIR.
     recursive-repo-metadata.md
     nemar-reorientation.md
+  prompts/                <- working prompts: how to start or restart one piece of work.
+    kick-off-repo-metadata.md
   notes/                  <- dated write-once records. Never edited after the day.
     2026-06-15_recursive_repo_metadata.md
     2026-07-23_crlf_lineending_fix.md
@@ -75,7 +77,7 @@ ______________________________________________________________________
   scratch/                <- throwaway. Deletable without reading. No exceptions.
 ```
 
-Seven entries at the top level, forever. `ls .status/` stays useful no matter how much history accumulates, because history lives in `archive/`, and `archive/` is something Claude is told not to read.
+Eight entries at the top level, forever. `ls .status/` stays useful no matter how much history accumulates, because history lives in `archive/`, and `archive/` is something Claude is told not to read.
 
 **Rules that make it work, in order of how much they matter:**
 
@@ -85,15 +87,17 @@ Seven entries at the top level, forever. `ls .status/` stays useful no matter ho
 
 3. **One initiative, one plan file, edited in place.** If you want the history of how the plan changed, that is what the session notes in `notes/` are for. Four files named after one initiative is the disease, not the record.
 
-4. **Only `plans/` is ever edited.** `notes/` is write-once: a note records what happened on a day and is never revised, which is exactly why it can be trusted later. `decisions.md` is append-only.
+4. **Only `plans/` and `prompts/` are ever edited.** `notes/` is write-once: a note records what happened on a day and is never revised, which is exactly why it can be trusted later. `decisions.md` is append-only.
 
-5. **Nothing new is ever created at the `.status/` root.** New file -> `plans/`, `notes/`, or `scratch/`. If you cannot tell which, it is `scratch/`.
+5. **Nothing new is ever created at the `.status/` root.** New file -> `plans/`, `prompts/`, `notes/`, or `scratch/`. If you cannot tell which, it is `scratch/`.
 
 6. **Every file opens with a `For humans:` summary.** Three or four sentences at the very top, before any other heading: what the file is, and the one or two things you need to take away from it. Everything below may be written for an assistant to consume; that block is not.
 
    This rule exists because of who writes these files. An assistant asked for a status note produces something thorough, structured, and long - optimised for being complete rather than for being read. Six months later you open it and have to reconstruct the point from four screens of prose. Requiring the summary forces the point to exist somewhere, in one place, in your language. It is also the cheapest quality check available: if the assistant cannot state the takeaway in three sentences, the document does not have one yet.
 
    No throat-clearing, no restating the title, no listing what the document will cover. Extend the same rule to answers in a session: lead with the conclusion.
+
+7. **A plan is the work; a prompt is how to start it.** `plans/<slug>.md` holds the work itself - goal, decisions, steps. `prompts/<slug>.md` holds the words that hand that work to a fresh session, or restart one that has drifted; it is about one piece of work at one moment, and it is local and disposable. The test for where a prompt belongs: would someone else, in another repository, get value from it? If yes, it is illustrative and goes in the tracked `sample_prompts/` at the repo root, part of the repository's content; if it names your current task, it is a working prompt and goes in `.status/prompts/`.
 
 ______________________________________________________________________
 
@@ -104,6 +108,7 @@ One scheme, no exceptions:
 | Directory       | Pattern                                 | Example                             |
 | --------------- | --------------------------------------- | ----------------------------------- |
 | `plans/`        | `<slug>.md` - no date, no status        | `recursive-repo-metadata.md`        |
+| `prompts/`      | `<slug>.md` - no date, no status        | `kick-off-repo-metadata.md`         |
 | `notes/`        | `YYYY-MM-DD_<slug>.md` - **date first** | `2026-07-23_crlf_lineending_fix.md` |
 | `archive/YYYY/` | keeps whatever name it arrived with     |                                     |
 | root            | fixed set of four filenames only        |                                     |
@@ -126,6 +131,7 @@ This is the part that was missing, and it is the whole difference between a note
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `scratch/`             | **Anything older than 30 days is deleted without being read.** That is the deal that makes `scratch/` safe to use freely.                                                                              |
 | `plans/`               | A plan is *active* or it is gone. When it completes, or when it has had no activity for 60 days, it moves to `archive/YYYY/` - with a one-line outcome added to `decisions.md` if it decided anything. |
+| `prompts/`             | Tied to one piece of work: when that work closes, delete the prompt, or move it to `archive/YYYY/` beside its plan if it captured anything worth keeping.                                              |
 | `notes/`               | Stays until the year turns, then the whole year moves to `archive/YYYY/`.                                                                                                                              |
 | `decisions.md`         | Never. It is the point.                                                                                                                                                                                |
 | `local-environment.md` | Never; it is edited in place.                                                                                                                                                                          |
@@ -141,7 +147,7 @@ ______________________________________________________________________
 
 ## `README.md` - the file that makes the rest work
 
-Three of your 25 directories have one. It should be in all of them, it should be under 30 lines, and it is the only `.status/` file `CLAUDE.md` needs to point at by name. It exists so that a session can orient in a single read instead of a glob.
+Three of your 25 directories have one. It should be in all of them, it should be under 30 lines, and it is the only `.status/` file `AGENTS.md` needs to point at by name. It exists so that a session can orient in a single read instead of a glob.
 
 ```markdown
 # Status directory - <repo-name>
@@ -153,6 +159,7 @@ Working notes for this repo. Gitignored: local to this machine, not on GitHub.
 
 - `decisions.md` - why things are the way they are. Append; never rewrite.
 - `plans/` - active initiatives, one file each, `[ ]`/`[x]` markers. Start here.
+- `prompts/` - working prompts for starting or restarting the work in `plans/`. Disposable.
 - `notes/` - dated records of what happened. Write-once. Reference only.
 - `archive/` - finished work. **Do not read unless asked for a specific file.**
 - `scratch/` - throwaway; anything here may be deleted without warning.
@@ -203,7 +210,7 @@ Your `session_2026-07-23_crlf-lineending-fix.md` is a genuinely good example of 
 
 ______________________________________________________________________
 
-## What `CLAUDE.md` should say
+## What `AGENTS.md` should say
 
 Five lines, no more. Point at the index and the two files with authority; say explicitly what *not* to read, because that is the instruction that saves context:
 
@@ -250,7 +257,7 @@ ______________________________________________________________________
 
 Three things, in descending order of effect:
 
-1. **The `.status/` root is closed.** Four filenames, and new material goes in a subdirectory. This is one line in `CLAUDE.md` and one habit.
+1. **The `.status/` root is closed.** Four filenames, and new material goes in a subdirectory. This is one line in `AGENTS.md` and one habit.
 2. **`scratch/` with a real 30-day delete rule.** The junk-drawer subdirectories exist because there was no sanctioned place for junk. Give junk a place with an expiry and it stops colonizing everything else.
 3. **A tidy pass when a plan closes, not on a schedule.** Plan completes -> move it to `archive/`, add its decision to `decisions.md`, update the "Active right now" list. Three minutes, at the one moment you have the context to do it correctly. Calendar-based cleanups do not happen; you have 25 directories proving it.
 
@@ -265,7 +272,7 @@ ______________________________________________________________________
 
 ## Should `.status/` be committed?
 
-`01-repo-standards.md` says commit it. You have gitignored it in all 25 repos. **Your call is the defensible one and I would not change it**, for two reasons I did not have when I wrote that file: these repos are public, and `.status/` holds half-formed thinking that becomes part of the permanent public record the moment it is pushed.
+You have gitignored it in all 25 repos, and `01-repo-standards.md` now says the same. **The call is the defensible one**, for two reasons: these repos are public, and `.status/` holds half-formed thinking that becomes part of the permanent public record the moment it is pushed.
 
 The cost is real and worth naming: no backup, no visibility to collaborators, and nothing in worktrees. If you ever want the middle path, the split is clean under this layout - commit `README.md`, `decisions.md`, and `plans/`; gitignore `notes/`, `archive/`, `scratch/`, and `local-environment.md`:
 
@@ -284,16 +291,17 @@ ______________________________________________________________________
 ## One-page checklist
 
 - [ ] Snapshot `.status/` to a zip outside the repo - it is not in git
-- [ ] Skeleton: `README.md`, `decisions.md`, `plans/`, `notes/`, `archive/YYYY/`, `scratch/`
+- [ ] Skeleton: `README.md`, `decisions.md`, `plans/`, `prompts/`, `notes/`, `archive/YYYY/`, `scratch/`
 - [ ] `.status/` holds markdown only; everything else moved to a real home or deleted
 - [ ] No filename contains `complete`, `final`, `status`, `progress`, or `summary`
 - [ ] Every note is `YYYY-MM-DD_slug.md`, date first; every plan is `<slug>.md`, no date
 - [ ] Every plan has a `Status:` header line
+- [ ] Working prompts live in `.status/prompts/`; anything general enough for another repository is promoted to the tracked `sample_prompts/` at the repo root
 - [ ] Every file opens with a `For humans:` summary, three or four sentences
 - [ ] Nothing older than 90 days sits outside `archive/`
 - [ ] `README.md` exists and lists what is active
 - [ ] `decisions.md` has at least one real entry harvested from the old files
 - [ ] `Read(.status/archive/**)` and `Read(.status/scratch/**)` denied in `.claude/settings.json`
-- [ ] `CLAUDE.md` points at `README.md`, `decisions.md`, `plans/` - and says what not to read
+- [ ] `AGENTS.md` points at `.status/README.md`, `.status/decisions.md`, `.status/plans/` - and says what not to read
 - [ ] `.status/` is gitignored (check `hed-ontology` and `OpenAlex`)
 - [ ] Lowercase, ASCII, no spaces, no case-only differences anywhere
