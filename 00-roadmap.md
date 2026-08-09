@@ -26,7 +26,7 @@ ______________________________________________________________________
 
 Your current setup, as far as I can tell from your prompt:
 
-- Work spans at least 5 locations on 2 drives: `H:\Research\task-research`, `H:\Repos\hed-task`, `H:\Repos\hed-metadata-toolkit`, `I:\RepositoryMetadata\nemar-metadata`, `I:\NemarCitationWorking`
+- Work spans at least 5 locations on 2 drives: `task-research`, `hed-task`, `hed-metadata-toolkit`, `nemar-metadata`, and a citation staging folder. The paths belong in `.status/local-environment.md`, not here.
 - You already have a `.status/` convention (`.status/TaskResearchStructure.md`) - this is genuinely good practice and the docs independently recommend it ("ask Claude to write the plan to a markdown file in the repository ... the saved plan survives where conversation history may not")
 - You're asking Claude to "add to your trusted folders" inside a prompt. That isn't how directory access works - see Phase 2. This is probably the single biggest mechanical thing to fix.
 - Each session starts by re-explaining the nemar/openneuro history. That history is a *decision record* and belongs in a file.
@@ -57,7 +57,7 @@ ______________________________________________________________________
 2. **Install [Git for Windows](https://git-scm.com/downloads/win)** if you haven't. On native Windows, Claude Code uses Git Bash for its Bash tool; if Git Bash is absent it falls back to the PowerShell tool. If it can't find Git Bash, point it there in `%USERPROFILE%\.claude\settings.json`:
 
    ```json
-   { "env": { "CLAUDE_CODE_GIT_BASH_PATH": "C:\\Program Files\\Git\\bin\\bash.exe" } }
+   { "env": { "CLAUDE_CODE_GIT_BASH_PATH": "<absolute path to Git's bin\\bash.exe>" } }
    ```
 
 3. Write a short user-level `CLAUDE.md` at `%USERPROFILE%\.claude\CLAUDE.md`. This loads in *every* session, every project. Keep it to genuine personal preferences - 10-20 lines. Example:
@@ -69,8 +69,8 @@ ______________________________________________________________________
    - When a task spans more than ~3 files, write a plan to `.status/` first and
      let me read it before editing.
    - Never delete or rewrite files under `.status/` without asking.
-   - Windows paths: drive letters are case-insensitive but be consistent - use
-     uppercase (`H:\`, `I:\`).
+   - Windows paths: drive letters are case-insensitive but be consistent -
+     always uppercase.
    ```
 
 4. Learn these five keystrokes and nothing else for now:
@@ -118,13 +118,13 @@ To also load memory files from an added directory:
 ```powershell
 # PowerShell
 $env:CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD = 1
-claude --add-dir I:\RepositoryMetadata\nemar-metadata
+claude --add-dir <absolute path to nemar-metadata>
 ```
 
 ```batch
 :: cmd.exe
 set CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
-claude --add-dir I:\RepositoryMetadata\nemar-metadata
+claude --add-dir <absolute path to nemar-metadata>
 ```
 
 (The env var has no effect on directories listed in `additionalDirectories`.)
@@ -137,7 +137,7 @@ claude --add-dir I:\RepositoryMetadata\nemar-metadata
 
 ### Pick a hub
 
-Designate **`H:\Research\task-research` as the hub**. It already has `.status/` and it's where your cross-cutting thinking lives. In it:
+Designate **`task-research` as the hub**. It already has `.status/` and it's where your cross-cutting thinking lives. In it:
 
 - `REPOS.md` - the map: every repo, its one-line purpose, what it owns, what it depends on. Template provided.
 - `.status/` - cross-repo plans, one file per initiative, plus `decisions.md`.
@@ -146,20 +146,20 @@ Designate **`H:\Research\task-research` as the hub**. It already has `.status/` 
 Then launch from the hub with the sibling repos added:
 
 ```powershell
-cd H:\Research\task-research
-claude --add-dir H:\Repos\hed-task --add-dir I:\RepositoryMetadata\nemar-metadata
+cd <absolute path to task-research>
+claude --add-dir <absolute path to hed-task> --add-dir <absolute path to nemar-metadata>
 ```
 
-Or, so you don't retype it, put the durable set in `H:\Research\task-research\.claude\settings.local.json` - the **gitignored** settings file, because these paths are true only on your machine and must never be committed:
+Or, so you don't retype it, put the durable set in the hub's `.claude/settings.local.json` - the **gitignored** settings file, because these paths are true only on your machine and must never be committed:
 
 ```json
 {
   "permissions": {
     "additionalDirectories": [
-      "H:\\Repos\\hed-task",
-      "H:\\Repos\\hed-metadata-toolkit",
-      "I:\\RepositoryMetadata\\nemar-metadata",
-      "I:\\NemarCitationWorking"
+      "<absolute path to hed-task>",
+      "<absolute path to hed-metadata-toolkit>",
+      "<absolute path to nemar-metadata>",
+      "<absolute path to the citation staging folder>"
     ]
   }
 }

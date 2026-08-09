@@ -94,7 +94,7 @@ In rough order of likelihood:
 
 1. **You tried it before doing Phase 0-2.** With no CLAUDE.md, no repo map, and no directory access configured, the extension is just a chat box that can see one folder. All the leverage is in the configuration, and it's shared with the CLI - so it wasn't really an extension problem.
 
-2. **The workspace folder wasn't the repo root.** The extension works against the folder you have open. If you opened `H:\Repos` you got a Claude that sees four projects and loads no project CLAUDE.md; if you opened one repo you get the right one. **Open one repository per VS Code window.** Your repos are on two different drives, so a multi-root workspace is a configuration I'd test deliberately rather than assume works cleanly - start with one repo per window and use `/add-dir` when you need a sibling.
+2. **The workspace folder wasn't the repo root.** The extension works against the folder you have open. If you opened a parent folder holding several repos you got a Claude that sees all of them and loads no project CLAUDE.md; if you opened one repo you get the right one. **Open one repository per VS Code window.** Your repos are on two different drives, so a multi-root workspace is a configuration I'd test deliberately rather than assume works cleanly - start with one repo per window and use `/add-dir` when you need a sibling.
 
 3. **Spark icon nowhere to be found.** It only appears in the editor toolbar when a file is open. Use the Status Bar entry instead.
 

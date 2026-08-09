@@ -6,21 +6,21 @@ ______________________________________________________________________
 
 ## What the survey found
 
-25 repositories under `H:\Repos`, `H:\Research`, and `I:\RepositoryMetadata` have a `.status/` directory. Together they hold **2,229 files, about 185 MB**.
+25 repositories under three roots on two drives have a `.status/` directory. Together they hold **2,229 files, about 185 MB**.
 
-| Measure                                                                       | Count                                      | What it means                                                      |
-| ----------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------ |
-| Total files                                                                   | 2,229                                      |                                                                    |
-| Markdown files                                                                | 664                                        | the only thing `.status/` is *for*                                 |
-| **Non-markdown files**                                                        | **1,565**                                  | code, logs, XML, TSV, CSS, `.yaml`, PDFs, `.backup`                |
-| Markdown untouched in 90+ days                                                | **552 of 664 (83%)**                       | the directory is mostly archive, but nothing says so               |
-| Filenames containing `complete` / `final` / `summary` / `report` / `progress` | 85                                         | files named after their own state                                  |
-| Filenames carrying a date                                                     | 154 of 664 (23%)                           | and only 5 put the date first, so sorting does nothing             |
-| `.backup` / `.bak` / `.tmp` / `.log` / `copy` files                           | 48                                         | pure noise                                                         |
-| ALL_CAPS filenames                                                            | 35                                         | a third naming convention, alongside `snake_case` and `kebab-case` |
-| Directories with a `README.md` index                                          | **3 of 25**                                | nothing tells you where to start                                   |
-| Directories with `local-environment.md`                                       | 12 of 25                                   | your one convention that actually propagated                       |
-| `.status/` **not** gitignored                                                 | 2 (`hed-ontology`, `H:\Research\OpenAlex`) | their files sit in `git status` as `??` forever                    |
+| Measure                                                                       | Count                          | What it means                                                      |
+| ----------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------ |
+| Total files                                                                   | 2,229                          |                                                                    |
+| Markdown files                                                                | 664                            | the only thing `.status/` is *for*                                 |
+| **Non-markdown files**                                                        | **1,565**                      | code, logs, XML, TSV, CSS, `.yaml`, PDFs, `.backup`                |
+| Markdown untouched in 90+ days                                                | **552 of 664 (83%)**           | the directory is mostly archive, but nothing says so               |
+| Filenames containing `complete` / `final` / `summary` / `report` / `progress` | 85                             | files named after their own state                                  |
+| Filenames carrying a date                                                     | 154 of 664 (23%)               | and only 5 put the date first, so sorting does nothing             |
+| `.backup` / `.bak` / `.tmp` / `.log` / `copy` files                           | 48                             | pure noise                                                         |
+| ALL_CAPS filenames                                                            | 35                             | a third naming convention, alongside `snake_case` and `kebab-case` |
+| Directories with a `README.md` index                                          | **3 of 25**                    | nothing tells you where to start                                   |
+| Directories with `local-environment.md`                                       | 12 of 25                       | your one convention that actually propagated                       |
+| `.status/` **not** gitignored                                                 | 2 (`hed-ontology`, `OpenAlex`) | their files sit in `git status` as `??` forever                    |
 
 The worst four: `hed-resources` (457 files, 31 MB), `hed-python` (396, 28 MB), `hed-server` (177), `table-remodeler` (170). `task-research` has 170 files but 156 are markdown - it is large but it is the *right kind* of large.
 
@@ -265,7 +265,7 @@ If you want it enforced rather than intended, a `PreToolUse` hook on `Write` can
 
 Two loose ends from the survey while you are in there:
 
-- `hed-ontology` and `H:\Research\OpenAlex` do not gitignore `.status/`, so those files show as untracked in every `git status`. Add the line.
+- `hed-ontology` and `OpenAlex` do not gitignore `.status/`, so those files show as untracked in every `git status`. Add the line.
 - `hed-typescript` has an empty `.status/`. Delete it or leave it; it costs nothing either way.
 
 ______________________________________________________________________

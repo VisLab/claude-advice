@@ -8,14 +8,14 @@ ______________________________________________________________________
 
 Your prompt contained six different things at once:
 
-| #   | What it was                                                                          | Where it belongs                                                                                                |
-| --- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| 1   | `add to your trusted folders h:\..., i:\..., ...`                                    | A launch flag or settings file - **not a prompt**                                                               |
-| 2   | `Read the .status/TaskResearchStructure.md and the stuff in i:\NemarCitationWorking` | Fine in a prompt, but `i:\NemarCitationWorking` is unscoped - "the stuff in" a folder could be 3 files or 3,000 |
-| 3   | The nemar-vs-openneuro history and rationale                                         | `.status/decisions.md`, written once                                                                            |
-| 4   | Facts about what hed-task contains and its limitations                               | That repo's `AGENTS.md`, written once                                                                           |
-| 5   | "My ultimate goal is to create models of tasks that can be applied to real data"     | A spec in `.status/plans/`, arrived at through an interview                                                     |
-| 6   | Three sequenced plans: download nemar repos -> remove openneuro -> merge citations   | The actual ask - but it's three asks                                                                            |
+| #   | What it was                                                                        | Where it belongs                                                                                           |
+| --- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| 1   | `add to your trusted folders <path>, <path>, ...`                                  | A launch flag or settings file - **not a prompt**                                                          |
+| 2   | `Read the .status/TaskResearchStructure.md and the stuff in <the staging folder>`  | Fine in a prompt, but the folder reference is unscoped - "the stuff in" a folder could be 3 files or 3,000 |
+| 3   | The nemar-vs-openneuro history and rationale                                       | `.status/decisions.md`, written once                                                                       |
+| 4   | Facts about what hed-task contains and its limitations                             | That repo's `AGENTS.md`, written once                                                                      |
+| 5   | "My ultimate goal is to create models of tasks that can be applied to real data"   | A spec in `.status/plans/`, arrived at through an interview                                                |
+| 6   | Three sequenced plans: download nemar repos -> remove openneuro -> merge citations | The actual ask - but it's three asks                                                                       |
 
 Plus it ends mid-word: `"I don't know how to assig..."`. That's the tell. You were still thinking while typing, which is fine - but the model receives a half-formed thought as if it were a specification.
 
@@ -57,13 +57,13 @@ ______________________________________________________________________
 ### Step 0 - outside the prompt, once
 
 ```powershell
-cd H:\Research\task-research
-claude --add-dir H:\Repos\hed-task --add-dir H:\Repos\hed-metadata-toolkit --add-dir I:\RepositoryMetadata\nemar-metadata --add-dir I:\NemarCitationWorking
+cd <absolute path to task-research>
+claude --add-dir <absolute path to each sibling repo, repeated per repo>
 ```
 
 Or put those four paths in `.claude/settings.json` under `permissions.additionalDirectories` once and just type `claude`. Either way, directory access is now settled and never appears in a prompt again.
 
-*(Note: you wrote both `I:\Repos\hed-task` and `H:\Repos\hed-task` in the same prompt. Worth confirming which is real - a wrong drive letter is a silent failure that looks like Claude ignoring you.)*
+*(Note: your prompt gave the same repo two different drive letters. Worth confirming which is real - a wrong drive letter is a silent failure that looks like Claude ignoring you.)*
 
 ### Step 1 - write the background to disk (one prompt, once)
 
@@ -97,7 +97,7 @@ ______________________________________________________________________
 | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | "why does the citation loader behave oddly?" | "look through the git history of `citations/loader.py` and summarize how its API came to be"                           |
 | "the metadata is inconsistent"               | "compare the `task` field across the first 20 dataset JSONs in nemar-metadata and report the distinct shapes you find" |
-| "the stuff in I:\\NemarCitationWorking"      | "list `I:\NemarCitationWorking`, then read only the files that define the citation record format"                      |
+| "the stuff in the staging folder"            | "list `<the staging folder>`, then read only the files that define the citation record format"                         |
 
 **2. `@` pulls a file in immediately.** `@.status/decisions.md` inlines the content rather than hoping Claude decides to read it. Type `@` for a path picker. A bonus: an `@` file reference also brings in the CLAUDE.md files from that file's directory and its parents.
 

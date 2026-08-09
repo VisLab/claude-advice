@@ -30,7 +30,7 @@ ______________________________________________________________________
 
 ## 2. You're right about the committed/local leak
 
-You caught a real error in the first version of my templates. `CLAUDE.md.template` had a "Related repositories" section with `H:\Repos\other-repo` in it, and `settings.json.template` had `additionalDirectories` full of `H:\` and `I:\` paths - both in files marked COMMIT. That's wrong, and it's wrong in the way that does the most damage: it works fine for you and quietly breaks for everyone and everywhere else.
+You caught a real error in the first version of my templates. `CLAUDE.md.template` had a "Related repositories" section with an absolute checkout path in it, and `settings.json.template` had `additionalDirectories` full of drive-letter paths - both in files marked COMMIT. That's wrong, and it's wrong in the way that does the most damage: it works fine for you and quietly breaks for everyone and everywhere else.
 
 The templates are fixed. The rule now stated in `01-repo-standards.md`:
 
