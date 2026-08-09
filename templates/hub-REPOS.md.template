@@ -1,14 +1,14 @@
 <!--
-  Copy to the hub repo root as REPOS.md (suggested hub: task-research).
+  Copy to the hub repo root as REPOS.md.
 
   THIS FILE IS COMMITTED, so it names repositories and states who owns what -
   it does NOT record where your checkouts live. The path table goes in
-  CLAUDE.local.md (gitignored). That split is deliberate: the ownership rules
-  below are permanent project facts, while the paths are true only on your
-  machine.
+  .status/local-environment.md (gitignored). That split is deliberate: the
+  ownership rules below are permanent project facts, while the paths are true
+  only on your machine.
 
-  Reference it from the hub's CLAUDE.md as `@REPOS.md` to load it every session,
-  or leave it un-imported and let Claude read it on demand - un-imported is
+  Reference it from the hub's AGENTS.md as a file to read on demand, or import
+  it from CLAUDE.md as `@REPOS.md` to load it every session - un-imported is
   cheaper and usually enough.
 
   Keep entries to one line each. This is a map, not documentation.
@@ -19,12 +19,12 @@
 These repositories are separate checkouts, not submodules. A session that needs
 more than one must be granted access to the others; paths are configured locally.
 
-| Repo | Owns | Depends on |
-| --- | --- | --- |
-| task-research | Cross-cutting plans, citation store, task analysis | hed-task, nemar-metadata |
-| hed-task | Curated task/process vocabulary | - |
-| hed-metadata-toolkit | Tooling for reading and validating metadata | - |
-| nemar-metadata | Mirrored nemar dataset metadata | - |
+| Repo             | Owns                                             | Depends on                       |
+| ---------------- | ------------------------------------------------ | -------------------------------- |
+| `<hub-repo>`     | Cross-cutting plans, the merged data store       | `<vocab-repo>`, `<mirror-repo>`  |
+| `<vocab-repo>`   | The curated vocabulary                           | -                                |
+| `<toolkit-repo>` | Reusable code shared by the others               | -                                |
+| `<mirror-repo>`  | Mirrored upstream metadata                       | -                                |
 
 <!-- Confirm which of these are actual git repos vs. plain working folders. It
      changes what worktrees, checkpoints, and per-repo auto memory can do. -->
@@ -34,51 +34,50 @@ more than one must be granted access to the others; paths are configured locally
 State this explicitly - it's the question that costs the most time when it's
 ambiguous.
 
-- **Task/process vocabulary**: `hed-task` is the source of truth. Do not define
-  new task terms in `task-research`; propose them for `hed-task` instead.
-- **Dataset metadata**: `nemar-metadata` mirrors nemar.org. Treat it as read-only
-  downstream of nemar; never hand-edit mirrored records.
-- **Citations**: `task-research` owns the merged citation store. Any separate
-  working area is staging only.
-- **Reusable code**: `hed-metadata-toolkit`. If a helper is being written twice,
-  it belongs here.
+- **Vocabulary**: `<vocab-repo>` is the source of truth. Do not define new
+  terms in `<hub-repo>`; propose them for `<vocab-repo>` instead.
+- **Mirrored metadata**: `<mirror-repo>` mirrors its upstream. Treat it as
+  read-only downstream; never hand-edit mirrored records.
+- **The merged store**: `<hub-repo>` owns it. Any separate working area is
+  staging only.
+- **Reusable code**: `<toolkit-repo>`. If a helper is being written twice, it
+  belongs there.
 
 ## Retired / do not extend
 
-- OpenNeuro integration - superseded by nemar. See `.status/decisions.md`.
-  Do not add features to it.
+- `<retired-integration>` - superseded by `<its-replacement>`. Do not add
+  features to it. The reasoning is in the hub's `.status/decisions.md`.
 
 <!--
   ==========================================================================
-  The block below belongs in CLAUDE.local.md, NOT here. Copy it there.
+  The block below belongs in .status/local-environment.md, NOT here.
   ==========================================================================
 
   ## Where my checkouts live
 
-  | Repo | Path on this machine |
-  | --- | --- |
-  | task-research        | H:\Research\task-research |
-  | hed-task             | H:\Repos\hed-task |
-  | hed-metadata-toolkit | H:\Repos\hed-metadata-toolkit |
-  | nemar-metadata       | I:\RepositoryMetadata\nemar-metadata |
-  | citation staging     | I:\NemarCitationWorking |
+  | Repo             | Path on this machine       |
+  | ---------------- | -------------------------- |
+  | <hub-repo>       | <absolute path>            |
+  | <vocab-repo>     | <absolute path>            |
+  | <toolkit-repo>   | <absolute path>            |
+  | <mirror-repo>    | <absolute path>            |
 
   ## Common launch commands
 
   # Hub session with siblings reachable. Better: put these paths once in
   # .claude/settings.local.json under permissions.additionalDirectories and
   # then just run `claude`.
-  cd H:\Research\task-research
-  claude --add-dir H:\Repos\hed-task --add-dir I:\RepositoryMetadata\nemar-metadata
+  cd <absolute path to hub>
+  claude --add-dir <absolute path to sibling> --add-dir <absolute path to sibling>
 
   # Focused session in one repo - preferred when the work is scoped there
-  cd H:\Repos\hed-task
+  cd <absolute path to that repo>
   claude
 
   # Also load the added directory's CLAUDE.md and rules (off by default).
   # PowerShell; in cmd.exe use: set CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
   $env:CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD = 1
-  claude --add-dir H:\Repos\hed-task
+  claude --add-dir <absolute path to sibling>
 -->
 
 Rule of thumb: **launch from the narrowest directory that contains the work.**
