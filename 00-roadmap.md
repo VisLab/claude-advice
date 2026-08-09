@@ -10,13 +10,13 @@ ______________________________________________________________________
 
 That single constraint explains almost every recommendation below:
 
-| Symptom you've probably hit                               | Cause                                                     | Fix                                                              |
-| --------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
-| Claude re-derives your project background every session   | The background only exists in your head and in past chats | Put durable facts in `CLAUDE.md`, decisions in a `.status/` file |
-| Long prompts that explain history, then ask for something | You're paying context for narrative                       | Split: facts -> files, ask -> prompt                             |
-| Claude ignores an instruction you definitely gave         | CLAUDE.md too long, rule buried                           | Keep CLAUDE.md under ~200 lines                                  |
-| Session gets worse the longer it runs                     | Accumulated failed approaches                             | `/clear` between unrelated tasks                                 |
-| "Investigate X" fills the window with file reads          | Unscoped exploration in the main context                  | "use a subagent to investigate X"                                |
+| Symptom you've probably hit                               | Cause                                                     | Fix                                                                   |
+| --------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------- |
+| Claude re-derives your project background every session   | The background only exists in your head and in past chats | Put durable facts in `AGENTS.md`, decisions in `.status/decisions.md` |
+| Long prompts that explain history, then ask for something | You're paying context for narrative                       | Split: facts -> files, ask -> prompt                                  |
+| Claude ignores an instruction you definitely gave         | AGENTS.md too long, rule buried                           | Keep AGENTS.md under 200 lines                                        |
+| Session gets worse the longer it runs                     | Accumulated failed approaches                             | `/clear` between unrelated tasks                                      |
+| "Investigate X" fills the window with file reads          | Unscoped exploration in the main context                  | "use a subagent to investigate X"                                     |
 
 Docs: [best-practices](https://code.claude.com/docs/en/best-practices), [context-window](https://code.claude.com/docs/en/context-window)
 
@@ -34,10 +34,12 @@ Your current setup, as far as I can tell from your prompt:
 Target state:
 
 ```
-Each repo:  self-contained. CLAUDE.md + .claude/settings.json + .status/
+Each repo:  self-contained. AGENTS.md (CLAUDE.md imports it) + .claude/settings.json + .status/
 One repo:   the "hub" - holds the map of repos and cross-repo plans
 Your habit: plan mode -> plan doc on disk -> fresh session to execute -> verify
 ```
+
+More than one assistant works in these repos, so the shared rules live in `AGENTS.md`, a file no single vendor owns. `CLAUDE.md` is the `@AGENTS.md` import plus Claude-Code-specific notes, and `.github/copilot-instructions.md` is a pointer: Claude Code does not read `AGENTS.md` and Copilot does, so this wiring gives every tool the same instructions without duplicating them. Machine facts go in `.status/local-environment.md`, which any tool can read - `CLAUDE.local.md` is loaded only by Claude Code, so it holds nothing another assistant would need. The wiring and the sources are in `01-repo-standards.md`.
 
 ______________________________________________________________________
 
@@ -93,9 +95,10 @@ Do this in each of your five locations. Details and templates in `01-repo-standa
 
 1. `cd` into the repo, run `claude`, then `/init`. It analyzes the codebase and writes a starting `CLAUDE.md` with build commands, test instructions, and conventions it discovers. If a CLAUDE.md already exists, `/init` proposes improvements instead of overwriting.
 2. **Then prune it.** `/init` output is a first draft and is usually too long. For every line ask the docs' question: *"would removing this cause Claude to make mistakes?"* If not, cut it. Target under 200 lines.
-3. Add `.claude/settings.json` with read-deny rules for generated/vendored content and (where needed) sibling-repo access.
-4. Add `.status/` with `decisions.md` if you don't have one. This is where the nemar-vs-openneuro reasoning goes.
-5. Commit both. `CLAUDE.md` and `.claude/settings.json` are shared; `CLAUDE.local.md` and `.claude/settings.local.json` are personal and gitignored.
+3. Move the pruned content into `AGENTS.md`, shrink `CLAUDE.md` to the `@AGENTS.md` import plus any Claude-Code-specific notes, and add the `.github/copilot-instructions.md` pointer. `01-repo-standards.md` has the wiring and the reasons.
+4. Add `.claude/settings.json` with read-deny rules for generated/vendored content and (where needed) sibling-repo access.
+5. Add `.status/` with `decisions.md` if you don't have one. This is where the nemar-vs-openneuro reasoning goes.
+6. Commit the shared set: `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `.claude/settings.json`. `CLAUDE.local.md` and `.claude/settings.local.json` are personal and gitignored, and `.status/` is gitignored too.
 
 Order I'd suggest, easiest-to-hardest so you build the habit on a small repo first: `hed-metadata-toolkit` -> `hed-task` -> `nemar-metadata` -> `task-research`.
 
@@ -243,7 +246,7 @@ ______________________________________________________________________
 Straight from the docs, annotated for your situation:
 
 - **The kitchen sink session** - one task, then something unrelated, then back. You are at high risk of this because your repos are conceptually linked. Fix: `/clear`.
-- **The over-specified CLAUDE.md** - if Claude ignores half of it, it's too long.
+- **The over-specified AGENTS.md** - if Claude ignores half of it, it's too long.
 - **The trust-then-verify gap** - plausible-looking output that doesn't hold up. For metadata/citation work specifically: always have Claude show you counts, a sample of records, and the command it ran.
 - **The infinite exploration** - "investigate the nemar datasets" without scope will read hundreds of files. Scope it or subagent it.
 
