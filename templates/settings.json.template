@@ -1,0 +1,59 @@
+// Template for <repo-root>/.claude/settings.json
+//
+// THIS FILE IS COMMITTED. Everything in it must work on any machine and any OS.
+//   - Relative paths only. No drive letters. No absolute paths of any kind.
+//   - No secrets, tokens, or API keys.
+//   - Nothing that is true only of your checkout.
+// Anything machine-specific goes in .claude/settings.local.json instead
+// (see settings.local.json.template).
+//
+// Reminder: this file loads ONLY from the directory you start Claude in. It is
+// NOT inherited from parent directories the way CLAUDE.md files are. If you
+// launch from a subdirectory too, that subdirectory needs its own copy.
+//
+// Strip these comments before saving - settings.json must be valid JSON.
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+
+  "permissions": {
+    // Block reads of things that are CHECKED IN but useless to read.
+    // .gitignore'd paths are already excluded from searches automatically.
+    // Note every pattern is relative - that is what makes this portable.
+    "deny": [
+      "Read(./**/dist/**)",
+      "Read(./**/build/**)",
+      "Read(./**/*.generated.*)"
+      // For a data repo, also consider bulk payloads you never want read whole:
+      // "Read(./data/raw/**)",
+      // "Read(./**/*.parquet)"
+    ]
+
+    // NOT HERE: "additionalDirectories". Sibling-repo paths are machine-specific.
+    // Put them in .claude/settings.local.json.
+  }
+
+  // Only if the team uses `claude --worktree` in a large repo: check out just
+  // these directories instead of the whole tree. Paths are relative to the repo
+  // root, so this is portable. Include ".claude" or the worktree won't have the
+  // repo's settings/rules/skills.
+  // "worktree": {
+  //   "sparsePaths": [".claude", "src", "tests"]
+  // }
+}
+
+// ---------------------------------------------------------------------------
+// Which file gets what
+//
+//   .claude/settings.json          COMMITTED   relative deny rules, hooks that
+//                                              call repo-relative scripts,
+//                                              worktree.sparsePaths
+//   .claude/settings.local.json    GITIGNORED  additionalDirectories,
+//                                              claudeMdExcludes, personal
+//                                              permissions, absolute paths
+//   ~/.claude/settings.json        LOCAL       your defaults for every project
+//                                              (CLAUDE_CODE_GIT_BASH_PATH,
+//                                              autoUpdatesChannel, model, ...)
+//
+// Precedence, highest first: managed policy -> CLI flags -> local -> project ->
+// user. Permission rules MERGE across scopes rather than overriding.
+// ---------------------------------------------------------------------------

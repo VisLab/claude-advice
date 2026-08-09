@@ -1,0 +1,53 @@
+<!--
+  Copy to <repo-root>/CLAUDE.local.md
+
+  THIS FILE IS NOT COMMITTED. Add it to .gitignore (see gitignore-snippet.txt).
+  It loads alongside CLAUDE.md and is treated exactly the same way - the only
+  difference is that it is yours.
+
+  This is the correct home for everything the committed CLAUDE.md must not
+  contain: drive letters, absolute checkout paths, machine quirks, personal
+  preferences for this one repo.
+
+  WORKTREE CAVEAT: because this file is gitignored, it does NOT exist in a new
+  git worktree created by `claude --worktree`. If you use worktrees, put the
+  content in a home-directory file and import it here instead:
+
+      @~/.claude/<repo-name>-local.md
+
+  A project-level import that resolves outside the working directory triggers a
+  one-time approval dialog. Accept it once and it stops asking.
+  (You can also list this file in .worktreeinclude at the repo root, which tells
+  Claude Code to copy matching gitignored files into each new worktree.)
+-->
+
+# Local notes - <repo-name>
+
+## Where my checkouts live
+
+<!-- The absolute paths that must never be committed. -->
+- This repo: `<H:\Repos\this-repo>`
+- `<other-repo-name>`: `<I:\RepositoryMetadata\other-repo>`
+- Scratch / working area: `<I:\Scratch\this-repo>`
+
+Sibling access is granted via `.claude/settings.local.json`
+(`permissions.additionalDirectories`) or `claude --add-dir <path>` at launch.
+
+## Machine quirks
+
+- <e.g. "Large data lives on I:, which is a slow spinning disk. Prefer sampling over full scans.">
+- <e.g. "Python env is at <path>; activate before running tests.">
+- <e.g. "Git Bash is at C:\Program Files\Git\bin\bash.exe.">
+
+## My preferences for this repo
+
+<!-- Things a collaborator should not inherit. -->
+- <e.g. "Don't run the full validation suite unless I ask; it takes 40 minutes.">
+- <e.g. "I read plans in VS Code, so write them as markdown with headings, not tables.">
+
+## Scratch
+
+<!-- Freeform. Half-formed thoughts, current focus, things to remember this week.
+     Cheap to keep because nobody else ever sees it. Prune it occasionally -
+     it loads into context every session, same as CLAUDE.md. -->
+- Currently working on: <...>

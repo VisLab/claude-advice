@@ -1,0 +1,40 @@
+<!--
+  Copy to .status/README.md  (see 05-status-directory.md)
+
+  This is the index. It exists so a session can orient from ONE read instead of
+  globbing a directory with hundreds of files in it. Keep it under 30 lines.
+  The "Active right now" section is the part that earns its keep - update it when
+  work changes state, not on a schedule.
+
+  Not committed, because .status/ is gitignored. If you later decide to commit
+  the durable parts, this file and decisions.md are the two to start with.
+-->
+
+# Status directory - <repo-name>
+
+**For humans:** <what is happening in this repo right now, and where to look
+first. Two or three sentences. Rewrite it when the answer changes; delete it
+never.>
+
+Working notes for this repo. Gitignored: local to this machine, not on GitHub,
+and absent from fresh clones and `claude --worktree` worktrees.
+
+- `decisions.md` - why things are the way they are. Append; never rewrite an entry.
+- `plans/` - active initiatives, one file each, `[ ]`/`[x]` markers. **Start here.**
+- `notes/` - dated records of what happened, `YYYY-MM-DD_slug.md`. Write-once;
+  reference material, not instructions.
+- `archive/<year>/` - finished work. **Do not read unless asked for a named file.**
+- `scratch/` - throwaway. Anything here may be deleted without being read.
+- `local-environment.md` - this machine's paths, interpreter, and quirks.
+
+Nothing new is created at this directory's root. New material goes in `plans/`,
+`notes/`, or `scratch/`.
+
+## Active right now
+
+<!-- Three lines beats four hundred files. Delete a line when it stops being true. -->
+
+- `plans/<slug>.md` - <state, e.g. "in progress, step 4 of 7">
+- `plans/<slug>.md` - <state, e.g. "blocked on <thing>">
+
+Last tidied: YYYY-MM-DD.

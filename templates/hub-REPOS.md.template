@@ -1,0 +1,85 @@
+<!--
+  Copy to the hub repo root as REPOS.md (suggested hub: task-research).
+
+  THIS FILE IS COMMITTED, so it names repositories and states who owns what -
+  it does NOT record where your checkouts live. The path table goes in
+  CLAUDE.local.md (gitignored). That split is deliberate: the ownership rules
+  below are permanent project facts, while the paths are true only on your
+  machine.
+
+  Reference it from the hub's CLAUDE.md as `@REPOS.md` to load it every session,
+  or leave it un-imported and let Claude read it on demand - un-imported is
+  cheaper and usually enough.
+
+  Keep entries to one line each. This is a map, not documentation.
+-->
+
+# Repository map
+
+These repositories are separate checkouts, not submodules. A session that needs
+more than one must be granted access to the others; paths are configured locally.
+
+| Repo | Owns | Depends on |
+| --- | --- | --- |
+| task-research | Cross-cutting plans, citation store, task analysis | hed-task, nemar-metadata |
+| hed-task | Curated task/process vocabulary | - |
+| hed-metadata-toolkit | Tooling for reading and validating metadata | - |
+| nemar-metadata | Mirrored nemar dataset metadata | - |
+
+<!-- Confirm which of these are actual git repos vs. plain working folders. It
+     changes what worktrees, checkpoints, and per-repo auto memory can do. -->
+
+## Which one is authoritative for what
+
+State this explicitly - it's the question that costs the most time when it's
+ambiguous.
+
+- **Task/process vocabulary**: `hed-task` is the source of truth. Do not define
+  new task terms in `task-research`; propose them for `hed-task` instead.
+- **Dataset metadata**: `nemar-metadata` mirrors nemar.org. Treat it as read-only
+  downstream of nemar; never hand-edit mirrored records.
+- **Citations**: `task-research` owns the merged citation store. Any separate
+  working area is staging only.
+- **Reusable code**: `hed-metadata-toolkit`. If a helper is being written twice,
+  it belongs here.
+
+## Retired / do not extend
+
+- OpenNeuro integration - superseded by nemar. See `.status/decisions.md`.
+  Do not add features to it.
+
+<!--
+  ==========================================================================
+  The block below belongs in CLAUDE.local.md, NOT here. Copy it there.
+  ==========================================================================
+
+  ## Where my checkouts live
+
+  | Repo | Path on this machine |
+  | --- | --- |
+  | task-research        | H:\Research\task-research |
+  | hed-task             | H:\Repos\hed-task |
+  | hed-metadata-toolkit | H:\Repos\hed-metadata-toolkit |
+  | nemar-metadata       | I:\RepositoryMetadata\nemar-metadata |
+  | citation staging     | I:\NemarCitationWorking |
+
+  ## Common launch commands
+
+  # Hub session with siblings reachable. Better: put these paths once in
+  # .claude/settings.local.json under permissions.additionalDirectories and
+  # then just run `claude`.
+  cd H:\Research\task-research
+  claude --add-dir H:\Repos\hed-task --add-dir I:\RepositoryMetadata\nemar-metadata
+
+  # Focused session in one repo - preferred when the work is scoped there
+  cd H:\Repos\hed-task
+  claude
+
+  # Also load the added directory's CLAUDE.md and rules (off by default).
+  # PowerShell; in cmd.exe use: set CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
+  $env:CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD = 1
+  claude --add-dir H:\Repos\hed-task
+-->
+
+Rule of thumb: **launch from the narrowest directory that contains the work.**
+Narrower means less irrelevant context and faster, more accurate sessions.

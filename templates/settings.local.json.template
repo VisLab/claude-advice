@@ -1,0 +1,48 @@
+// Template for <repo-root>/.claude/settings.local.json
+//
+// THIS FILE IS NOT COMMITTED. This is where absolute paths belong.
+//
+// Claude Code adds this file to your global gitignore only when IT saves a
+// setting here. If you create it by hand, add it to .gitignore yourself -
+// see gitignore-snippet.txt.
+//
+// Same JSON schema as settings.json; it takes precedence over it.
+// Strip these comments before saving - it must be valid JSON.
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+
+  "permissions": {
+    // Sibling checkouts this repo needs to READ on THIS machine.
+    // Windows absolute paths need doubled backslashes in JSON.
+    //
+    // NOTE: additionalDirectories grants file access ONLY. It does not load the
+    // other directory's CLAUDE.md, rules, or skills. Launch with
+    // `claude --add-dir <path>` if you want its skills too, plus
+    // CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 for its CLAUDE.md.
+    "additionalDirectories": [
+      "H:\\Repos\\hed-task",
+      "H:\\Repos\\hed-metadata-toolkit",
+      "I:\\RepositoryMetadata\\nemar-metadata",
+      "I:\\NemarCitationWorking"
+    ],
+
+    // Personal deny rules, e.g. a local data mount you never want read in bulk.
+    "deny": [
+      // "Read(//I:/BulkData/**)"
+    ]
+  },
+
+  // Skip CLAUDE.md and rules files you don't want loaded on this machine.
+  // Patterns are globs matched against ABSOLUTE paths, so start relative-style
+  // patterns with **/ to match anywhere.
+  "claudeMdExcludes": [
+    // "**/legacy-openneuro/**"
+  ]
+}
+
+// ---------------------------------------------------------------------------
+// Relative-path caveat: a pattern like "Read(./vendor/**)" in this file anchors
+// at the directory you start Claude Code from. If you launch sessions from more
+// than one directory inside this repo, write the rules as //-absolute paths
+// instead, e.g. "Read(//H:/Repos/this-repo/vendor/**)".
+// ---------------------------------------------------------------------------
