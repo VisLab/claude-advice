@@ -34,7 +34,7 @@
   // Patterns are globs matched against ABSOLUTE paths, so start relative-style
   // patterns with **/ to match anywhere.
   "claudeMdExcludes": [
-    // "**/legacy-openneuro/**"
+    // "**/legacy-subsystem/**"
   ]
 }
 

@@ -1,6 +1,6 @@
 <!--
   Copy to: <repo>/.claude/skills/status-update/SKILL.md
-  Invoke with: /status-update            (or /status-update nemar-migration)
+  Invoke with: /status-update            (or /status-update <initiative-slug>)
 
   The directory name becomes the command name. `disable-model-invocation: true`
   means only you can trigger it, and it costs ZERO context until you do.

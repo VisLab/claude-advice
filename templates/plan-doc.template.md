@@ -74,7 +74,7 @@ in place rather than deleting them - the resolution is the valuable part.
 Where the plan is guessing. Be specific - this is the section that saves you
 when a phase fails.
 
-- ASSUMPTION: <e.g. nemar exposes a per-dataset citation endpoint>.
+- ASSUMPTION: <e.g. the upstream API exposes a per-record endpoint>.
   If false: <what changes>.
 - RISK: <e.g. mirroring every dataset repo exceeds available disk>.
   Mitigation: <...>.
