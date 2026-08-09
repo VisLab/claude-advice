@@ -34,7 +34,7 @@ Do the small ones first. Not for safety - for calibration. You want to find out 
 
 | Order | Repo                          | Files    | Why this position                                                                                                          |
 | ----- | ----------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
-| 1     | `hed-metadata-toolkit`        | 5        | Four minutes. Also the repo whose `CLAUDE.md` and settings are already done, so it becomes the complete reference example. |
+| 1     | `hed-metadata-toolkit`        | 5        | Four minutes. Also the repo whose `AGENTS.md` and settings are already done, so it becomes the complete reference example. |
 | 2     | `openneuro-metadata`          | 49       | Mostly well-named dated notes already. Tests the notes/ renaming without much judgment.                                    |
 | 3     | `task-research`               | 170      | The hub, and the one with real active plans. Tests the plan/harvest distinction properly.                                  |
 | 4     | everything else               | 2-177    | Mechanical by now.                                                                                                         |
@@ -101,7 +101,7 @@ Verify:
 
 ```powershell
 Get-ChildItem .status | Select-Object Name
-# expect: archive, notes, plans, README.md, decisions.md, local-environment.md, scratch
+# expect: archive, notes, plans, prompts, README.md, decisions.md, local-environment.md, scratch
 ```
 
 ### Step 4 - harvest the decisions (the part that matters)
@@ -128,7 +128,7 @@ Date, what was decided, why, what it supersedes. `task-research` has 8 of these 
    ```json
    "deny": ["Read(.status/archive/**)", "Read(.status/scratch/**)"]
    ```
-3. Add the five-line "Where the thinking lives" block to `CLAUDE.md` (see `05-status-directory.md`).
+3. Add the "Where the thinking lives" block to `AGENTS.md` (see `05-status-directory.md`).
 4. If `.status/` is not gitignored in this repo, add it. Two repos need this: `hed-ontology` and `H:\Research\OpenAlex`.
 
 ### Step 6 - a week later
@@ -196,10 +196,10 @@ ______________________________________________________________________
 - [ ] Snapshot `.status/` to a zip or tarball outside the repo
 - [ ] Dry run; read the summary and sanity-check the counts
 - [ ] Correct every `review` row and confirm every `plan` row
-- [ ] `--apply`; verify the top level has exactly the seven expected entries
+- [ ] `--apply`; verify the top level has exactly the eight expected entries
 - [ ] Harvest the `harvest` rows and the surviving plans into `decisions.md`
 - [ ] Write `README.md` with the "Active right now" list
 - [ ] Add the two `Read(.status/...)` deny rules to `.claude/settings.json`
-- [ ] Add the "Where the thinking lives" block to `CLAUDE.md`
+- [ ] Add the "Where the thinking lives" block to `AGENTS.md`
 - [ ] Confirm `.status/` is gitignored
 - [ ] A week later: delete `archive/<year>/_quarantine/`

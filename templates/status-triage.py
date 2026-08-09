@@ -51,8 +51,8 @@ DONE_NAME_RE = re.compile(
 # against the first path component under .status/.
 VAGUE_DIR_RE = re.compile(
     r"^(temp|tmp|.*temp|working.*|original.*|old.*|leftovers|unused|removed|"
-    r"review_for_deletion|merged|unmerged|backup|chat.*|prompts|test_.*|"
-    r".*_test|scripts|config|data|instructions|fixes|issues|plans|prs|features|"
+    r"review_for_deletion|merged|unmerged|backup|chat.*|test_.*|"
+    r".*_test|scripts|config|data|instructions|fixes|issues|prs|features|"
     r"migration|release_notes|schemas.*|search|helpers|documentation)$",
     re.IGNORECASE,
 )
@@ -92,7 +92,7 @@ def classify(rel: Path, full: Path, today: dt.date) -> tuple[str, str, str]:
         return ("keep", str(rel).replace("\\", "/"), "part of the target layout")
 
     # 4. Already-correct locations are left alone.
-    if len(parts) > 1 and parts[0] in ("archive", "scratch", "plans", "notes"):
+    if len(parts) > 1 and parts[0] in ("archive", "scratch", "plans", "prompts", "notes"):
         return ("keep", str(rel).replace("\\", "/"), "already in the target layout")
 
     # 5. Non-markdown needs a human: it either has a real home in the repo or it
