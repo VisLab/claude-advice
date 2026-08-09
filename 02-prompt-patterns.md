@@ -13,8 +13,8 @@ Your prompt contained six different things at once:
 | 1   | `add to your trusted folders h:\..., i:\..., ...`                                    | A launch flag or settings file - **not a prompt**                                                               |
 | 2   | `Read the .status/TaskResearchStructure.md and the stuff in i:\NemarCitationWorking` | Fine in a prompt, but `i:\NemarCitationWorking` is unscoped - "the stuff in" a folder could be 3 files or 3,000 |
 | 3   | The nemar-vs-openneuro history and rationale                                         | `.status/decisions.md`, written once                                                                            |
-| 4   | Facts about what hed-task contains and its limitations                               | `hed-task/CLAUDE.md`, written once                                                                              |
-| 5   | "My ultimate goal is to create models of tasks that can be applied to real data"     | A `SPEC.md`, arrived at through an interview                                                                    |
+| 4   | Facts about what hed-task contains and its limitations                               | That repo's `AGENTS.md`, written once                                                                           |
+| 5   | "My ultimate goal is to create models of tasks that can be applied to real data"     | A spec in `.status/plans/`, arrived at through an interview                                                     |
 | 6   | Three sequenced plans: download nemar repos -> remove openneuro -> merge citations   | The actual ask - but it's three asks                                                                            |
 
 Plus it ends mid-word: `"I don't know how to assig..."`. That's the tell. You were still thinking while typing, which is fine - but the model receives a half-formed thought as if it were a specification.
@@ -43,6 +43,15 @@ Two rules that do most of the work:
 
 ______________________________________________________________________
 
+## Two kinds of prompt, two homes
+
+- **`sample_prompts/` at the repo root, tracked**: illustrative, general, meant to be adapted - part of the repository's content. The paste-ready versions of the prompts this document discusses live there, one per file.
+- **`.status/prompts/`, gitignored**: working prompts - the ones that hand a task to a fresh session, or restart one that has drifted. About one piece of work at one moment; local and disposable.
+
+The test: **would someone else, in another repository, get value from this prompt?** If yes it is a sample. If it names your current task, it is a working prompt.
+
+______________________________________________________________________
+
 ## Your prompt, rewritten
 
 ### Step 0 - outside the prompt, once
@@ -58,29 +67,7 @@ Or put those four paths in `.claude/settings.json` under `permissions.additional
 
 ### Step 1 - write the background to disk (one prompt, once)
 
-```
-GOAL: Stop re-explaining project history every session.
-
-THIS TURN: Write two files. No other changes.
-
-1. H:\Research\task-research\.status\decisions.md - record these decisions
-   with dates and consequences:
-
-   - All OpenNeuro datasets have been exported to nemar.org. Nemar has richer
-     metadata and already gathers citations per dataset, each tied to an actual
-     open dataset. Nemar does not produce PDFs.
-   - Consequence: OpenNeuro integration is being retired, not maintained.
-   - hed-task defines a curated set of "tasks" and "processes". The list is
-     incomplete and is not currently linked to any data.
-   - Long-term goal: models of tasks that apply to real data and integrate with
-     events, so comparisons can be made across datasets.
-
-2. H:\Research\task-research\CLAUDE.md - add a short "Repository map" section
-   naming each of the five locations and what it owns, in one line each.
-
-CONSTRAINTS: Facts and consequences only, no plans, no recommendations. Do not
-touch anything under .status/ other than creating decisions.md.
-```
+The prompt states each decision as a flat fact, sends the durable history to `.status/decisions.md`, and puts the repository map - locations by name, never by path - in `AGENTS.md`. The paste-ready version is `sample_prompts/write-background-to-disk.md`.
 
 That is a 30-second prompt whose value compounds across every future session.
 
@@ -88,55 +75,15 @@ That is a 30-second prompt whose value compounds across every future session.
 
 Your prompt admitted *"I realize this is a complicated problem"* and trailed off at *"I don't know how to assig..."*. That's exactly the signal to invert the direction of questioning:
 
-```
-I want to build models of experimental tasks that can be applied to real
-datasets and integrate with event files, so that task-level comparisons can be
-made across datasets.
+The move: state the goal in one sentence, point at the existing work, and have the assistant interview you with the AskUserQuestion tool until a spec can be written to `.status/plans/`. The paste-ready version is `sample_prompts/interview-to-spec.md`.
 
-Read .status/decisions.md and H:\Repos\hed-task first.
-
-Then interview me in detail using the AskUserQuestion tool. Ask about the data
-model, what "task" and "process" have to mean formally, how a task model binds
-to an events.tsv, edge cases, and the tradeoffs I haven't considered. Don't ask
-obvious questions - dig into the hard parts.
-
-Keep interviewing until we've covered everything, then write a complete spec to
-.status/task-model-SPEC.md.
-```
-
-Run this in **plan mode** (`Shift+Tab`). Then `/clear` and start a fresh session against the spec.
+Run it in **plan mode** (`Shift+Tab`). Then `/clear` and start a fresh session against the spec.
 
 ### Step 3 - the plan you actually asked for
 
 Now, with background on disk and the goal sharper, the plan request gets short:
 
-```
-GOAL: Retire the OpenNeuro path and re-found the pipeline on nemar.
-
-THIS TURN: One plan document. No code, no file changes outside .status/.
-
-WHERE:
-  @.status/decisions.md
-  @.status/TaskResearchStructure.md
-  I:\NemarCitationWorking  (survey it - tell me what's there before relying on it)
-
-GIVEN: Nemar is now the single source for datasets and citations. hed-task's
-curated task/process list is the seed vocabulary, incomplete and unlinked to data.
-
-DELIVERABLE: .status/nemar-migration-plan.md with exactly three phases:
-  Phase 1 - mirror individual nemar dataset repositories locally
-  Phase 2 - remove the OpenNeuro integration (list every file and call site
-            that would need to change; do not change them)
-  Phase 3 - merge nemar citations into the existing task-research citation store
-
-For each phase: concrete steps, files touched, open questions, and one
-verification I can run to confirm the phase is done. Mark every step
-`[ ] TODO`.
-
-CONSTRAINTS: Don't design the task model here - that's task-model-SPEC.md.
-Where you're guessing about nemar's API or metadata shape, say so explicitly
-rather than assuming.
-```
+All six slots filled, one named deliverable in `.status/plans/`, and one verification per phase so "done" is checkable. The paste-ready version is `sample_prompts/request-a-phased-plan.md`.
 
 Length: about the same as your original. Difference: every line is either an instruction or a pointer, none of it is narrative you'll retype, and there's one named deliverable at a known path.
 
@@ -174,9 +121,9 @@ ______________________________________________________________________
 1. Land in the right directory. Check /context if unsure what loaded.
 2. Shift+Tab -> plan mode.
 3. Explore:  "read X and Y and tell me how Z works" - no edits happen.
-4. Plan:     "write a plan to .status/foo-plan.md" - review it, Ctrl+G to edit.
+4. Plan:     "write a plan to .status/plans/foo.md" - review it, Ctrl+G to edit.
 5. /clear.
-6. Execute:  "implement phase 1 of @.status/foo-plan.md. run <check> when done."
+6. Execute:  "implement phase 1 of @.status/plans/foo.md. run <check> when done."
 7. Verify:   "use a subagent to review the diff against the plan. Report gaps
              that affect correctness, not style."
 8. Commit:   "commit with a descriptive message."
@@ -191,7 +138,7 @@ ______________________________________________________________________
 ## Things that don't work the way you might expect
 
 - **"Add to your trusted folders"** - not a prompt-level action. `--add-dir`, `/add-dir`, or `permissions.additionalDirectories`.
-- **"Remember this for next time"** - Claude does keep auto-memory notes per repository (`/memory` to browse them), but for anything you rely on, write it to CLAUDE.md or `.status/` yourself. Auto-memory is machine-local and Claude decides what's worth saving.
+- **"Remember this for next time"** - Claude does keep auto-memory notes per repository (`/memory` to browse them), but for anything you rely on, write it to `AGENTS.md` or `.status/` yourself. Auto-memory is machine-local and Claude decides what's worth saving.
 - **CLAUDE.md is not enforcement.** It's context delivered as a message. If a rule must hold every time, use a hook.
 - **Instructions given only in conversation don't survive `/compact`.** The project-root CLAUDE.md is re-read from disk after compaction; a rule you typed in chat is not. Another argument for files over chat.
 - **Nested CLAUDE.md files** in subdirectories load on demand when Claude reads a file there, and are *not* re-injected after `/compact`.
