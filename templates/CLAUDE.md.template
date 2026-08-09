@@ -1,90 +1,19 @@
 <!--
-  CLAUDE.md template. Copy to <repo-root>/CLAUDE.md and fill in.
-  THIS FILE IS COMMITTED. Everything in it must be true on any machine.
+  CLAUDE.md template. Copy to <repo-root>/CLAUDE.md.
 
-  Hard rule: NO absolute paths, NO drive letters (H:\, I:\, C:\), no personal
-  scratch directories, no credentials, no "on my machine" anything. If a fact is
-  only true for you, it belongs in CLAUDE.local.md instead.
-
-  Delete every section you don't have a real answer for - an empty heading costs
-  context and teaches Claude nothing.
-  Target: under 200 lines. Aim for 60.
-  HTML comments like this one are stripped before Claude sees the file, so notes
-  to yourself are free.
+  COMMITTED, and deliberately almost empty: AGENTS.md is the single source of
+  instructions for every assistant, and Claude Code does not read AGENTS.md,
+  so it is imported below. Anything true of the repo goes in AGENTS.md, not
+  here - a rule stated in two files is a rule that will disagree with itself.
+  Only Claude-Code-specific behaviour belongs under the heading.
 -->
 
-# <repo-name>
+@AGENTS.md
 
-<!-- One or two sentences. What this repo IS and what it is NOT. -->
-Purpose: <what this repo produces or owns>.
-Not in scope: <the thing people assume is here but isn't>.
+# Claude Code
 
-## Commands
-
-<!-- Only commands Claude cannot guess. Verify each one actually works.
-     Keep them repo-relative so they run anywhere. -->
-- Install dev env: `<command>`
-- Run tests: `<command>`
-- Single test: `<command>`
-- Lint / typecheck: `<command>`
-- Validate data: `<command>`
-
-## Layout
-
-<!-- Two to six lines. Where things live, RELATIVE to the repo root. -->
-- `<dir>/` - <what it owns>
-- `<dir>/` - <what it owns>
-- `.status/` - plans and decisions (see below)
-
-## Conventions that differ from defaults
-
-<!--
-  Only things that would surprise a competent stranger.
-
-  A style rule that is true of EVERY project belongs in
-  %USERPROFILE%\.claude\CLAUDE.md, not here - see 04-file-conventions.md
-  section 6. Repeat it here only when the repo is public or shared, so a
-  collaborator who does not have your user-level file still sees it.
--->
-- **ASCII only** in prose, code, comments, and filenames: `-` not em/en dashes,
-  `->` not arrows, `...` not an ellipsis character, straight quotes. Exception:
-  genuine data (author names, dataset titles, recorded API responses) keeps
-  whatever characters it actually contains.
-- <e.g. "Sidecar JSON is written with 2-space indent and sorted keys; downstream diffs depend on it.">
-- <e.g. "Column order in events.tsv is significant - never reorder.">
-
-## Gotchas
-
-<!-- Non-obvious behaviour that has bitten you before. -->
-- <e.g. "The citation cache is keyed by DOI, not dataset ID. Two datasets can share a citation.">
-
-## Where the thinking lives
-
-- `.status/decisions.md` - decisions and their rationale. **Read this before
-  proposing structural changes.** Append entries; never rewrite existing ones.
-- `.status/*-plan.md` - active plans with `[ ] TODO` / `[x] DONE` markers.
-  Check the markers before starting work.
-
-## Working agreements
-
-<!-- Behavioural rules. Emphasis words genuinely improve adherence. -->
-- IMPORTANT: Never edit or delete files under `.status/` without asking first.
-- For changes spanning more than 3 files, write a plan to `.status/` and stop for review.
-- When you are guessing about an external API or data format, say so explicitly
-  rather than assuming.
-- Show evidence, not assertions: the command you ran and its output.
-
-## Related repositories
-
-<!--
-  Refer to sibling repos BY NAME, never by path. The path is machine-specific
-  and belongs in CLAUDE.local.md / .claude/settings.local.json.
--->
-- `<other-repo-name>` - <what it provides to this repo>.
-  Not vendored here; a session that needs it must be granted access to that
-  checkout. Paths are configured locally, not in this file.
-
-<!--
-  Local companion file (gitignored) - see CLAUDE.local.md.template:
-    CLAUDE.local.md   your checkout paths, scratch dirs, machine quirks
--->
+- `CLAUDE.local.md` (gitignored) holds notes about this machine's Claude Code
+  setup and imports `.status/local-environment.md`, which is where machine
+  facts live for every tool, not just this one.
+- After changing either import, run `/context` and confirm the file appears
+  under **Memory files**.

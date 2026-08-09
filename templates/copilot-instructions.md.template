@@ -1,0 +1,20 @@
+<!--
+  Copy to <repo-root>/.github/copilot-instructions.md.
+
+  COMMITTED. A pointer, nothing else: Copilot reads AGENTS.md natively, and
+  this file exists for the Copilot surfaces that still read it and for humans
+  who look in .github/ first.
+-->
+
+# <repo-name>
+
+**`AGENTS.md` at the repository root is the instruction set for this project.
+Read it before answering, and follow it.**
+
+This file is a pointer and duplicates nothing. One source, several pointers: a
+rule stated in two files is a rule that will disagree with itself.
+
+Machine-specific facts - interpreter, local paths, cache locations - are in
+`.status/local-environment.md`, which is gitignored: read it when it is there
+and ignore its absence when it is not. No committed file in this repository
+may contain a local path or a drive letter.

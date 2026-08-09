@@ -1,30 +1,38 @@
 # ---------------------------------------------------------------------------
-# Claude Code - append these lines to each repo's .gitignore
+# Append these lines to each repo's .gitignore
 #
-# Everything NOT listed here under .claude/ is meant to be committed:
-#   .claude/settings.json, .claude/rules/, .claude/skills/, .claude/agents/,
-#   plus CLAUDE.md and .mcp.json at the repo root.
+# Everything NOT listed here is meant to be committed:
+#   AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .mcp.json,
+#   .vscode/settings.json, .env.example, .gitattributes,
+#   .claude/settings.json, .claude/rules/, .claude/skills/, .claude/agents/
 # ---------------------------------------------------------------------------
 
-# Personal per-repo instructions (drive letters, scratch dirs, machine quirks)
+# Personal per-repo Claude Code notes (imports .status/local-environment.md)
 CLAUDE.local.md
 
 # Personal per-repo settings (absolute paths, claudeMdExcludes)
 .claude/settings.local.json
 
+# Real tokens and machine values; .env.example is the committed documentation
+.env
+
+# Working notes, plans, prompts, and decision records. Deliberately NOT
+# committed: these repos are public and .status/ holds half-formed thinking.
+# The consequence is that it lives on one machine only and is absent from
+# fresh clones and from `claude --worktree` worktrees.
+.status/
+
 # ---------------------------------------------------------------------------
 # One-time check before your first commit in each repo. From the repo root:
 #
 #   PowerShell:
-#     git ls-files | Select-String -Pattern '^(CLAUDE\.md|\.claude/|\.mcp\.json)' |
-#       ForEach-Object { $_.Line } |
-#       ForEach-Object { Select-String -Path $_ -Pattern '[A-Za-z]:\\' }
+#     git ls-files | ForEach-Object { Select-String -Path $_ -Pattern '[A-Za-z]:\\' }
 #
 #   Git Bash:
-#     git ls-files 'CLAUDE.md' '.claude/*' '.mcp.json' | xargs grep -n '[A-Za-z]:\\'
+#     git ls-files | xargs grep -n '[A-Za-z]:\\'
 #
 # Any hit is a machine-specific path in a file you are about to commit.
-# Move it to CLAUDE.local.md or .claude/settings.local.json.
+# Move it to .status/local-environment.md or .claude/settings.local.json.
 #
 # Also worth checking for secrets before the first commit of .mcp.json:
 #     git ls-files '.mcp.json' | xargs grep -niE 'token|secret|key|password'
@@ -35,10 +43,11 @@ CLAUDE.local.md
 #
 # This is a COMMITTED file at the repo root (not in .claude/). It lists
 # gitignored files to copy into each new worktree Claude Code creates, using
-# .gitignore syntax. Useful precisely because CLAUDE.local.md and
-# settings.local.json are gitignored and would otherwise be missing there:
+# .gitignore syntax. Useful precisely because the files above are gitignored
+# and would otherwise be missing there:
 #
 #     CLAUDE.local.md
 #     .claude/settings.local.json
 #     .env
+#     .status/**
 # ---------------------------------------------------------------------------

@@ -11,42 +11,82 @@
 // NOT inherited from parent directories the way CLAUDE.md files are. If you
 // launch from a subdirectory too, that subdirectory needs its own copy.
 //
+// Keep the allow list consistent with the "Test framework:" line declared in
+// AGENTS.md - both runners are allowed below because `python -m pytest` also
+// runs a unittest suite, but the commands AGENTS.md documents should name the
+// declared one.
+//
 // Strip these comments before saving - settings.json must be valid JSON.
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
 
   "permissions": {
-    // Block reads of things that are CHECKED IN but useless to read.
-    // .gitignore'd paths are already excluded from searches automatically.
-    // Note every pattern is relative - that is what makes this portable.
+    // Read-only, repo-relative commands a session uses constantly.
+    "allow": [
+      "Bash(python -m pytest *)",
+      "Bash(python -m pytest)",
+      "Bash(python -m unittest *)",
+      "Bash(python -m ruff *)",
+      "Bash(python -m mdformat *)",
+      "Bash(python -c *)",
+      "Bash(python --version)",
+      "Bash(git status)",
+      "Bash(git status *)",
+      "Bash(git log)",
+      "Bash(git log *)",
+      "Bash(git diff)",
+      "Bash(git diff *)",
+      "Bash(git show *)",
+      "Bash(git branch)",
+      "Bash(git ls-files *)",
+      "Bash(grep *)",
+      "Bash(ls)",
+      "Bash(ls *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(cat *)",
+      "Bash(wc *)"
+    ],
+
+    // Things that change history or the index: fine, but only on request.
+    "ask": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout -- *)",
+      "Bash(git restore *)",
+      "Bash(git stash *)"
+    ],
+
+    // Secrets, bulk history, deletion, publishing, and the network.
+    // .gitignore'd paths are already excluded from searches automatically;
+    // deny rules are for things that exist but must not be touched.
     "deny": [
-      "Read(./**/dist/**)",
-      "Read(./**/build/**)",
-      "Read(./**/*.generated.*)"
-      // For a data repo, also consider bulk payloads you never want read whole:
-      // "Read(./data/raw/**)",
-      // "Read(./**/*.parquet)"
+      "Read(.env)",
+      "Read(.envrc)",
+      "Read(.status/archive/**)",
+      "Read(.status/scratch/**)",
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(git push)",
+      "Bash(git push *)",
+      "Bash(git reset --hard *)",
+      "Bash(pip install *)",
+      "Bash(python -m pip install *)",
+      "Bash(curl *)",
+      "Bash(wget *)"
     ]
 
     // NOT HERE: "additionalDirectories". Sibling-repo paths are machine-specific.
     // Put them in .claude/settings.local.json.
   }
-
-  // Only if the team uses `claude --worktree` in a large repo: check out just
-  // these directories instead of the whole tree. Paths are relative to the repo
-  // root, so this is portable. Include ".claude" or the worktree won't have the
-  // repo's settings/rules/skills.
-  // "worktree": {
-  //   "sparsePaths": [".claude", "src", "tests"]
-  // }
 }
 
 // ---------------------------------------------------------------------------
 // Which file gets what
 //
-//   .claude/settings.json          COMMITTED   relative deny rules, hooks that
-//                                              call repo-relative scripts,
-//                                              worktree.sparsePaths
+//   .claude/settings.json          COMMITTED   relative allow/ask/deny rules,
+//                                              hooks that call repo-relative
+//                                              scripts, worktree.sparsePaths
 //   .claude/settings.local.json    GITIGNORED  additionalDirectories,
 //                                              claudeMdExcludes, personal
 //                                              permissions, absolute paths

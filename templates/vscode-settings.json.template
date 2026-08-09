@@ -1,0 +1,24 @@
+// Template for <repo-root>/.vscode/settings.json
+//
+// COMMITTED and shared. Workspace settings override user settings, so a
+// machine-specific value here is imposed on everyone: interpreter paths go in
+// your VS Code User settings, environment values go in .env.
+//
+// The two python.testing.*Enabled keys MUST match the "Test framework:" line
+// declared in AGENTS.md - the wrong pair makes test discovery silently show
+// nothing. The values below are for a pytest repo; flip both booleans for a
+// unittest repo.
+//
+// Strip these comments before saving - the file must be valid JSON.
+{
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestArgs": ["tests"],
+  "python.testing.cwd": "${workspaceFolder}",
+  "python.testing.autoTestDiscoverOnSaveEnabled": true,
+  "python.terminal.activateEnvironment": false
+}

@@ -5,9 +5,12 @@
   It loads alongside CLAUDE.md and is treated exactly the same way - the only
   difference is that it is yours.
 
-  This is the correct home for everything the committed CLAUDE.md must not
-  contain: drive letters, absolute checkout paths, machine quirks, personal
-  preferences for this one repo.
+  Only Claude Code loads this file, so it holds only Claude-Code-specific
+  local notes and preferences. Machine facts every tool needs - checkout
+  paths, interpreter, quirks - go in .status/local-environment.md, which this
+  file imports:
+
+      @.status/local-environment.md
 
   WORKTREE CAVEAT: because this file is gitignored, it does NOT exist in a new
   git worktree created by `claude --worktree`. If you use worktrees, put the
@@ -23,21 +26,18 @@
 
 # Local notes - <repo-name>
 
-## Where my checkouts live
+## Machine facts
 
-<!-- The absolute paths that must never be committed. -->
-- This repo: `<H:\Repos\this-repo>`
-- `<other-repo-name>`: `<I:\RepositoryMetadata\other-repo>`
-- Scratch / working area: `<I:\Scratch\this-repo>`
+@.status/local-environment.md
+
+<!-- The import above is the single home for checkout paths, the interpreter,
+     and machine quirks - every tool reads that file, not this one. Add below
+     only what is both machine-specific AND Claude-Code-specific. -->
+
+- <e.g. "Git Bash is at <path>; CLAUDE_CODE_GIT_BASH_PATH is set in user settings.">
 
 Sibling access is granted via `.claude/settings.local.json`
 (`permissions.additionalDirectories`) or `claude --add-dir <path>` at launch.
-
-## Machine quirks
-
-- <e.g. "Large data lives on I:, which is a slow spinning disk. Prefer sampling over full scans.">
-- <e.g. "Python env is at <path>; activate before running tests.">
-- <e.g. "Git Bash is at C:\Program Files\Git\bin\bash.exe.">
 
 ## My preferences for this repo
 
