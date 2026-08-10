@@ -50,11 +50,9 @@ ______________________________________________________________________
 
 Target state:
 
-```
-Each repo:  self-contained. AGENTS.md (CLAUDE.md imports it) + .claude/settings.json + .status/
-One repo:   the "hub" - holds the map of repos and cross-repo plans
-Your habit: plan mode -> plan doc on disk -> fresh session to execute -> verify
-```
+- **Each repo is self-contained.** `AGENTS.md` holds the instructions (`CLAUDE.md` imports it), `.claude/settings.json` holds the permissions, and `.status/` holds the working notes.
+- **One repo is the hub.** It carries the map of the repositories and the cross-repo plans.
+- **The working habit:** plan mode first; the plan is written to disk; a fresh session executes it; the result is verified against a check.
 
 More than one assistant works in these repos, so the shared rules live in `AGENTS.md`, a file no single vendor owns. `CLAUDE.md` is the `@AGENTS.md` import plus Claude-Code-specific notes, and `.github/copilot-instructions.md` is a pointer: Claude Code does not read `AGENTS.md` and Copilot does, so this wiring gives every tool the same instructions without duplicating them. Machine facts go in `.status/local-environment.md`, which any tool can read - `CLAUDE.local.md` is loaded only by Claude Code, so it holds nothing another assistant would need. The wiring and the sources are detailed in the rest of this document.
 
@@ -88,7 +86,7 @@ A repo's instructions live in one committed file, `AGENTS.md`. Two facts, checke
 - **Claude Code does not read `AGENTS.md`.** Its docs prescribe exactly this setup: "create a `CLAUDE.md` that imports it so both tools read the same instructions without duplicating them." A symlink also works but requires Administrator or Developer Mode on Windows, so the `@AGENTS.md` import is the right mechanism here.
 - **GitHub Copilot reads `AGENTS.md` natively** - in VS Code and in the coding agent - while still supporting `.github/copilot-instructions.md`.
 
-Why not make `CLAUDE.md` the source: more than one assistant works in these repos, and a file named for one vendor cannot hold the shared rules. The same argument puts machine facts in `.status/local-environment.md`, which any tool can read, rather than in `CLAUDE.local.md`, which only Claude Code loads.
+`CLAUDE.md` cannot be the shared instruction file: more than one assistant works in these repos, and the other tools do not read a file named for one vendor. The same reasoning moves machine facts out of `CLAUDE.local.md`, which only Claude Code loads, and into `.status/local-environment.md`, which every tool can read.
 
 One source, several pointers - a rule stated in two files is a rule that will disagree with itself:
 

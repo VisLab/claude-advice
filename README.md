@@ -38,7 +38,7 @@ Cross-repo conventions for working with AI coding assistants: what each reposito
 
 ## Sources
 
-All from the official documentation:
+All from the official documentation. First checked 2026-08-03; the memory, setup, and Copilot custom-instructions pages were re-verified 2026-08-09 and 2026-08-10:
 
 - [Memory and project instructions](https://code.claude.com/docs/en/memory)
 - [Best practices](https://code.claude.com/docs/en/best-practices)
