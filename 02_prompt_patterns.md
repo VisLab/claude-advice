@@ -110,17 +110,14 @@ ______________________________________________________________________
 
 ## The rhythm of a session
 
-```
 1. Land in the right directory. Check /context if unsure what loaded.
 2. Shift+Tab -> plan mode.
-3. Explore:  "read X and Y and tell me how Z works" - no edits happen.
-4. Plan:     "write a plan to .status/plans/foo.md" - review it, Ctrl+G to edit.
+3. Explore: "read X and Y and tell me how Z works" - no edits happen.
+4. Plan: "write a plan to .status/plans/foo.md" - review it, Ctrl+G to edit.
 5. /clear.
-6. Execute:  "implement phase 1 of @.status/plans/foo.md. run <check> when done."
-7. Verify:   "use a subagent to review the diff against the plan. Report gaps
-             that affect correctness, not style."
-8. Commit:   "commit with a descriptive message."
-```
+6. Execute: "implement phase 1 of @.status/plans/foo.md. run <check> when done."
+7. Verify: "use a subagent to review the diff against the plan. Report gaps that affect correctness, not style."
+8. Commit: "commit with a descriptive message."
 
 Step 5 is the one people skip. The plan is on disk; the exploration that produced it is dead weight. Clearing before execution gives the implementation a full context window.
 
@@ -132,6 +129,6 @@ ______________________________________________________________________
 
 - **"Add to your trusted folders"** - not a prompt-level action. `--add-dir`, `/add-dir`, or `permissions.additionalDirectories`.
 - **"Remember this for next time"** - Claude does keep auto-memory notes per repository (`/memory` to browse them), but for anything you rely on, write it to `AGENTS.md` or `.status/` yourself. Auto-memory is machine-local and Claude decides what's worth saving.
-- **CLAUDE.md is not enforcement.** It's context delivered as a message. If a rule must hold every time, use a hook.
+- **CLAUDE.md is not enforcement.** It's context delivered as a message - Claude reads it and tries to comply. If a rule must hold every time, use a **hook**: a shell command Claude Code itself runs at a fixed point in the session (before a tool call, after an edit, on stop), configured in `.claude/settings.json`. A hook runs whether or not Claude remembers the rule, and a `PreToolUse` hook can block an action outright. Docs: [hooks-guide](https://code.claude.com/docs/en/hooks-guide).
 - **Instructions given only in conversation don't survive `/compact`.** The project-root CLAUDE.md is re-read from disk after compaction; a rule you typed in chat is not. Another argument for files over chat.
 - **Nested CLAUDE.md files** in subdirectories load on demand when Claude reads a file there, and are *not* re-injected after `/compact`.
