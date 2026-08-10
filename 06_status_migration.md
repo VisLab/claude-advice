@@ -127,7 +127,7 @@ First match wins. This is the whole of the script's judgment, stated so you can 
 | 1   | inside a junk-drawer directory (`temp`, `working*`, `original*`, `old*`, `leftovers`, `unused`, `removed`, `merged`, `chat*`, ...) | whole tree -> `archive/<year>/`, unopened                |
 | 2   | `.log` `.bak` `.backup` `.tmp` `.orig` `.swp` `.pyc`, or `" copy"` in the name                                                     | -> `archive/<year>/_quarantine/`                         |
 | 3   | root `README.md`, `decisions.md`, `local-environment.md`                                                                           | keep                                                     |
-| 4   | already under `plans/`, `notes/`, `archive/`, `scratch/`                                                                           | keep                                                     |
+| 4   | already under `plans/`, `prompts/`, `notes/`, `archive/`, `scratch/`                                                               | keep                                                     |
 | 5   | not markdown                                                                                                                       | **review** - human routes it                             |
 | 6   | name says "decision"                                                                                                               | **harvest** - checked before staleness, on purpose       |
 | 7   | name contains `complete`/`final`/`summary`/`report`/`progress`/`assessment`/`deprecated`                                           | -> `archive/`                                            |
