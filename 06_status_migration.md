@@ -1,6 +1,6 @@
 # Migrating an existing `.status/` directory
 
-Written 2026-08-05. `05_status_directory.md` describes the target layout and why. This document is the procedure for getting a directory that already has 457 files in it to that layout, and it is deliberately separate because the two get read at different times: the target once, the procedure once per repo.
+`05_status_directory.md` describes the target layout and why. This document is the procedure for getting a directory that already has hundreds of files in it to that layout, and it is deliberately separate because the two get read at different times: the target once, the procedure once per repo.
 
 The classification rules live in `templates/status-triage.py`, which **proposes** a plan and changes nothing unless you pass `--apply`.
 
@@ -18,7 +18,7 @@ Everything below follows from that:
 
 ```powershell
 # From the repo root. Adjust the name.
-Compress-Archive -Path .status\* -DestinationPath ..\status-backup-hed-resources-2026-08-05.zip
+Compress-Archive -Path .status\* -DestinationPath ..\status-backup-<repo-name>-<date>.zip
 ```
 
 ```bash
@@ -30,15 +30,7 @@ ______________________________________________________________________
 
 ## Which repo first
 
-Do the small ones first. Not for safety - for calibration. You want to find out whether you actually like the scheme on a 5-file directory, not discover it on the one with 457.
-
-| Order | Repo                          | Files    | Why this position                                                                                                          |
-| ----- | ----------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
-| 1     | `hed-metadata-toolkit`        | 5        | Four minutes. Also the repo whose `AGENTS.md` and settings are already done, so it becomes the complete reference example. |
-| 2     | `openneuro-metadata`          | 49       | Mostly well-named dated notes already. Tests the notes/ renaming without much judgment.                                    |
-| 3     | `task-research`               | 170      | The hub, and the one with real active plans. Tests the plan/harvest distinction properly.                                  |
-| 4     | everything else               | 2-177    | Mechanical by now.                                                                                                         |
-| last  | `hed-resources`, `hed-python` | 457, 396 | Almost pure archive. Boring by the time you get here, which is the goal.                                                   |
+Do the small ones first. Not for safety - for calibration. You want to find out whether you actually like the scheme on a 5-file directory, not discover it on the one with 457. A sensible order: a tiny repo that is already otherwise in shape (it becomes the reference example), then one whose files are mostly well-named dated notes (tests the `notes/` renaming without much judgment), then the hub with real active plans (tests the plan/harvest distinction), then everything else, and the near-pure-archive giants last - boring by the time you get there, which is the goal.
 
 ______________________________________________________________________
 
@@ -51,39 +43,25 @@ ______________________________________________________________________
 python <path to claude-advice>/templates/status-triage.py <path to the repo>
 ```
 
-It walks `.status/`, classifies every file, writes a tab-separated plan next to the repo, and prints a summary. Nothing is moved. Real output from the five repos I tested it on:
+It walks `.status/`, classifies every file, writes a tab-separated plan next to the repo, and prints a summary. Nothing is moved. Real output from one of the directories the script was tested on:
 
 ```
-### hed-metadata-toolkit - 5 files
-      1  plan        candidate ACTIVE work - read these, they are the whole point
-      3  note        dated record -> notes/, renamed date-first
-      1  review      non-markdown - YOUR CALL: a real home in the repo, or archive/
-
-### task-research - 170 files
-      7  plan        candidate ACTIVE work
+### <repo> - 170 files
+      7  plan        candidate ACTIVE work - read these, they are the whole point
       8  harvest     decision records - copy their substance into decisions.md
      29  note        dated record -> notes/, renamed date-first
     121  archive     finished or stale -> archive/
       4  review      non-markdown - YOUR CALL
       1  quarantine  noise -> archive/<year>/_quarantine/
-
-### hed-resources - 457 files
-      1  keep        already correct, untouched
-      1  plan        candidate ACTIVE work
-    447  archive     finished or stale -> archive/
-      8  review      non-markdown - YOUR CALL
-
-### hed-python - 396 files
-      7  plan / 1 note / 317 archive / 62 review / 9 quarantine
 ```
 
-Read those numbers as the answer to "is this worth doing": `task-research` goes from a 170-file listing to **7 plans and 29 notes in view**, and `hed-resources` from 457 to 2.
+Read those numbers as the answer to "is this worth doing": that repo goes from a 170-file listing to **7 plans and 29 notes in view**. The most extreme directory tested went from 457 files to 2 in view.
 
 ### Step 2 - read the plan and correct it
 
 The plan is a TSV with `action`, `source`, `destination`, `kb`, `modified`, `reason`. Open it in Excel or VS Code. The columns you care about:
 
-- **`action = review`** - the script refuses to guess where non-markdown belongs. These are yours to route. For each: does anything still run or import it? Then `scripts/` or `src/` or `tests/data/`, and commit it. Otherwise accept the `archive/` destination it proposed. `hed-python` has 62 of these; that is where most of your time will go on that repo.
+- **`action = review`** - the script refuses to guess where non-markdown belongs. These are yours to route. For each: does anything still run or import it? Then `scripts/` or `src/` or `tests/data/`, and commit it. Otherwise accept the `archive/` destination it proposed. A code-heavy directory can have dozens of these; that is where most of the correction time goes.
 - **`action = plan`** - candidate *active* work, and the script says CONFIRM for a reason. It only knows the file is recent and named like a plan. Read each one. Half will turn out to be finished; change their destination to `archive/<year>/`.
 - **`action = harvest`** - decision records. Leave the destination alone; the work is step 4.
 - **Everything else** - `archive`, `note`, `quarantine`, `keep` - is rule-driven and rarely needs a correction.
@@ -122,17 +100,17 @@ date-bucketed.
 Superseded: notes/2026-04-28_stable_cache_for_lookups.md (kept; do not act on it).
 ```
 
-Date, what was decided, why, what it supersedes. `task-research` has 8 of these waiting; that is 8 paragraphs that currently exist only in files you will never open again, and they are exactly what you have been re-typing into prompts.
+Date, what was decided, why, what it supersedes. Every `harvest` row is a paragraph that currently exists only in a file you will never open again - and it is exactly the background that otherwise gets re-typed into prompts.
 
 ### Step 5 - write the index and wire it up
 
-1. `.status/README.md` from `templates/status-README.md.template`, including the "Active right now" list. Three lines, and it is worth more than the 400 files you just archived.
+1. `.status/README.md` from `templates/status-README.md.template`, including the "Active right now" list. Three lines, and it is worth more than everything you just archived.
 2. Add the deny rules to the repo's **committed** `.claude/settings.json` - the patterns are repo-relative, so they are portable and inert for anyone without a `.status/`:
    ```json
    "deny": ["Read(.status/archive/**)", "Read(.status/scratch/**)"]
    ```
 3. Add the "Where the thinking lives" block to `AGENTS.md` (see `05_status_directory.md`).
-4. If `.status/` is not gitignored in this repo, add it. Two repos need this: `hed-ontology` and `OpenAlex`.
+4. If `.status/` is not gitignored in this repo, add it - `git ls-files .status` should print nothing.
 
 ### Step 6 - a week later
 
@@ -158,12 +136,12 @@ First match wins. This is the whole of the script's judgment, stated so you can 
 | 10  | name carries a date                                                                                                                | -> `notes/YYYY-MM-DD_<slug>.md`, date moved to the front |
 | 11  | anything left (recent, undated, unlabelled)                                                                                        | -> `plans/<slug>.md`, flagged CONFIRM                    |
 
-Two of those orderings were bugs I hit while testing on your real directories, and they are worth knowing because they are the same mistake in two places:
+Two of those orderings were bugs hit while testing on real directories, and they are worth knowing because they are the same mistake in two places:
 
-- **Rule 9 must precede rule 10.** Otherwise `plan_2026-06-15_recursive_repo_metadata.md` matches "has a date" and lands in `notes/` as a session record. The first version did exactly that to the toolkit's only real plan.
-- **Rule 6 must precede rule 8.** Otherwise a five-month-old `decision_2026-04-28_*.md` is archived unread as "stale", and the rationale it holds - the whole reason you write decision records - is lost. Fixing the order took `task-research` from 1 harvest to 8.
+- **Rule 9 must precede rule 10.** Otherwise `plan_<date>_<slug>.md` matches "has a date" and lands in `notes/` as a session record. The first version did exactly that to one repo's only real plan.
+- **Rule 6 must precede rule 8.** Otherwise a five-month-old `decision_<date>_*.md` is archived unread as "stale", and the rationale it holds - the whole reason you write decision records - is lost. Fixing the order took one directory from 1 harvest to 8.
 
-Adjust `STALE_DAYS`, `VAGUE_DIR_RE`, and `DONE_NAME_RE` at the top of the script if your repos disagree. `VAGUE_DIR_RE` is deliberately aggressive - it treats `scripts`, `config`, `data`, `plans`, and `documentation` as junk drawers when they appear *inside* `.status/`, because in your repos that is what they are.
+Adjust `STALE_DAYS`, `VAGUE_DIR_RE`, and `DONE_NAME_RE` at the top of the script if your repos disagree. `VAGUE_DIR_RE` is deliberately aggressive - it treats `scripts`, `config`, `data`, and `documentation` as junk drawers when they appear *inside* `.status/`, because there that is what they usually are.
 
 ______________________________________________________________________
 
@@ -190,7 +168,7 @@ Four lines each, append-only order, oldest first. Show me the draft; do not writ
 the file yet.
 ```
 
-The "do not read anything with action=archive" line matters - without it you will spend the context window on `sphinx_build2.log`.
+The "do not read anything with action=archive" line matters - without it the context window goes to stray build logs.
 
 ______________________________________________________________________
 
