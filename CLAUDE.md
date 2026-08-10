@@ -27,7 +27,7 @@ This repository holds the cross-repo conventions for AI-assisted work. It is doc
 
 - **Every factual claim about Claude Code carries its source.** These documents cite `code.claude.com/docs` and state the date the claim was checked. If you cannot verify a claim, flag it in place rather than smoothing it over.
 
-- **Numbers come from measuring, not estimating.** The survey table in `05_status_directory.md` is real counts; keep it that way, and re-run the measurement rather than adjusting a number by hand.
+- **Numbers come from measuring, not estimating.** Any count quoted in an advice file (like the `.status/` survey figures in `05_status_directory.md`) must trace to a real measurement; re-run the measurement rather than adjusting a number by hand. The measured survey itself lives with the working notes, not in a committed file.
 
 - When a later document overturns an earlier one, add a short block quote at the top of the superseded section pointing forward. Do not silently rewrite the old document - the reasoning is worth keeping even when the conclusion changed.
 

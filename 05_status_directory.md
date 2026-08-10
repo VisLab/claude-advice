@@ -1,42 +1,22 @@
 # How to organize `.status/`
 
-Written 2026-08-04, after surveying every `.status/` directory reachable on this machine. Unlike the other files in this folder, this one is not general advice - it is a diagnosis of your 25 actual directories and a scheme sized to fix them.
+How a `.status/` directory should be organized: the layout, the naming scheme, and an exit rule for every location. The scheme was sized against a real survey of 25 grown `.status/` directories - 2,229 files, 185 MB, 70% of it not markdown at all, 83% of the markdown untouched for 90+ days. The survey itself, with its per-repo counts, lives with the working notes; what matters here is what it showed.
 
 ______________________________________________________________________
 
-## What the survey found
+## The four failure modes of an unmanaged `.status/`
 
-25 repositories under three roots on two drives have a `.status/` directory. Together they hold **2,229 files, about 185 MB**.
+1. **It becomes a junk drawer.** In the survey, more than two thirds of all files were not notes: build logs, XML schemas, CSS, downloaded PDFs, stray test scripts. Every one of them has a real home elsewhere in its repo.
 
-| Measure                                                                       | Count                          | What it means                                                      |
-| ----------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------ |
-| Total files                                                                   | 2,229                          |                                                                    |
-| Markdown files                                                                | 664                            | the only thing `.status/` is *for*                                 |
-| **Non-markdown files**                                                        | **1,565**                      | code, logs, XML, TSV, CSS, `.yaml`, PDFs, `.backup`                |
-| Markdown untouched in 90+ days                                                | **552 of 664 (83%)**           | the directory is mostly archive, but nothing says so               |
-| Filenames containing `complete` / `final` / `summary` / `report` / `progress` | 85                             | files named after their own state                                  |
-| Filenames carrying a date                                                     | 154 of 664 (23%)               | and only 5 put the date first, so sorting does nothing             |
-| `.backup` / `.bak` / `.tmp` / `.log` / `copy` files                           | 48                             | pure noise                                                         |
-| ALL_CAPS filenames                                                            | 35                             | a third naming convention, alongside `snake_case` and `kebab-case` |
-| Directories with a `README.md` index                                          | **3 of 25**                    | nothing tells you where to start                                   |
-| Directories with `local-environment.md`                                       | 12 of 25                       | your one convention that actually propagated                       |
-| `.status/` **not** gitignored                                                 | 2 (`hed-ontology`, `OpenAlex`) | their files sit in `git status` as `??` forever                    |
+2. **Filenames encode completion state, so nothing says what is current.** One initiative accumulates `<name>_plan.md`, `<name>_status.md`, `<name>_complete.md`, and `<name>_completion.md` - and the newest is not obviously the truth.
 
-The worst four: `hed-resources` (457 files, 31 MB), `hed-python` (396, 28 MB), `hed-server` (177), `table-remodeler` (170). `task-research` has 170 files but 156 are markdown - it is large but it is the *right kind* of large.
+3. **Nothing ever leaves.** The escape hatch is a subdirectory with a vague name - `temp`, `working`, `old_docs`, `leftovers`, `review_for_deletion`, `backup` - and none of them has a rule for when it gets emptied, so none ever does.
 
-### The four failure modes, with your own examples
-
-1. **`.status/` became a junk drawer.** 1,565 of 2,229 files are not notes. `HED8.5.0.xml`, `sphinx_build3.log`, `pyproject.toml`, `custom.css`, `layout.html`, `downloaded_paper.pdf`, `requirements.txt`, `black.yaml`, `osa-chat-widget.js`, `test_pandas3_deep_dive.py`, `create_ontology.py`. Every one of these has a real home elsewhere in its repo.
-
-2. **Filenames encode completion state, so you cannot tell what is current.** `table-remodeler` alone has `documentation_integration_plan.md`, `documentation_integration_status.md`, `documentation_integration_complete.md`, and `documentation_integration_completion.md` - four files for one initiative, and the newest is not obviously the truth. Also `FINAL_STATUS.md` next to `FINAL_STATUS_REPORT.md`; `ENHANCEMENT_PROGRESS_REPORT.md` next to `COMPLETE_ENHANCEMENT_REPORT.md` next to `ENHANCEMENT_SUMMARY.md`.
-
-3. **Nothing ever leaves.** The escape hatch you reached for was a subdirectory with a vague name, and there are now dozens: `temp`, `temp_files`, `temp_tsv_test`, `mainTemp`, `working`, `working_original`, `working_second_draft`, `original`, `original_2`, `original_3`, `oldStuff`, `old_docs`, `leftovers`, `unused`, `removed`, `review_for_deletion`, `merged`, `unmerged`, `backup`, `chat1`, `chat2`. None of these has a rule for when it gets emptied, so none ever does.
-
-4. **Four naming schemes coexist.** In `hed-schemas`: `HedSchemas.md`, `action_versions.md`, `2026-02-05_removed-build-scripts.md`, `SETUP_COMPLETE.md`. Sorting is meaningless, and you cannot guess a filename, so you `ls` and read.
+4. **Several naming schemes coexist.** `CamelCase.md` next to `snake_case.md` next to `2026-02-05_dated-kebab.md` next to `ALL_CAPS.md`. Sorting is meaningless, and you cannot guess a filename, so you `ls` and read.
 
 ### Why this matters more for Claude than for you
 
-You can skim a 457-file listing and ignore it. Claude cannot. Point it at `.status/` and it globs, reads, and burns the context window on `sphinx_build2.log` before it reaches the plan you wanted. A `.status/` that is 83% stale actively degrades every session that touches it - the directory that was supposed to *save* context starts costing it.
+You can skim a several-hundred-file listing and ignore it. Claude cannot. Point it at `.status/` and it globs, reads, and burns the context window on a stray build log before it reaches the plan you wanted. A `.status/` that is mostly stale actively degrades every session that touches it - the directory that was supposed to *save* context starts costing it.
 
 That is the whole argument for the scheme below: **`.status/` must be small enough and predictable enough that Claude can orient from it in one read.**
 
@@ -63,10 +43,10 @@ ______________________________________________________________________
 .status/
   README.md               <- the index. The ONE file worth reading to orient.
   decisions.md            <- append-only log of WHY. Permanent.
-  local-environment.md    <- machine specifics. Keep; 12 repos already have it.
+  local-environment.md    <- machine specifics, tool-agnostic. Every tool reads it.
   plans/                  <- active initiatives. One file each. THE ONLY HOT DIR.
     recursive_repo_metadata.md
-    nemar_reorientation.md
+    upstream_migration.md
   prompts/                <- working prompts: how to start or restart one piece of work.
     kick_off_repo_metadata.md
   notes/                  <- dated write-once records. Never edited after the day.
@@ -81,7 +61,7 @@ Eight entries at the top level, forever. `ls .status/` stays useful no matter ho
 
 **Rules that make it work, in order of how much they matter:**
 
-1. **`.status/` holds markdown only.** No `.py`, `.log`, `.xml`, `.tsv`, `.json`, `.css`, `.yaml`, `.pdf`, `.backup`. This single rule removes 1,565 of your 2,229 files. Everything non-markdown has a real home: live code -> `scripts/` or `src/`, test data -> `tests/data/`, CI config -> `.github/workflows/`, logs and backups -> delete. The only exception is a small fixture a note is meaningless without, and it goes in `notes/` beside the note.
+1. **`.status/` holds markdown only.** No `.py`, `.log`, `.xml`, `.tsv`, `.json`, `.css`, `.yaml`, `.pdf`, `.backup`. In the survey this one rule accounted for 1,565 of the 2,229 files. Everything non-markdown has a real home: live code -> `scripts/` or `src/`, test data -> `tests/data/`, CI config -> `.github/workflows/`, logs and backups -> delete. The only exception is a small fixture a note is meaningless without, and it goes in `notes/` beside the note.
 
 2. **The filename never encodes status.** Not `_complete`, not `_final`, not `_status`, not `_progress`, not `FINAL_v2`. Status is expressed by **which directory the file is in** and by a `Status:` line in its header. When a plan finishes it *moves* to `archive/2026/`; it is not renamed.
 
@@ -113,7 +93,7 @@ One scheme, no exceptions:
 | `archive/YYYY/` | keeps whatever name it arrived with     |                                     |
 | root            | fixed set of four filenames only        |                                     |
 
-A plan gets no date because it is a living document and its creation date stops being interesting on day two. A note gets a date *first* because that is the only position where sorting by name equals sorting by time. You currently have 149 files with the date in the middle or at the end and 5 with it in front - flipping that is most of what makes a large `notes/` directory navigable.
+A plan gets no date because it is a living document and its creation date stops being interesting on day two. A note gets a date *first* because that is the only position where sorting by name equals sorting by time. In the survey, 149 of 154 dated filenames had the date in the middle or at the end - flipping that is most of what makes a large `notes/` directory navigable.
 
 Character rules, which matter because these repos also get touched from Linux:
 
@@ -139,7 +119,7 @@ This is the part that was missing, and it is the whole difference between a note
 
 Two consequences worth stating plainly:
 
-**`.status/` is gitignored in every one of your repos** (I verified: zero tracked `.status` files across all 40 repos on this machine). So **`git` will not save you from a bad prune** - there is no `git checkout` to undo it, and no copy on GitHub. Before any cleanup, snapshot the directory (see the migration section). This is also the strongest argument for `archive/` over deletion: moving is reversible, deleting is not.
+**`.status/` is gitignored in every one of these repos** - verify in yours with `git ls-files .status`, which should print nothing. So **`git` will not save you from a bad prune** - there is no `git checkout` to undo it, and no copy on GitHub. Before any cleanup, snapshot the directory (see the migration section). This is also the strongest argument for `archive/` over deletion: moving is reversible, deleting is not.
 
 **Being gitignored means `.status/` is absent from fresh clones and from `claude --worktree` worktrees.** If you start using worktrees, either list `.status/**` in a `.worktreeinclude` at the repo root, or accept that worktree sessions start with no project memory.
 
@@ -147,7 +127,7 @@ ______________________________________________________________________
 
 ## `README.md` - the file that makes the rest work
 
-Three of your 25 directories have one. It should be in all of them, it should be under 30 lines, and it is the only `.status/` file `AGENTS.md` needs to point at by name. It exists so that a session can orient in a single read instead of a glob.
+Almost no `.status/` directory grows one on its own - in the survey, 3 of 25 had one. It should be in all of them, it should be under 30 lines, and it is the only `.status/` file `AGENTS.md` needs to point at by name. It exists so that a session can orient in a single read instead of a glob.
 
 ```markdown
 # Status directory - <repo-name>
@@ -168,12 +148,12 @@ Working notes for this repo. Gitignored: local to this machine, not on GitHub.
 ## Active right now
 
 - `plans/recursive_repo_metadata.md` - in progress, step 4 of 7.
-- `plans/nemar_reorientation.md` - blocked on the nemar export finishing.
+- `plans/upstream_migration.md` - blocked on the upstream export finishing.
 
 Last tidied: 2026-08-04.
 ```
 
-The "Active right now" section is three lines you update when work changes state, and it is worth more than the other 400 files combined.
+The "Active right now" section is three lines you update when work changes state, and it is worth more than the rest of the directory combined.
 
 ______________________________________________________________________
 
@@ -193,7 +173,7 @@ Last touched: 2026-08-04
 Supersedes: notes/2026-06-01_flat_entries_schema.md
 ```
 
-Then goal, decisions, and steps with `[ ]` / `[x]`. Your existing `plan_2026-06-15_recursive_repo_metadata.md` in `hed-metadata-toolkit` is already close to this - it has Goal, Decisions, Schema, and Scope sections and reads well. It just needs the status header and a home in `plans/`.
+Then goal, decisions, and steps with `[ ]` / `[x]`. A plan that already has Goal, Decisions, and Scope sections is close - usually all it needs is the status header and a home in `plans/`.
 
 Notes need only a title and a date, because a note is a fact about a day:
 
@@ -206,7 +186,7 @@ three sentences.>
 ## Problem / What was done / Left for next session
 ```
 
-Your `session_2026-07-23_crlf-lineending-fix.md` is a genuinely good example of this form. Keep writing them exactly that way.
+A note in this form - title, date, three short sections - is the cheapest trustworthy record there is. Keep writing them exactly that way.
 
 ______________________________________________________________________
 
@@ -247,7 +227,7 @@ ______________________________________________________________________
 
 ## Migrating an existing directory
 
-**The procedure is `06_status_migration.md`,** with the classification rules encoded in `templates/status-triage.py` so you review a proposed plan instead of hand-sorting 457 files. This document describes the target; that one gets you there.
+**The procedure is `06_status_migration.md`,** with the classification rules encoded in `templates/status-triage.py` so you review a proposed plan instead of hand-sorting hundreds of files. This document describes the target; that one gets you there.
 
 The short version: snapshot the directory to a zip (it is not in git), run the triage script in dry-run mode, read and correct the plan it writes, re-run with `--apply`, then do the two things no script can - harvest `decisions.md` and write `README.md` with the "Active right now" list.
 
@@ -259,20 +239,15 @@ Three things, in descending order of effect:
 
 1. **The `.status/` root is closed.** Four filenames, and new material goes in a subdirectory. This is one line in `AGENTS.md` and one habit.
 2. **`scratch/` with a real 30-day delete rule.** The junk-drawer subdirectories exist because there was no sanctioned place for junk. Give junk a place with an expiry and it stops colonizing everything else.
-3. **A tidy pass when a plan closes, not on a schedule.** Plan completes -> move it to `archive/`, add its decision to `decisions.md`, update the "Active right now" list. Three minutes, at the one moment you have the context to do it correctly. Calendar-based cleanups do not happen; you have 25 directories proving it.
+3. **A tidy pass when a plan closes, not on a schedule.** Plan completes -> move it to `archive/`, add its decision to `decisions.md`, update the "Active right now" list. Three minutes, at the one moment you have the context to do it correctly. Calendar-based cleanups do not happen; the survey's 25 directories prove it.
 
 If you want it enforced rather than intended, a `PreToolUse` hook on `Write` can reject any path matching `^\.status/[^/]+\.md$` that is not one of the four allowed root filenames. Worth it only if you find yourself drifting back; the rule is cheap to follow by hand.
-
-Two loose ends from the survey while you are in there:
-
-- `hed-ontology` and `OpenAlex` do not gitignore `.status/`, so those files show as untracked in every `git status`. Add the line.
-- `hed-typescript` has an empty `.status/`. Delete it or leave it; it costs nothing either way.
 
 ______________________________________________________________________
 
 ## Should `.status/` be committed?
 
-You have gitignored it in all 25 repos, and `01_repo_standards.md` now says the same. **The call is the defensible one**, for two reasons: these repos are public, and `.status/` holds half-formed thinking that becomes part of the permanent public record the moment it is pushed.
+These repos gitignore it everywhere, and `01_repo_standards.md` says the same. **The call is the defensible one**, for two reasons: the repos are public, and `.status/` holds half-formed thinking that becomes part of the permanent public record the moment it is pushed.
 
 The cost is real and worth naming: no backup, no visibility to collaborators, and nothing in worktrees. If you ever want the middle path, the split is clean under this layout - commit `README.md`, `decisions.md`, and `plans/`; gitignore `notes/`, `archive/`, `scratch/`, and `local-environment.md`:
 
@@ -303,5 +278,5 @@ ______________________________________________________________________
 - [ ] `decisions.md` has at least one real entry harvested from the old files
 - [ ] `Read(.status/archive/**)` and `Read(.status/scratch/**)` denied in `.claude/settings.json`
 - [ ] `AGENTS.md` points at `.status/README.md`, `.status/decisions.md`, `.status/plans/` - and says what not to read
-- [ ] `.status/` is gitignored (check `hed-ontology` and `OpenAlex`)
+- [ ] `.status/` is gitignored - `git ls-files .status` prints nothing
 - [ ] Lowercase, ASCII, no spaces, no case-only differences anywhere
