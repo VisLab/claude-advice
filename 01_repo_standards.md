@@ -4,14 +4,31 @@
 
 ### Each agent accesses many repos
 
-Straight from the docs, annotated for your situation:
+The recurring problems, each with its fix:
 
-- **A kitchen sink session** - one task, then something unrelated, then back. You are at high risk of this because your repos are conceptually linked. Fix: `/clear`.
+- **A kitchen sink session** - one task, then something unrelated, then back. The risk is highest when the repos are conceptually linked.
+
+  **Fix:** `/clear` between unrelated tasks - one task per session. After two failed corrections on the same task, `/clear` and restart with a better prompt; a clean session outperforms a long one with accumulated corrections.
+
 - **Over-specified AGENTS.md** - if Claude ignores half of it, it's too long.
-- **A trust-then-verify gap** - plausible-looking output that doesn't hold up. For metadata/citation work specifically: always have Claude show you counts, a sample of records, and the command it ran.
-- **Infinite exploration** - "investigate the nemar datasets" without scope will read hundreds of files. Scope it or subagent it.
-- **Stale data pollution** - a recurring issue with Claude using cached data to verify the claims.
-- **Overly complex responses** - overly verbose and complex Claude response that are hard to wade through.
+
+  **Fix:** cut every line whose removal would not cause a mistake, and keep the file under 200 lines. Move rules that only matter for certain files into `.claude/rules/` with a `paths:` glob, so they load only when those files are touched.
+
+- **A trust-then-verify gap** - plausible-looking output that doesn't hold up.
+
+  **Fix:** require the evidence with the claim: the command that was run and its actual output - for metadata work, counts and a sample of records. Better, give the session something that returns pass/fail (a test, a schema check, a validator); without one, "looks done" is the only signal and you are the verification loop.
+
+- **Infinite exploration** - "investigate the datasets" without scope will read hundreds of files.
+
+  **Fix:** scope the ask ("read X and Y, then answer") or hand it to a subagent - it reads in its own context window and returns only the findings.
+
+- **Stale data pollution** - Claude verifies a claim against cached or remembered data instead of measuring.
+
+  **Fix:** make "verify" mean re-running the measurement in this session: ask for the command and today's output, and reject any number that arrives without them. Keep ephemeral counts out of committed files (a stale count reads as a target), and treat cached artifacts - old command output, dated cache buckets, numbers quoted from memory - as claims to re-check, never as verification.
+
+- **Overly complex responses** - verbose, over-structured replies that are hard to wade through.
+
+  **Fix:** demand the conclusion first with a length cap: "three or four sentences of takeaway, then the detail". This is the `For humans:` rule applied to answers. Put the instruction in `AGENTS.md` once ("lead with the conclusion") so it holds in every session instead of being re-asked.
 
 ### Context is the scarce resource
 
