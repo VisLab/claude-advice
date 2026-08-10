@@ -1,25 +1,23 @@
 # How to frame prompts
 
-You sent me a real prompt to look at. Let's use it, because what's wrong with it is instructive and fixable, and most of it isn't your fault - it's what happens when the only place to put context is the chat box.
+The chat box is the worst place to keep context, and most bad prompts are good intentions crammed into it. This document gives the anatomy of an overloaded prompt, a template, the two homes for prompts, and the habits that matter more than either.
 
 ______________________________________________________________________
 
-## What your prompt was actually doing
+## The anatomy of an overloaded prompt
 
-Your prompt contained six different things at once:
+A typical kickoff prompt mixes six different things at once:
 
-| #   | What it was                                                                        | Where it belongs                                                                                           |
-| --- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| 1   | `add to your trusted folders <path>, <path>, ...`                                  | A launch flag or settings file - **not a prompt**                                                          |
-| 2   | `Read the .status/TaskResearchStructure.md and the stuff in <the staging folder>`  | Fine in a prompt, but the folder reference is unscoped - "the stuff in" a folder could be 3 files or 3,000 |
-| 3   | The nemar-vs-openneuro history and rationale                                       | `.status/decisions.md`, written once                                                                       |
-| 4   | Facts about what hed-task contains and its limitations                             | That repo's `AGENTS.md`, written once                                                                      |
-| 5   | "My ultimate goal is to create models of tasks that can be applied to real data"   | A spec in `.status/plans/`, arrived at through an interview                                                |
-| 6   | Three sequenced plans: download nemar repos -> remove openneuro -> merge citations | The actual ask - but it's three asks                                                                       |
+| #   | What it is                                        | Where it belongs                                                                 |
+| --- | ------------------------------------------------- | -------------------------------------------------------------------------------- |
+| 1   | An access request ("add these folders...")        | A launch flag or settings file - **not a prompt**                                |
+| 2   | An unscoped read ("read the stuff in `<folder>`") | Fine in a prompt once scoped - "the stuff in" a folder could be 3 files or 3,000 |
+| 3   | Project history and rationale                     | `.status/decisions.md`, written once                                             |
+| 4   | Durable facts about a repository                  | That repo's `AGENTS.md`, written once                                            |
+| 5   | The long-term goal, still fuzzy                   | A spec in `.status/plans/`, arrived at through an interview                      |
+| 6   | Several sequenced asks                            | The actual ask - but it should be one deliverable per prompt                     |
 
-Plus it ends mid-word: `"I don't know how to assig..."`. That's the tell. You were still thinking while typing, which is fine - but the model receives a half-formed thought as if it were a specification.
-
-**The core problem: 80% of that prompt was durable background that you will retype next session, and next session, and next session.** Everything in rows 3 and 4 is a fact about your project that never changes. Write it to a file once and it loads automatically forever.
+**The core problem: most of such a prompt is durable background that gets retyped next session, and the next.** Rows 3 and 4 are facts that never change. Write them to a file once and they load automatically forever.
 
 ______________________________________________________________________
 
@@ -52,19 +50,17 @@ The test: **would someone else, in another repository, get value from this promp
 
 ______________________________________________________________________
 
-## Your prompt, rewritten
+## From one overloaded prompt to three good ones
 
-### Step 0 - outside the prompt, once
+### Step 0 - settle access outside the prompt, once
 
 ```
 # same in PowerShell and bash
-cd <absolute path to task-research>
+cd <absolute path to the main repo>
 claude --add-dir <absolute path to each sibling repo, repeated per repo>
 ```
 
-Or put those four paths in `.claude/settings.json` under `permissions.additionalDirectories` once and just type `claude`. Either way, directory access is now settled and never appears in a prompt again.
-
-*(Note: your prompt gave the same repo two different drive letters. Worth confirming which is real - a wrong drive letter is a silent failure that looks like Claude ignoring you.)*
+Or put those paths in `.claude/settings.local.json` under `permissions.additionalDirectories` once and just type `claude`. Either way, directory access is settled and never appears in a prompt again. (Confirm the paths: a wrong drive letter fails silently and looks like Claude ignoring you.)
 
 ### Step 1 - write the background to disk (one prompt, once)
 
@@ -74,19 +70,15 @@ That is a 30-second prompt whose value compounds across every future session.
 
 ### Step 2 - interview, don't specify (because the goal is still fuzzy)
 
-Your prompt admitted *"I realize this is a complicated problem"* and trailed off at *"I don't know how to assig..."*. That's exactly the signal to invert the direction of questioning:
-
-The move: state the goal in one sentence, point at the existing work, and have the assistant interview you with the AskUserQuestion tool until a spec can be written to `.status/plans/`. The paste-ready version is `sample_prompts/interview_to_spec.md`.
+The tell is a prompt that admits "this is a complicated problem" or trails off mid-thought. That is exactly the signal to invert the direction of questioning: state the goal in one sentence, point at the existing work, and have the assistant interview you with the AskUserQuestion tool until a spec can be written to `.status/plans/`. The paste-ready version is `sample_prompts/interview_to_spec.md`.
 
 Run it in **plan mode** (`Shift+Tab`). Then `/clear` and start a fresh session against the spec.
 
-### Step 3 - the plan you actually asked for
+### Step 3 - the plan you actually wanted
 
-Now, with background on disk and the goal sharper, the plan request gets short:
+Now, with background on disk and the goal sharper, the plan request gets short: all six slots filled, one named deliverable in `.status/plans/`, and one verification per phase so "done" is checkable. The paste-ready version is `sample_prompts/request_a_phased_plan.md`.
 
-All six slots filled, one named deliverable in `.status/plans/`, and one verification per phase so "done" is checkable. The paste-ready version is `sample_prompts/request_a_phased_plan.md`.
-
-Length: about the same as your original. Difference: every line is either an instruction or a pointer, none of it is narrative you'll retype, and there's one named deliverable at a known path.
+No longer than the overloaded original - but every line is either an instruction or a pointer, none of it is narrative you'll retype, and there is one named deliverable at a known path.
 
 ______________________________________________________________________
 
@@ -94,23 +86,23 @@ ______________________________________________________________________
 
 **1. Point at sources instead of describing them.**
 
-| Instead of                                   | Write                                                                                                                  |
-| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| "why does the citation loader behave oddly?" | "look through the git history of `citations/loader.py` and summarize how its API came to be"                           |
-| "the metadata is inconsistent"               | "compare the `task` field across the first 20 dataset JSONs in nemar-metadata and report the distinct shapes you find" |
-| "the stuff in the staging folder"            | "list `<the staging folder>`, then read only the files that define the citation record format"                         |
+| Instead of                                   | Write                                                                                                |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| "why does the citation loader behave oddly?" | "look through the git history of `citations/loader.py` and summarize how its API came to be"         |
+| "the metadata is inconsistent"               | "compare the `task` field across the first 20 dataset JSONs and report the distinct shapes you find" |
+| "the stuff in `<folder>`"                    | "list `<folder>`, then read only the files that define the record format"                            |
 
 **2. `@` pulls a file in immediately.** `@.status/decisions.md` inlines the content rather than hoping Claude decides to read it. Type `@` for a path picker. A bonus: an `@` file reference also brings in the CLAUDE.md files from that file's directory and its parents.
 
-**3. Reference an existing pattern.** Your strongest lever in a codebase you partly wrote: *"`hed_metadata_toolkit/validators/sidecar.py` is the pattern I like. Follow it for the nemar dataset validator."* Vastly better than describing the pattern in words.
+**3. Reference an existing pattern.** Your strongest lever in a codebase you partly wrote: *"`src/<package>/validators/sidecar.py` is the pattern I like. Follow it for the new validator."* Vastly better than describing the pattern in words.
 
 **4. Say what "done" looks like, in the same prompt.** From the docs:
 
 > *"write a validateEmail function. example test cases: user@example.com is true, invalid is false, user@.com is false. run the tests after implementing"*
 
-For your work that's usually a count or a schema check: *"after downloading, report how many dataset repos you got, how many failed and why, and confirm each has a dataset_description.json."*
+For metadata work that's usually a count or a schema check: *"after downloading, report how many dataset repos you got, how many failed and why, and confirm each has a dataset_description.json."*
 
-**5. Vague prompts are a legitimate tool - just know when you're using one.** *"what would you improve about how task-research is organized?"* is a good prompt. It's exploration. What goes wrong is mixing exploration and specification in one message and expecting a specified result.
+**5. Vague prompts are a legitimate tool - just know when you're using one.** *"what would you improve about how this repo is organized?"* is a good prompt. It's exploration. What goes wrong is mixing exploration and specification in one message and expecting a specified result.
 
 **6. Prompts for unattended runs need to be self-contained.** If you ever set up a scheduled task, it can't ask you anything. Be explicit about what success is and what to do with the results.
 
