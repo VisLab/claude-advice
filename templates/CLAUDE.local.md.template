@@ -34,7 +34,7 @@
      and machine quirks - every tool reads that file, not this one. Add below
      only what is both machine-specific AND Claude-Code-specific. -->
 
-- <e.g. "Git Bash is at <path>; CLAUDE_CODE_GIT_BASH_PATH is set in user settings.">
+- <e.g. on Windows: "Git Bash is at <path>; CLAUDE_CODE_GIT_BASH_PATH is set in user settings.">
 
 Sibling access is granted via `.claude/settings.local.json`
 (`permissions.additionalDirectories`) or `claude --add-dir <path>` at launch.

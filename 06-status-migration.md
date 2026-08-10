@@ -46,8 +46,9 @@ ______________________________________________________________________
 
 ### Step 1 - dry run
 
-```powershell
-python <path to claude-advice>\templates\status-triage.py <path to the repo>
+```
+# same in PowerShell and bash
+python <path to claude-advice>/templates/status-triage.py <path to the repo>
 ```
 
 It walks `.status/`, classifies every file, writes a tab-separated plan next to the repo, and prints a summary. Nothing is moved. Real output from the five repos I tested it on:
@@ -91,16 +92,18 @@ Editing the `destination` cell is how you override. The script honors whatever t
 
 ### Step 3 - apply
 
-```powershell
-python <path to claude-advice>\templates\status-triage.py <path to the repo> --apply
+```
+# same in PowerShell and bash
+python <path to claude-advice>/templates/status-triage.py <path to the repo> --apply
 ```
 
 It creates directories as needed, moves each file, refuses to overwrite, and removes directories the moves left empty. It re-derives the plan by default; pass `--plan <path>` to apply the exact file you edited.
 
 Verify:
 
-```powershell
-Get-ChildItem .status | Select-Object Name
+```
+# `ls` works in PowerShell and bash alike
+ls .status
 # expect: archive, notes, plans, prompts, README.md, decisions.md, local-environment.md, scratch
 ```
 

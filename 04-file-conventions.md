@@ -86,7 +86,7 @@ ______________________________________________________________________
 It's Claude Code's configuration directory - the tool-specific folder, exactly analogous to `.vscode/` or `.github/`. There are two of them and they layer:
 
 - **`<repo>/.claude/`** - configuration for this project, mostly committed
-- **`%USERPROFILE%\.claude\`** - your configuration for every project, never committed
+- **`~/.claude/`** (on Windows, `%USERPROFILE%\.claude\`) - your configuration for every project, never committed. Per-machine: each machine you work from has its own.
 
 The official inventory, project level:
 
@@ -116,9 +116,9 @@ your-repo/
 And the user level:
 
 ```
-%USERPROFILE%\
+~/                                (on Windows: %USERPROFILE%\)
 |-- .claude.json                  app state and UI preferences (NOT settings)
-`-- .claude\
+`-- .claude/
     |-- CLAUDE.md                 your preferences across every project
     |-- settings.json             your defaults across every project
     |-- keybindings.json          custom keyboard shortcuts
@@ -218,7 +218,7 @@ ______________________________________________________________________
 
 The test to apply to every line of a committed config file is still the one from section 2 - *would this be true on a colleague's laptop, or on Linux CI?* - but run it against **shell layout, interpreter names, path separators, filename case, and line endings**, not just against drive letters.
 
-The full split - which files carry the portable half and which carry the machine half - is specified in `01-repo-standards.md`: `AGENTS.md`, `.claude/settings.json`, and `.vscode/settings.json` carry the portable half; `.status/local-environment.md` and `.claude/settings.local.json` carry the interpreter path, checkout locations, cache root, and Windows-only quirks.
+The full split - which files carry the portable half and which carry the machine half - is specified in `01-repo-standards.md`: `AGENTS.md`, `.claude/settings.json`, and `.vscode/settings.json` carry the portable half; `.status/local-environment.md` and `.claude/settings.local.json` carry the interpreter path, checkout locations, cache root, and that machine's quirks.
 
 ______________________________________________________________________
 
@@ -228,7 +228,7 @@ The question that comes up every time you notice Claude doing something you did 
 
 | The rule is...                                                               | Put it in                                                  | Loads                                  |
 | ---------------------------------------------------------------------------- | ---------------------------------------------------------- | -------------------------------------- |
-| True of every project you work on ("ASCII only", "never touch `.status/`")   | `%USERPROFILE%\.claude\CLAUDE.md`                          | every session, every project           |
+| True of every project you work on ("ASCII only", "never touch `.status/`")   | `~/.claude/CLAUDE.md`, on every machine                    | every session, every project           |
 | True of one repo, and a collaborator or CI needs it too                      | that repo's `AGENTS.md`, committed                         | every session in that repo             |
 | True of one repo, only on this machine (paths, interpreter, "the slow disk") | that repo's `CLAUDE.local.md`, gitignored                  | every session in that repo, yours only |
 | Only relevant when touching certain files (event files, sidecar JSON)        | `.claude/rules/<topic>.md` with a `paths:` glob, committed | only when Claude opens a matching file |
@@ -246,7 +246,7 @@ Three practical notes:
 
 The trigger was real: this folder was clean until a session added 91 non-ASCII characters to it (80 em dashes, 8 arrows, 2 en dashes, one ellipsis) across four files. It went in three places, and the reasoning for each is the general case:
 
-1. `%USERPROFILE%\.claude\CLAUDE.md` - it applies to every project, so this is its real home.
+1. `~/.claude/CLAUDE.md` on each machine - it applies to every project, so this is its real home.
 2. `templates/AGENTS.md.template` - so every repo set up from the template inherits it, and public repos state it for collaborators.
 3. This folder's `CLAUDE.md` (new) - this folder had no `CLAUDE.md`, which is precisely why the drift happened here and was not caught.
 

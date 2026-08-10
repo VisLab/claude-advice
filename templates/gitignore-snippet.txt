@@ -28,7 +28,7 @@ CLAUDE.local.md
 #   PowerShell:
 #     git ls-files | ForEach-Object { Select-String -Path $_ -Pattern '[A-Za-z]:\\' }
 #
-#   Git Bash:
+#   bash (any Linux/macOS shell; Git Bash on Windows):
 #     git ls-files | xargs grep -n '[A-Za-z]:\\'
 #
 # Any hit is a machine-specific path in a file you are about to commit.

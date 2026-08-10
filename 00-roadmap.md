@@ -45,22 +45,24 @@ ______________________________________________________________________
 
 ## Phase 0 - Half an hour, once
 
-1. Confirm the install is healthy:
+1. Confirm the install is healthy - same commands in PowerShell and bash:
 
-   ```powershell
+   ```
    claude --version
    claude doctor
    ```
 
    `claude doctor` prints install health, settings-file validation errors, and warnings with suggested fixes, without starting a session.
 
-2. **Install [Git for Windows](https://git-scm.com/downloads/win)** if you haven't. On native Windows, Claude Code uses Git Bash for its Bash tool; if Git Bash is absent it falls back to the PowerShell tool. If it can't find Git Bash, point it there in `%USERPROFILE%\.claude\settings.json`:
+2. **Windows only: install [Git for Windows](https://git-scm.com/downloads/win)** if you haven't. On native Windows, Claude Code uses Git Bash for its Bash tool; if Git Bash is absent it falls back to the PowerShell tool. If it can't find Git Bash, point it there in your user settings (`%USERPROFILE%\.claude\settings.json`):
 
    ```json
    { "env": { "CLAUDE_CODE_GIT_BASH_PATH": "<absolute path to Git's bin\\bash.exe>" } }
    ```
 
-3. Write a short user-level `CLAUDE.md` at `%USERPROFILE%\.claude\CLAUDE.md`. This loads in *every* session, every project. Keep it to genuine personal preferences - 10-20 lines. Example:
+   Linux and macOS need no equivalent step - the Bash tool uses the system shell.
+
+3. Write a short user-level `CLAUDE.md` at `~/.claude/CLAUDE.md` (on Windows, `%USERPROFILE%\.claude\CLAUDE.md`). This loads in *every* session, every project - but it is per-machine, so put a copy on each machine you work from. Keep it to genuine personal preferences - 10-20 lines. Example:
 
    ```markdown
    - I am a researcher, not a software engineer by trade. Explain the "why" of
@@ -121,10 +123,9 @@ $env:CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD = 1
 claude --add-dir <absolute path to nemar-metadata>
 ```
 
-```batch
-:: cmd.exe
-set CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
-claude --add-dir <absolute path to nemar-metadata>
+```bash
+# bash (Linux/macOS)
+CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir <absolute path to nemar-metadata>
 ```
 
 (The env var has no effect on directories listed in `additionalDirectories`.)
@@ -145,7 +146,8 @@ Designate **`task-research` as the hub**. It already has `.status/` and it's whe
 
 Then launch from the hub with the sibling repos added:
 
-```powershell
+```
+# same in PowerShell and bash
 cd <absolute path to task-research>
 claude --add-dir <absolute path to hed-task> --add-dir <absolute path to nemar-metadata>
 ```

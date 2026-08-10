@@ -75,7 +75,8 @@ ambiguous.
   claude
 
   # Also load the added directory's CLAUDE.md and rules (off by default).
-  # PowerShell; in cmd.exe use: set CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
+  # PowerShell shown; bash equivalent:
+  #   CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir <path>
   $env:CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD = 1
   claude --add-dir <absolute path to sibling>
 -->

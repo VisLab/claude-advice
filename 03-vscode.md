@@ -82,7 +82,7 @@ ______________________________________________________________________
 | Tab completion      | Yes | No                                                             |
 | Checkpoints         | Yes | Yes                                                            |
 
-Also: **installing the extension does not put `claude` on your PATH.** The extension bundles a private copy of the CLI for its own panel. If you want to type `claude` in the integrated terminal, you need the standalone install too (`irm https://claude.ai/install.ps1 | iex` in PowerShell). Having both is normal and recommended.
+Also: **installing the extension does not put `claude` on your PATH.** The extension bundles a private copy of the CLI for its own panel. If you want to type `claude` in the integrated terminal, you need the standalone install too: `irm https://claude.ai/install.ps1 | iex` in PowerShell on Windows, `curl -fsSL https://claude.ai/install.sh | bash` on Linux and macOS. Having both is normal and recommended.
 
 Background process visibility is weaker than the CLI. For a long-running job, have Claude print the command and run it yourself in the integrated terminal.
 

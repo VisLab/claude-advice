@@ -56,7 +56,8 @@ ______________________________________________________________________
 
 ### Step 0 - outside the prompt, once
 
-```powershell
+```
+# same in PowerShell and bash
 cd <absolute path to task-research>
 claude --add-dir <absolute path to each sibling repo, repeated per repo>
 ```
