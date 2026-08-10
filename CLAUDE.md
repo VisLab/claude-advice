@@ -4,7 +4,7 @@ This repository holds the cross-repo conventions for AI-assisted work. It is doc
 
 ## What this repository is
 
-- `00`-`06` numbered documents: the advice, read in order. `README.md` indexes them.
+- `01`-`06` numbered documents: the advice, read in order. `README.md` indexes them. (There is no `00`: the personal adoption roadmap moved to the toolkit repo's `.status/plans/`, because working plans about specific repos do not belong in shared advice.)
 - `sample_prompts/`: paste-ready prompts, one per file - illustrative and general, tracked as content.
 - `templates/`: copy-paste starting points. Named `*.template` on purpose so a session started here does not mistake them for live config.
 - `.status/` (gitignored): working state. Read `.status/README.md` first. **`.status/decisions.md` is the authority: if an advice file contradicts it, the file is wrong.**

@@ -13,7 +13,7 @@ The extension and the CLI **share your configuration and your history**:
 - Conversation history - same sessions. Start in the panel, continue with `claude --resume` in the terminal, and vice versa.
 - Plugins and marketplaces - configure in either, available in both
 
-So the work you do in Phases 0-2 of the roadmap is not CLI-specific. Set the CLI up properly and the extension inherits all of it. That's also the catch: if your CLAUDE.md is bloated, the extension is bloated too.
+So the setup work in `01-repo-standards.md` - the `AGENTS.md` wiring, settings, directory access - is not CLI-specific. Set the CLI up properly and the extension inherits all of it. That's also the catch: if your CLAUDE.md is bloated, the extension is bloated too.
 
 ______________________________________________________________________
 
