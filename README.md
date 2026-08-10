@@ -6,12 +6,12 @@ Cross-repo conventions for working with AI coding assistants: what each reposito
 
 | File                     | What it answers                                                                                                                                            |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `01-repo-standards.md`   | Using Claude Code across repos: the central ideas, what every repository commits, and the `AGENTS.md` / `CLAUDE.md` wiring - with a checklist. Start here. |
-| `02-prompt-patterns.md`  | How to frame prompts. The paste-ready examples live in `sample_prompts/`                                                                                   |
-| `03-vscode.md`           | The VS Code extension: setup, what it is better at, and what belongs where                                                                                 |
-| `04-file-conventions.md` | File naming, `.claude/`, committed versus gitignored, and the cross-tool `AGENTS.md` landscape                                                             |
-| `05-status-directory.md` | How `.status/` is organized: the eight-entry layout, naming, and the exit rule for every location                                                          |
-| `06-status-migration.md` | How to get an existing `.status/` there - one pass per repo, driven by `templates/status-triage.py`                                                        |
+| `01_repo_standards.md`   | Using Claude Code across repos: the central ideas, what every repository commits, and the `AGENTS.md` / `CLAUDE.md` wiring - with a checklist. Start here. |
+| `02_prompt_patterns.md`  | How to frame prompts. The paste-ready examples live in `sample_prompts/`                                                                                   |
+| `03_vscode.md`           | The VS Code extension: setup, what it is better at, and what belongs where                                                                                 |
+| `04_file_conventions.md` | File naming, `.claude/`, committed versus gitignored, and the cross-tool `AGENTS.md` landscape                                                             |
+| `05_status_directory.md` | How `.status/` is organized: the eight-entry layout, naming, and the exit rule for every location                                                          |
+| `06_status_migration.md` | How to get an existing `.status/` there - one pass per repo, driven by `templates/status-triage.py`                                                        |
 | `CLAUDE.md`              | House style for this folder. Loads automatically in any session started here                                                                               |
 | `sample_prompts/`        | Paste-ready prompts, one per file, general enough to adapt anywhere                                                                                        |
 | `templates/`             | Copy-paste starting points                                                                                                                                 |

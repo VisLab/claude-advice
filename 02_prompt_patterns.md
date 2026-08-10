@@ -68,7 +68,7 @@ Or put those four paths in `.claude/settings.json` under `permissions.additional
 
 ### Step 1 - write the background to disk (one prompt, once)
 
-The prompt states each decision as a flat fact, sends the durable history to `.status/decisions.md`, and puts the repository map - locations by name, never by path - in `AGENTS.md`. The paste-ready version is `sample_prompts/write-background-to-disk.md`.
+The prompt states each decision as a flat fact, sends the durable history to `.status/decisions.md`, and puts the repository map - locations by name, never by path - in `AGENTS.md`. The paste-ready version is `sample_prompts/write_background_to_disk.md`.
 
 That is a 30-second prompt whose value compounds across every future session.
 
@@ -76,7 +76,7 @@ That is a 30-second prompt whose value compounds across every future session.
 
 Your prompt admitted *"I realize this is a complicated problem"* and trailed off at *"I don't know how to assig..."*. That's exactly the signal to invert the direction of questioning:
 
-The move: state the goal in one sentence, point at the existing work, and have the assistant interview you with the AskUserQuestion tool until a spec can be written to `.status/plans/`. The paste-ready version is `sample_prompts/interview-to-spec.md`.
+The move: state the goal in one sentence, point at the existing work, and have the assistant interview you with the AskUserQuestion tool until a spec can be written to `.status/plans/`. The paste-ready version is `sample_prompts/interview_to_spec.md`.
 
 Run it in **plan mode** (`Shift+Tab`). Then `/clear` and start a fresh session against the spec.
 
@@ -84,7 +84,7 @@ Run it in **plan mode** (`Shift+Tab`). Then `/clear` and start a fresh session a
 
 Now, with background on disk and the goal sharper, the plan request gets short:
 
-All six slots filled, one named deliverable in `.status/plans/`, and one verification per phase so "done" is checkable. The paste-ready version is `sample_prompts/request-a-phased-plan.md`.
+All six slots filled, one named deliverable in `.status/plans/`, and one verification per phase so "done" is checkable. The paste-ready version is `sample_prompts/request_a_phased_plan.md`.
 
 Length: about the same as your original. Difference: every line is either an instruction or a pointer, none of it is narrative you'll retype, and there's one named deliverable at a known path.
 

@@ -1,5 +1,5 @@
 <!--
-  Copy to .status/README.md  (see 05-status-directory.md)
+  Copy to .status/README.md  (see 05_status_directory.md)
 
   This is the index. It exists so a session can orient from ONE read instead of
   globbing a directory with hundreds of files in it. Keep it under 30 lines.

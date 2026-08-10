@@ -32,7 +32,7 @@ ______________________________________________________________________
 
 You caught a real error in the first version of my templates. `CLAUDE.md.template` had a "Related repositories" section with an absolute checkout path in it, and `settings.json.template` had `additionalDirectories` full of drive-letter paths - both in files marked COMMIT. That's wrong, and it's wrong in the way that does the most damage: it works fine for you and quietly breaks for everyone and everywhere else.
 
-The templates are fixed. The rule now stated in `01-repo-standards.md`:
+The templates are fixed. The rule now stated in `01_repo_standards.md`:
 
 > **Would this line still be true on a colleague's laptop, or in a cloud session on Linux?** If no, it belongs in a `.local` file.
 
@@ -55,7 +55,7 @@ The split, using the official committed/gitignored designations:
 | `.env.example`                                   | committed       | Documents every variable `.env` needs                                                                                                      |
 | `.env`                                           | **gitignored**  | Real tokens and machine values                                                                                                             |
 | `.gitattributes`                                 | committed       | Line-ending normalization (`* text=auto eol=lf`)                                                                                           |
-| `.status/`                                       | **gitignored**  | Plans, notes, decisions, working prompts - layout in `05-status-directory.md`                                                              |
+| `.status/`                                       | **gitignored**  | Plans, notes, decisions, working prompts - layout in `05_status_directory.md`                                                              |
 | `~/.claude/CLAUDE.md`, `~/.claude/settings.json` | never in a repo | Your preferences across all projects                                                                                                       |
 
 Three gotchas that make this easy to get wrong:
@@ -71,11 +71,11 @@ Three gotchas that make this easy to get wrong:
 The portability test covers where a line is *true*; these cover what a committed file may *say*. Both follow from the same reader - a stranger on GitHub:
 
 - **No project history.** No dates, no "this was changed", no "previously", no phase, session, or PR labels. A committed file states what is true now; how it got that way goes in `.status/decisions.md`.
-- **No references to `.status/`.** It is gitignored, so the pointer is a dead link for every reader but its author - except in the handful of files whose job is to orient a tool. `01-repo-standards.md` states both rules with the full exception list.
+- **No references to `.status/`.** It is gitignored, so the pointer is a dead link for every reader but its author - except in the handful of files whose job is to orient a tool. `01_repo_standards.md` states both rules with the full exception list.
 
 ### A dissenting note on `.status/`
 
-> **Settled in `05-status-directory.md`:** you gitignore `.status/` in all 25 repos that have one, these repos are public, and that combination makes your choice the right one. Read `.status/` as **gitignored** everywhere in this folder. The paragraph below is kept for the reasoning, not the conclusion.
+> **Settled in `05_status_directory.md`:** you gitignore `.status/` in all 25 repos that have one, these repos are public, and that combination makes your choice the right one. Read `.status/` as **gitignored** everywhere in this folder. The paragraph below is kept for the reasoning, not the conclusion.
 
 I have `.status/` as committed, and I'd defend that - decisions and plans are project history, and the whole point of writing them down is that they outlive your session and your machine. But it's a judgment call. If a plan document is really a personal scratchpad, either keep it in `CLAUDE.local.md` or split `.status/` into a committed part and a gitignored `.status/local/`.
 
@@ -132,7 +132,7 @@ And the user level:
     `-- projects/                 auto memory Claude writes and maintains itself
 ```
 
-You need almost none of this. `CLAUDE.md` plus `.claude/settings.json` covers the first month. The rest exists for when a specific trigger appears - see the trigger table at the end of `01-repo-standards.md`.
+You need almost none of this. `CLAUDE.md` plus `.claude/settings.json` covers the first month. The rest exists for when a specific trigger appears - see the trigger table at the end of `01_repo_standards.md`.
 
 Diagnostics, since knowing these makes the whole directory less mysterious:
 
@@ -196,7 +196,7 @@ So if any of your repos already carry Copilot instructions - plausible, given yo
 
 ### What I'd actually do
 
-> **Superseded: `AGENTS.md` is now the single instruction source in every repo**, with `CLAUDE.md` reduced to the `@AGENTS.md` import - see `01-repo-standards.md`. The conclusion below changed when Copilot's native `AGENTS.md` support was verified and more than one assistant began working in these repos; the paragraph is kept for the reasoning.
+> **Superseded: `AGENTS.md` is now the single instruction source in every repo**, with `CLAUDE.md` reduced to the `@AGENTS.md` import - see `01_repo_standards.md`. The conclusion below changed when Copilot's native `AGENTS.md` support was verified and more than one assistant began working in these repos; the paragraph is kept for the reasoning.
 
 For your five repositories: `CLAUDE.md` only. Skip `AGENTS.md` until a repo goes public or a collaborator shows up with a different tool, at which point the one-line `@AGENTS.md` import handles it. Don't invent a `.context` or `.rules` folder - `.claude/rules/` already does that job, and `.status/` already does the job of holding project reasoning.
 
@@ -218,7 +218,7 @@ ______________________________________________________________________
 
 The test to apply to every line of a committed config file is still the one from section 2 - *would this be true on a colleague's laptop, or on Linux CI?* - but run it against **shell layout, interpreter names, path separators, filename case, and line endings**, not just against drive letters.
 
-The full split - which files carry the portable half and which carry the machine half - is specified in `01-repo-standards.md`: `AGENTS.md`, `.claude/settings.json`, and `.vscode/settings.json` carry the portable half; `.status/local-environment.md` and `.claude/settings.local.json` carry the interpreter path, checkout locations, cache root, and that machine's quirks.
+The full split - which files carry the portable half and which carry the machine half - is specified in `01_repo_standards.md`: `AGENTS.md`, `.claude/settings.json`, and `.vscode/settings.json` carry the portable half; `.status/local-environment.md` and `.claude/settings.local.json` carry the interpreter path, checkout locations, cache root, and that machine's quirks.
 
 ______________________________________________________________________
 

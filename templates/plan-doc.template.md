@@ -1,5 +1,5 @@
 <!--
-  Copy to .status/plans/<slug>.md   (see 05-status-directory.md)
+  Copy to .status/plans/<slug>.md   (see 05_status_directory.md)
 
   No date and no "-plan" suffix in the filename: it lives in plans/, so the kind
   is already known, and its creation date stops being interesting on day two.

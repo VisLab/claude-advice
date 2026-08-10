@@ -1,6 +1,6 @@
 # Migrating an existing `.status/` directory
 
-Written 2026-08-05. `05-status-directory.md` describes the target layout and why. This document is the procedure for getting a directory that already has 457 files in it to that layout, and it is deliberately separate because the two get read at different times: the target once, the procedure once per repo.
+Written 2026-08-05. `05_status_directory.md` describes the target layout and why. This document is the procedure for getting a directory that already has 457 files in it to that layout, and it is deliberately separate because the two get read at different times: the target once, the procedure once per repo.
 
 The classification rules live in `templates/status-triage.py`, which **proposes** a plan and changes nothing unless you pass `--apply`.
 
@@ -131,7 +131,7 @@ Date, what was decided, why, what it supersedes. `task-research` has 8 of these 
    ```json
    "deny": ["Read(.status/archive/**)", "Read(.status/scratch/**)"]
    ```
-3. Add the "Where the thinking lives" block to `AGENTS.md` (see `05-status-directory.md`).
+3. Add the "Where the thinking lives" block to `AGENTS.md` (see `05_status_directory.md`).
 4. If `.status/` is not gitignored in this repo, add it. Two repos need this: `hed-ontology` and `OpenAlex`.
 
 ### Step 6 - a week later
@@ -172,7 +172,7 @@ ______________________________________________________________________
 The script exists so this does not need a conversation, but the judgment steps (2 and 4) are a reasonable thing to hand over. A prompt that works:
 
 ```
-Read 06-status-migration.md in <path to claude-advice>.
+Read 06_status_migration.md in <path to claude-advice>.
 
 Run the triage script on this repo in dry-run mode. Then, for every row with
 action=review or action=plan, read the file and tell me the correct destination

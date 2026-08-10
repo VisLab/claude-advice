@@ -116,7 +116,7 @@ The reader is a stranger on GitHub; all four follow from that.
 
 These repos are public and `.status/` holds half-formed thinking, so it stays out of git everywhere. Take the consequence seriously: **there is no safety net.** Nothing under `.status/` is versioned or backed up, nothing appears in a fresh clone or a `claude --worktree` worktree, and a deleted file is simply gone. So finished work moves to `.status/archive/` rather than being deleted, and nothing under `.status/` is rewritten without its owner's say-so.
 
-Layout, naming, and retention rules: `05-status-directory.md`.
+Layout, naming, and retention rules: `05_status_directory.md`.
 
 ## Committed or gitignored
 

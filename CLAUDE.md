@@ -21,11 +21,13 @@ This repository holds the cross-repo conventions for AI-assisted work. It is doc
 
 - **No personal repository names in the advice or templates.** The advice stands alone; a reference set may be read while writing, but the committed text never names it.
 
+- **Markdown filenames use `_` as the separator, never `-`** (`01_repo_standards.md`, not `01-repo-standards.md`). Fixed external names are the exception: `.github/copilot-instructions.md` is GitHub's filename and keeps its hyphens.
+
 - **Both Windows and Linux are first-class.** The advice serves machines of both kinds. Write user-level paths as `~/.claude/...` and give the Windows form (`%USERPROFILE%\.claude\...`) where it matters; when a command differs between PowerShell and bash, show both; a command identical in both shells gets one unlabeled block. Scope genuinely platform-specific facts explicitly ("on Windows, ...").
 
 - **Every factual claim about Claude Code carries its source.** These documents cite `code.claude.com/docs` and state the date the claim was checked. If you cannot verify a claim, flag it in place rather than smoothing it over.
 
-- **Numbers come from measuring, not estimating.** The survey table in `05-status-directory.md` is real counts; keep it that way, and re-run the measurement rather than adjusting a number by hand.
+- **Numbers come from measuring, not estimating.** The survey table in `05_status_directory.md` is real counts; keep it that way, and re-run the measurement rather than adjusting a number by hand.
 
 - When a later document overturns an earlier one, add a short block quote at the top of the superseded section pointing forward. Do not silently rewrite the old document - the reasoning is worth keeping even when the conclusion changed.
 

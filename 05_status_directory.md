@@ -65,10 +65,10 @@ ______________________________________________________________________
   decisions.md            <- append-only log of WHY. Permanent.
   local-environment.md    <- machine specifics. Keep; 12 repos already have it.
   plans/                  <- active initiatives. One file each. THE ONLY HOT DIR.
-    recursive-repo-metadata.md
-    nemar-reorientation.md
+    recursive_repo_metadata.md
+    nemar_reorientation.md
   prompts/                <- working prompts: how to start or restart one piece of work.
-    kick-off-repo-metadata.md
+    kick_off_repo_metadata.md
   notes/                  <- dated write-once records. Never edited after the day.
     2026-06-15_recursive_repo_metadata.md
     2026-07-23_crlf_lineending_fix.md
@@ -107,8 +107,8 @@ One scheme, no exceptions:
 
 | Directory       | Pattern                                 | Example                             |
 | --------------- | --------------------------------------- | ----------------------------------- |
-| `plans/`        | `<slug>.md` - no date, no status        | `recursive-repo-metadata.md`        |
-| `prompts/`      | `<slug>.md` - no date, no status        | `kick-off-repo-metadata.md`         |
+| `plans/`        | `<slug>.md` - no date, no status        | `recursive_repo_metadata.md`        |
+| `prompts/`      | `<slug>.md` - no date, no status        | `kick_off_repo_metadata.md`         |
 | `notes/`        | `YYYY-MM-DD_<slug>.md` - **date first** | `2026-07-23_crlf_lineending_fix.md` |
 | `archive/YYYY/` | keeps whatever name it arrived with     |                                     |
 | root            | fixed set of four filenames only        |                                     |
@@ -119,7 +119,7 @@ Character rules, which matter because these repos also get touched from Linux:
 
 - lowercase only, ASCII only, `-` or `_` as separators, never a space. `HedMatlabTools.md copy.backup` fails all three.
 - Never let two files differ only in case. Windows lets you think `README.md` and `readme.md` are two files; Linux agrees, and then one of them vanishes on the next checkout on Windows.
-- Pick `-` or `_` per repo and stay consistent. I would use `_` since your existing dated notes already do.
+- Use `_` as the separator, never `-`. This is the decided convention across these repos - the dated notes already follow it, and the markdown filenames in `claude-advice` do too.
 
 ______________________________________________________________________
 
@@ -167,8 +167,8 @@ Working notes for this repo. Gitignored: local to this machine, not on GitHub.
 
 ## Active right now
 
-- `plans/recursive-repo-metadata.md` - in progress, step 4 of 7.
-- `plans/nemar-reorientation.md` - blocked on the nemar export finishing.
+- `plans/recursive_repo_metadata.md` - in progress, step 4 of 7.
+- `plans/nemar_reorientation.md` - blocked on the nemar export finishing.
 
 Last tidied: 2026-08-04.
 ```
@@ -247,7 +247,7 @@ ______________________________________________________________________
 
 ## Migrating an existing directory
 
-**The procedure is `06-status-migration.md`,** with the classification rules encoded in `templates/status-triage.py` so you review a proposed plan instead of hand-sorting 457 files. This document describes the target; that one gets you there.
+**The procedure is `06_status_migration.md`,** with the classification rules encoded in `templates/status-triage.py` so you review a proposed plan instead of hand-sorting 457 files. This document describes the target; that one gets you there.
 
 The short version: snapshot the directory to a zip (it is not in git), run the triage script in dry-run mode, read and correct the plan it writes, re-run with `--apply`, then do the two things no script can - harvest `decisions.md` and write `README.md` with the "Active right now" list.
 
@@ -272,7 +272,7 @@ ______________________________________________________________________
 
 ## Should `.status/` be committed?
 
-You have gitignored it in all 25 repos, and `01-repo-standards.md` now says the same. **The call is the defensible one**, for two reasons: these repos are public, and `.status/` holds half-formed thinking that becomes part of the permanent public record the moment it is pushed.
+You have gitignored it in all 25 repos, and `01_repo_standards.md` now says the same. **The call is the defensible one**, for two reasons: these repos are public, and `.status/` holds half-formed thinking that becomes part of the permanent public record the moment it is pushed.
 
 The cost is real and worth naming: no backup, no visibility to collaborators, and nothing in worktrees. If you ever want the middle path, the split is clean under this layout - commit `README.md`, `decisions.md`, and `plans/`; gitignore `notes/`, `archive/`, `scratch/`, and `local-environment.md`:
 

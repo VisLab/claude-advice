@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """status-triage.py - propose a .status/ reorganization without performing it.
 
-Companion to 06-status-migration.md. Classifies every file in a repo's .status/
+Companion to 06_status_migration.md. Classifies every file in a repo's .status/
 directory by rule and writes a reviewable plan. It NEVER deletes anything, and
 it does nothing at all unless you pass --apply.
 
@@ -133,7 +133,7 @@ def classify(rel: Path, full: Path, today: dt.date) -> tuple[str, str, str]:
     if PLAN_NAME_RE.search(full.stem):
         stem = PLAN_NAME_RE.sub("", full.stem)
         stem = DATE_RE.sub("", stem)
-        stem = re.sub(r"[^A-Za-z0-9]+", "-", stem).strip("-").lower() or "plan"
+        stem = re.sub(r"[^A-Za-z0-9]+", "_", stem).strip("_").lower() or "plan"
         return ("plan", f"plans/{stem}.md",
                 f"recent ({age}d) and named as a plan - CONFIRM it is still active")
 
@@ -147,7 +147,7 @@ def classify(rel: Path, full: Path, today: dt.date) -> tuple[str, str, str]:
                 f"recent ({age}d) and dated: a record of a day")
 
     # 11. What is left is recent, undated, and unlabelled: candidate active work.
-    stem = re.sub(r"[^A-Za-z0-9]+", "-", full.stem).strip("-").lower()
+    stem = re.sub(r"[^A-Za-z0-9]+", "_", full.stem).strip("_").lower()
     return ("plan", f"plans/{stem}.md",
             f"recent ({age}d), undated: candidate active plan - CONFIRM by reading")
 
