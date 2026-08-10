@@ -1,10 +1,6 @@
 # The VS Code extension
 
-You said an earlier attempt "was not successful." Likely reasons are at the bottom. First, the setup - which is short.
-
-______________________________________________________________________
-
-## Why it's worth a second try
+## VS Code extension versus the CLI
 
 The extension and the CLI **share your configuration and your history**:
 
@@ -88,17 +84,17 @@ Background process visibility is weaker than the CLI. For a long-running job, ha
 
 ______________________________________________________________________
 
-## Why your earlier attempt probably failed
+## Sources of failure for extension
 
 In rough order of likelihood:
 
-1. **You tried it before doing Phase 0-2.** With no CLAUDE.md, no repo map, and no directory access configured, the extension is just a chat box that can see one folder. All the leverage is in the configuration, and it's shared with the CLI - so it wasn't really an extension problem.
+1. **You tried it before setting up Claude for the repo.** With no CLAUDE.md, no repo map, and no directory access configured, the extension is just a chat box that can see one folder. All the leverage is in the configuration, and it's shared with the CLI - so it wasn't really an extension problem.
 
 2. **The workspace folder wasn't the repo root.** The extension works against the folder you have open. If you opened a parent folder holding several repos you got a Claude that sees all of them and loads no project CLAUDE.md; if you opened one repo you get the right one. **Open one repository per VS Code window.** Your repos are on two different drives, so a multi-root workspace is a configuration I'd test deliberately rather than assume works cleanly - start with one repo per window and use `/add-dir` when you need a sibling.
 
 3. **Spark icon nowhere to be found.** It only appears in the editor toolbar when a file is open. Use the Status Bar entry instead.
 
-4. **Another AI extension was interfering.** Copilot, Cline, and Continue can conflict. Since Copilot has restricted your usage anyway, disable it in workspaces where you're using Claude and see if things settle.
+4. **Another AI extension was interfering.** Copilot, Cline, and Continue can conflict. Disable Copilot in workspaces where you're using Claude and see if things settle.
 
 5. **You were reaching for a CLI-only feature** (a slash command not in the subset, `!` bash, tab completion) and concluded the extension was broken.
 
@@ -128,4 +124,4 @@ ______________________________________________________________________
 
 ## About the Copilot situation
 
-Since that's what prompted this: the extension covers ordinary inline-assistance work fine, but it's a different shape of tool - it's agentic (reads files, runs commands, makes multi-file changes) rather than a completions engine. If what you miss most is as-you-type ghost-text completion, that specific thing isn't what this extension does. For "write this function", "fix this test", "refactor this module", it's more capable than what you were using Copilot for.
+Since that's what prompted this: the extension covers ordinary inline-assistance work fine, but it's a different shape of tool - it's agentic (reads files, runs commands, makes multi-file changes) rather than a completions engine. If what you miss most is as-you-type ghost-text completion, that specific thing isn't what this extension does. For "write this function", "fix this test", "refactor this module", it's likely to be more capable than Copilot.

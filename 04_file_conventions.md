@@ -1,8 +1,4 @@
-# File naming, the .claude directory, and what other tools use
-
-Four questions answered, in order.
-
-______________________________________________________________________
+# File naming
 
 ## 1. CLAUDE.md or Claude.md?
 
@@ -10,7 +6,7 @@ ______________________________________________________________________
 
 The lowercase variant is a trap on Windows specifically. NTFS is case-insensitive, so `Claude.md` may well work on your machine and give you no reason to suspect a problem. It then fails silently the moment the repo touches a case-sensitive filesystem - Linux CI, a cloud session, a collaborator on Linux. Nothing errors; the instructions just quietly stop loading.
 
-I could not find an explicit statement in the docs about whether the lookup itself is case-sensitive, so treat the all-caps form as the only safe answer and don't test the boundary. If you ever suspect a naming problem, `/context` is the check: if the file doesn't appear under **Memory files**, Claude cannot see it.
+Treat the all-caps form as the only safe answer and don't test the boundary. If you ever suspect a naming problem, `/context` is the check: if the file doesn't appear under **Memory files**, Claude cannot see it.
 
 The same convention applies to the companions:
 
