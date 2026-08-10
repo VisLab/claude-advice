@@ -1,0 +1,13 @@
+# mdformat settings for this repo. They live here rather than as command-line
+# flags so a local run and CI cannot disagree because someone forgot one.
+#
+#   python -m mdformat --check .      to check
+#   python -m mdformat .              to fix
+#
+# Markdown only. Do not pass templates/settings.json.template or
+# settings.local.json.template to mdformat: they are JSON, and mdformat will
+# parse them as markdown and rewrite them.
+
+wrap = "no"
+number = true
+end_of_line = "lf"

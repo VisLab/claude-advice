@@ -1,0 +1,20 @@
+# ruff settings for the one Python file here, templates/status-triage.py.
+#
+# ruff.toml rather than pyproject.toml on purpose: this repo ships documentation,
+# not a package, and a [project] table would imply otherwise. CI reaches ruff with
+# `uvx ruff` and needs no virtual environment.
+#
+#   python -m ruff check .            lint
+#   python -m ruff format --check .   formatting
+#
+# 120, matching the other repos. Changing it reformats the script in one diff, so
+# do that alone.
+
+line-length = 120
+
+[lint]
+select = ["E", "W", "F", "N", "B", "C4"]
+ignore = [
+    "E501", # line too long - the formatter handles what it can; URLs and long
+    # strings it cannot split are allowed to stay long
+]
