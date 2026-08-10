@@ -1,8 +1,49 @@
-# What belongs in every repository
+# Using Claude Code across repos
 
-The standard shape for a repository. Verified against `code.claude.com/docs` and the GitHub Copilot documentation; the sources, and the date they were checked, are at the bottom.
+## Central ideas
+
+### Each agent accesses many repos
+
+Straight from the docs, annotated for your situation:
+
+- **A kitchen sink session** - one task, then something unrelated, then back. You are at high risk of this because your repos are conceptually linked. Fix: `/clear`.
+- **Over-specified AGENTS.md** - if Claude ignores half of it, it's too long.
+- **A trust-then-verify gap** - plausible-looking output that doesn't hold up. For metadata/citation work specifically: always have Claude show you counts, a sample of records, and the command it ran.
+- **Infinite exploration** - "investigate the nemar datasets" without scope will read hundreds of files. Scope it or subagent it.
+- **Stale data pollution** - a recurring issue with Claude using cached data to verify the claims.
+- **Overly complex responses** - overly verbose and complex Claude response that are hard to wade through.
+
+### Context is the scarce resource
+
+**Context is the scarce resource, not tokens or time.** Claude Code starts each session with an empty context window and fills it with: your CLAUDE.md files, skill descriptions, every file it reads, and every command output. Performance degrades as it fills - Claude starts "forgetting" earlier instructions.
+
+That single constraint explains almost every recommendation below:
+
+| Symptom                                                   | Cause                                                     | Fix                                                                   |
+| --------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------- |
+| Claude re-derives your project background every session   | The background only exists in your head and in past chats | Put durable facts in `AGENTS.md`, decisions in `.status/decisions.md` |
+| Long prompts that explain history, then ask for something | You're paying context for narrative                       | Split: facts -> files, ask -> prompt                                  |
+| Claude ignores an instruction you definitely gave         | AGENTS.md too long, rule buried                           | Keep AGENTS.md under 200 lines                                        |
+| Session gets worse the longer it runs                     | Accumulated failed approaches                             | `/clear` between unrelated tasks                                      |
+| "Investigate X" fills the window with file reads          | Unscoped exploration in the main context                  | "use a subagent to investigate X"                                     |
+
+Docs: [best-practices](https://code.claude.com/docs/en/best-practices), [context-window](https://code.claude.com/docs/en/context-window)
+
+______________________________________________________________________
+
+Target state:
+
+```
+Each repo:  self-contained. AGENTS.md (CLAUDE.md imports it) + .claude/settings.json + .status/
+One repo:   the "hub" - holds the map of repos and cross-repo plans
+Your habit: plan mode -> plan doc on disk -> fresh session to execute -> verify
+```
+
+More than one assistant works in these repos, so the shared rules live in `AGENTS.md`, a file no single vendor owns. `CLAUDE.md` is the `@AGENTS.md` import plus Claude-Code-specific notes, and `.github/copilot-instructions.md` is a pointer: Claude Code does not read `AGENTS.md` and Copilot does, so this wiring gives every tool the same instructions without duplicating them. Machine facts go in `.status/local-environment.md`, which any tool can read - `CLAUDE.local.md` is loaded only by Claude Code, so it holds nothing another assistant would need. The wiring and the sources are detailed in the rest of this document.
 
 ## The shape
+
+The standard shape for a repository. Verified against `code.claude.com/docs` and the GitHub Copilot documentation; the sources, and the date they were checked, are at the bottom.
 
 ```
 your-repo/
