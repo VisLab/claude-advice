@@ -21,14 +21,17 @@ and absent from fresh clones and `claude --worktree` worktrees.
 
 - `decisions.md` - why things are the way they are. Append; never rewrite an entry.
 - `plans/` - active initiatives, one file each, `[ ]`/`[x]` markers. **Start here.**
+- `prompts/` - working prompts for starting or restarting the work in `plans/`.
+  Disposable.
 - `notes/` - dated records of what happened, `YYYY-MM-DD_slug.md`. Write-once;
   reference material, not instructions.
 - `archive/<year>/` - finished work. **Do not read unless asked for a named file.**
 - `scratch/` - throwaway. Anything here may be deleted without being read.
 - `local-environment.md` - this machine's paths, interpreter, and quirks.
+- `config.md` - this repo's retention settings (optional; defaults apply).
 
 Nothing new is created at this directory's root. New material goes in `plans/`,
-`notes/`, or `scratch/`.
+`prompts/`, `notes/`, or `scratch/`.
 
 ## Active right now
 

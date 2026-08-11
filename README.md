@@ -32,6 +32,7 @@ Cross-repo conventions for working with AI coding assistants: what each reposito
 | `settings.local.json.template`     | `<repo>/.claude/settings.local.json`           | **No** - gitignored           |
 | `plan-doc.template.md`             | `<repo>/.status/plans/<slug>.md`               | No - `.status/` is gitignored |
 | `status-README.md.template`        | `<repo>/.status/README.md`                     | No - same reason              |
+| `status_config.md.template`        | `<repo>/.status/config.md` (optional)          | No - same reason              |
 | `status-triage.py`                 | run in place; not copied into repos            | n/a                           |
 
 **No absolute path, drive letter, or personal repository name belongs in any file marked "Yes"** - and this repository holds itself to the same rule. Templates are named `*.template` deliberately, so a session run in this folder does not pick them up as live config.

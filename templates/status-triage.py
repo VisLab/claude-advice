@@ -32,14 +32,16 @@ from pathlib import Path
 # Classification rules. Order matters: first match wins.
 # --------------------------------------------------------------------------
 
-STALE_DAYS = 90
+# Retention defaults. A repo overrides them with `key: days` lines in
+# .status/config.md (see 05_status_directory.md); only stale_days is used here.
+RETENTION_DEFAULTS = {"scratch_days": 30, "plan_days": 60, "stale_days": 90}
 
 # Files that are noise no matter what they contain.
 JUNK_SUFFIXES = {".log", ".bak", ".backup", ".tmp", ".orig", ".swp", ".pyc"}
 JUNK_NAME_BITS = (" copy", ".md copy", "~")
 
 # Root filenames that are part of the target layout and stay put.
-KEEP_AT_ROOT = {"README.md", "decisions.md", "local-environment.md"}
+KEEP_AT_ROOT = {"README.md", "decisions.md", "local-environment.md", "config.md"}
 
 # Markdown whose name advertises that the work is over.
 DONE_NAME_RE = re.compile(
@@ -67,7 +69,18 @@ DECISION_NAME_RE = re.compile(r"(^decisions?[_-]+|[_-]+decisions?$)", re.IGNOREC
 MARKDOWN = {".md", ".markdown"}
 
 
-def classify(rel: Path, full: Path, today: dt.date) -> tuple[str, str, str]:
+def load_retention(status: Path) -> dict:
+    """Per-repo retention from .status/config.md; defaults for anything unset."""
+    cfg = dict(RETENTION_DEFAULTS)
+    config = status / "config.md"
+    if config.is_file():
+        for m in re.finditer(r"^(scratch_days|plan_days|stale_days)\s*[:=]\s*(\d+)\s*$",
+                             config.read_text(encoding="utf-8"), re.MULTILINE):
+            cfg[m.group(1)] = int(m.group(2))
+    return cfg
+
+
+def classify(rel: Path, full: Path, today: dt.date, stale_days: int) -> tuple[str, str, str]:
     """Return (action, destination_relative_to_status, reason).
 
     action is one of: keep, plan, note, archive, quarantine, review
@@ -124,7 +137,7 @@ def classify(rel: Path, full: Path, today: dt.date) -> tuple[str, str, str]:
 
     # 8. Stale markdown. A plan that has not been touched in this long is not
     #    active work, whatever it is called, so this precedes the plan rule.
-    if age > STALE_DAYS:
+    if age > stale_days:
         return ("archive", f"archive/{year}/{name}", f"untouched for {age} days")
 
     # 9. A name that says "plan" is a plan even when it carries a date. This has
@@ -153,12 +166,13 @@ def classify(rel: Path, full: Path, today: dt.date) -> tuple[str, str, str]:
 
 
 def build_plan(status: Path, today: dt.date) -> list[dict]:
+    stale_days = load_retention(status)["stale_days"]
     rows = []
     for full in sorted(status.rglob("*")):
         if not full.is_file():
             continue
         rel = full.relative_to(status)
-        action, dest, reason = classify(rel, full, today)
+        action, dest, reason = classify(rel, full, today, stale_days)
         rows.append({
             "action": action,
             "source": str(rel).replace("\\", "/"),

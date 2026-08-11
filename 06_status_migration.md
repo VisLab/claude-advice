@@ -126,12 +126,12 @@ First match wins. This is the whole of the script's judgment, stated so you can 
 | --- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | 1   | inside a junk-drawer directory (`temp`, `working*`, `original*`, `old*`, `leftovers`, `unused`, `removed`, `merged`, `chat*`, ...) | whole tree -> `archive/<year>/`, unopened                |
 | 2   | `.log` `.bak` `.backup` `.tmp` `.orig` `.swp` `.pyc`, or `" copy"` in the name                                                     | -> `archive/<year>/_quarantine/`                         |
-| 3   | root `README.md`, `decisions.md`, `local-environment.md`                                                                           | keep                                                     |
+| 3   | root `README.md`, `decisions.md`, `local-environment.md`, `config.md`                                                              | keep                                                     |
 | 4   | already under `plans/`, `prompts/`, `notes/`, `archive/`, `scratch/`                                                               | keep                                                     |
 | 5   | not markdown                                                                                                                       | **review** - human routes it                             |
 | 6   | name says "decision"                                                                                                               | **harvest** - checked before staleness, on purpose       |
 | 7   | name contains `complete`/`final`/`summary`/`report`/`progress`/`assessment`/`deprecated`                                           | -> `archive/`                                            |
-| 8   | markdown untouched for more than 90 days                                                                                           | -> `archive/`                                            |
+| 8   | markdown untouched longer than `stale_days` (default 90, set in `.status/config.md`)                                               | -> `archive/`                                            |
 | 9   | name says "plan"/"design"/"roadmap"                                                                                                | -> `plans/<slug>.md`, date stripped                      |
 | 10  | name carries a date                                                                                                                | -> `notes/YYYY-MM-DD_<slug>.md`, date moved to the front |
 | 11  | anything left (recent, undated, unlabelled)                                                                                        | -> `plans/<slug>.md`, flagged CONFIRM                    |
@@ -141,7 +141,7 @@ Two of those orderings were bugs hit while testing on real directories, and they
 - **Rule 9 must precede rule 10.** Otherwise `plan_<date>_<slug>.md` matches "has a date" and lands in `notes/` as a session record. The first version did exactly that to one repo's only real plan.
 - **Rule 6 must precede rule 8.** Otherwise a five-month-old `decision_<date>_*.md` is archived unread as "stale", and the rationale it holds - the whole reason you write decision records - is lost. Fixing the order took one directory from 1 harvest to 8.
 
-Adjust `STALE_DAYS`, `VAGUE_DIR_RE`, and `DONE_NAME_RE` at the top of the script if your repos disagree. `VAGUE_DIR_RE` is deliberately aggressive - it treats `scripts`, `config`, `data`, and `documentation` as junk drawers when they appear *inside* `.status/`, because there that is what they usually are.
+The day threshold comes from the repo's `.status/config.md` (`stale_days`, default 90 - see `05_status_directory.md`). Adjust `VAGUE_DIR_RE` and `DONE_NAME_RE` at the top of the script if your repos disagree. `VAGUE_DIR_RE` is deliberately aggressive - it treats `scripts`, `config`, `data`, and `documentation` as junk drawers when they appear *inside* `.status/`, because there that is what they usually are.
 
 ______________________________________________________________________
 
@@ -177,7 +177,7 @@ ______________________________________________________________________
 - [ ] Snapshot `.status/` to a zip or tarball outside the repo
 - [ ] Dry run; read the summary and sanity-check the counts
 - [ ] Correct every `review` row and confirm every `plan` row
-- [ ] `--apply`; verify the top level has exactly the eight expected entries
+- [ ] `--apply`; verify the top level has exactly the eight expected entries (nine with the optional `config.md`)
 - [ ] Harvest the `harvest` rows and the surviving plans into `decisions.md`
 - [ ] Write `README.md` with the "Active right now" list
 - [ ] Add the two `Read(.status/...)` deny rules to `.claude/settings.json`
