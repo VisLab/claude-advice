@@ -191,7 +191,7 @@ ______________________________________________________________________
 
 ## Plan and note headers
 
-Every plan file starts with the same four lines, so status is readable without parsing prose (`templates/plan_doc.template.md` is the starting point):
+Every plan file starts with the same four lines, so status is readable without parsing prose (`templates/plan_doc.template.md` is the starting point). A plan file named `plans/recursive_repo_metadata.md` opens like this:
 
 ```markdown
 # Plan: recursive-tree-based repo metadata
@@ -207,13 +207,12 @@ Supersedes: notes/2026-06-01_flat_entries_schema.md
 
 Then goal, decisions, and steps with `[ ]` / `[x]`. A plan that already has Goal, Decisions, and Scope sections is close - usually all it needs is the status header and a home in `plans/`.
 
-Notes need only a title and a date, because a note is a fact about a day:
+Notes need only a title and a date, because a note is a fact about a day. A note file named `notes/2026-07-23_crlf_lineending_fix.md` - date first, so sorting by name sorts by time - looks like this inside:
 
 ```markdown
 # 2026-07-23 - CRLF line-ending fix
 
-**For humans:** <what happened that day and what it means for you now - two or
-three sentences.>
+**For humans:** <what happened that day and what it means for you now - two or three sentences.>
 
 ## Problem / What was done / Left for next session
 ```
