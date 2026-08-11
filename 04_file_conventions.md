@@ -19,7 +19,7 @@ The same convention applies to the companions:
 
 Two related naming facts worth knowing:
 
-- A skill must be `<name>/SKILL.md` in its own folder. A bare `.claude/skills/name.md` does not register - it's a documented cause of "my skill doesn't appear in `/skills`".
+- A skill must be `<name>/SKILL.md` in its own folder. A bare `.claude/skills/name.md` does not register - it's a documented cause of "my skill doesn't appear in `/skills`". `templates/skill_example_SKILL.template.md` is a worked example.
 - Project MCP config is `.mcp.json` at the **repo root**, not inside `.claude/`. Putting it under `.claude/` is another documented silent failure.
 
 ______________________________________________________________________

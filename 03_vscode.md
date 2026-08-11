@@ -44,6 +44,8 @@ VS Code Settings (`Ctrl+,`) -> Extensions -> Claude Code. The three that matter:
 
 Others worth knowing: `autosave` (default true - saves files before Claude reads or writes them), `respectGitIgnore` (default true), `usePythonEnvironment` (default true - activates the workspace's Python env, needs the Python extension).
 
+Those are your VS Code User settings. The *workspace* file each repo commits - `.vscode/settings.json`, portable settings only - starts from `templates/vscode-settings.template.json`; see `01_repo_standards.md`.
+
 ______________________________________________________________________
 
 ## What the extension gives you that the terminal doesn't

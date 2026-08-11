@@ -159,7 +159,7 @@ ______________________________________________________________________
 
 ## `.status/README.md` orients agents to `.status`
 
-Every repository should have a `.status/README` (ideally under 30 lines) that is the only `.status/` file `AGENTS.md` needs to point at by name. It exists so that a session can orient in a single read instead of a glob.
+Every repository should have a `.status/README` (ideally under 30 lines) that is the only `.status/` file `AGENTS.md` needs to point at by name. It exists so that a session can orient in a single read instead of a glob. Start from `templates/status_README.template.md`.
 
 ```markdown
 # Status directory - <repo-name>
@@ -191,7 +191,7 @@ ______________________________________________________________________
 
 ## Plan and note headers
 
-Every plan file starts with the same four lines, so status is readable without parsing prose:
+Every plan file starts with the same four lines, so status is readable without parsing prose (`templates/plan_doc.template.md` is the starting point):
 
 ```markdown
 # Plan: recursive-tree-based repo metadata

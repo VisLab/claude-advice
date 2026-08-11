@@ -106,6 +106,8 @@ One source, several pointers - a rule stated in two files is a rule that will di
 
 - **`.github/copilot-instructions.md`** says "read `AGENTS.md` and follow it" and duplicates nothing.
 
+Templates for all three: `templates/AGENTS.template.md`, `templates/CLAUDE.template.md`, and `templates/copilot-instructions.template.md` (`templates/README.md` indexes the full set).
+
 ## What goes in AGENTS.md
 
 Under 200 lines - past that, instructions stop being read, by people and by assistants alike; a whole repo's rules fit in fewer. The sections that earn their place: commands (the exact test, lint, and format invocations, and what CI runs), layout (one line per top-level thing), conventions that differ from defaults, rules that are easy to get wrong, and working agreements.
@@ -147,7 +149,7 @@ The test for the left column: would this line be true on a colleague's laptop an
 
 Two gotchas:
 
-- Put `.claude/settings.local.json` in `.gitignore` up front, when the repo is set up. Claude Code adds the entry itself only when it creates the file (saving a permission you approved); a file you create by hand gets no such protection, and it is exactly the file that collects absolute paths.
+- Put `.claude/settings.local.json` in `.gitignore` up front, when the repo is set up - `templates/gitignore-snippet.txt` is the block to paste. Claude Code adds the entry itself only when it creates the file (saving a permission you approved); a file you create by hand gets no such protection, and it is exactly the file that collects absolute paths.
 - Everything in the right column is absent from clones and worktrees. That is the point, but it means a second machine starts with none of it.
 
 ## `.claude/settings.json`
@@ -162,7 +164,7 @@ Committed, portable settings only - workspace settings override user settings, s
 
 The testing keys must match the repo's declared framework: `python.testing.pytestEnabled` true and `python.testing.unittestEnabled` false in a pytest repo, the reverse in a unittest repo. The wrong pair makes test discovery silently show nothing.
 
-Also set `files.eol` to `"\n"`, `files.trimTrailingWhitespace`, and `files.insertFinalNewline` - the editor half of the line-ending defence, with `.gitattributes` (`* text=auto eol=lf`) as the backstop at commit time.
+Also set `files.eol` to `"\n"`, `files.trimTrailingWhitespace`, and `files.insertFinalNewline` - the editor half of the line-ending defence, with `.gitattributes` (`* text=auto eol=lf`) as the backstop at commit time. `templates/vscode-settings.template.json` is the starting point.
 
 ## Per-repo checklist
 
