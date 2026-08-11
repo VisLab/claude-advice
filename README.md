@@ -1,6 +1,9 @@
 # Claude Code advice for a multi-repo research workflow
 
-Cross-repo conventions for working with AI coding assistants: what each repository commits, how instructions are wired so several assistants read one source (`AGENTS.md`), and how working notes stay out of public history (`.status/`, gitignored). Every factual claim about Claude Code cites `code.claude.com/docs`; each document carries the date its claims were checked.
+Cross-repo conventions for working with AI coding assistants: what each repository commits, how instructions are wired
+so several assistants read one source (`AGENTS.md`), and how working notes stay out of public history (`.status/`,
+gitignored). Every factual claim about Claude Code cites `code.claude.com/docs`; each document carries the date its
+claims were checked.
 
 ## Read in this order
 
@@ -18,11 +21,15 @@ Cross-repo conventions for working with AI coding assistants: what each reposito
 
 ## Templates
 
-`templates/README.md` is the index: one row per template - what it is, where the copy goes, whether the copy is committed, and which document explains it. Templates are named `NAME.template.EXT` - `template` before the final extension - so viewers render them as their real type while a session run in this folder does not pick them up as live config.
+`templates/README.md` is the index: one row per template - what it is, where the copy goes, whether the copy is
+committed, and which document explains it. Templates are named `NAME.template.EXT` - `template` before the final
+extension - so viewers render them as their real type while a session run in this folder does not pick them up as live
+config.
 
 ## Sources
 
-All from the official documentation. First checked 2026-08-03; the memory, setup, and Copilot custom-instructions pages were re-verified 2026-08-09 and 2026-08-10:
+All from the official documentation. First checked 2026-08-03; the memory, setup, and Copilot custom-instructions pages
+were re-verified 2026-08-09 and 2026-08-10:
 
 - [Memory and project instructions](https://code.claude.com/docs/en/memory)
 - [Best practices](https://code.claude.com/docs/en/best-practices)
@@ -35,4 +42,5 @@ All from the official documentation. First checked 2026-08-03; the memory, setup
 - [Advanced setup](https://code.claude.com/docs/en/setup)
 - [Explore the .claude directory](https://code.claude.com/docs/en/claude-directory)
 - [Debug your configuration](https://code.claude.com/docs/en/debug-your-config)
-- [AGENTS.md](https://agents.md/) and [GitHub Copilot repository custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
+- [AGENTS.md](https://agents.md/) and
+  [GitHub Copilot repository custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)

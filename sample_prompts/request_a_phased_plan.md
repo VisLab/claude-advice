@@ -1,6 +1,7 @@
 # Request a phased plan
 
-The six-slot template from `02_prompt_patterns.md`, applied to asking for a plan document: one deliverable at a known path, phases inside it, and one verification per phase so "done" is checkable rather than felt.
+The six-slot template from `02_prompt_patterns.md`, applied to asking for a plan document: one deliverable at a known
+path, phases inside it, and one verification per phase so "done" is checkable rather than felt.
 
 ```
 GOAL: [the durable objective, one sentence].
