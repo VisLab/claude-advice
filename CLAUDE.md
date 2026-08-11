@@ -31,4 +31,4 @@ This repository holds the cross-repo conventions for AI-assisted work. It is doc
 
 - When a later document overturns an earlier one, add a short block quote at the top of the superseded section pointing forward. Do not silently rewrite the old document - the reasoning is worth keeping even when the conclusion changed.
 
-- Markdown formatting is `mdformat`, with the settings in `.mdformat.toml`. Run `python -m mdformat --check *.md sample_prompts/*.md` before finishing. Do not pass anything under `templates/` to it except `templates/README.md`: the JSON templates are not markdown, and the markdown templates carry frontmatter and placeholders that mdformat would mangle. Markdown headers in sentence case.
+- Markdown formatting is `mdformat`, with the settings in `.mdformat.toml` (wrap at 120, matching the ruff line-length). Run `python -m mdformat --check *.md sample_prompts/*.md templates/README.md` before finishing. Do not pass anything under `templates/` to it except `templates/README.md`: the JSON templates are not markdown, and the markdown templates carry frontmatter and placeholders that mdformat would mangle. Markdown headers in sentence case.

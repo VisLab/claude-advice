@@ -8,6 +8,8 @@
 # the JSON templates are not markdown, and the markdown templates carry
 # frontmatter and placeholders that mdformat would mangle.
 
-wrap = "no"
+# 120 matches the ruff line-length for the one Python file here. Changing it
+# reflows every markdown file in one diff, so do that alone.
+wrap = 120
 number = true
 end_of_line = "lf"
