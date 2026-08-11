@@ -6,7 +6,7 @@ The classification rules live in `templates/status-triage.py`, which **proposes*
 
 ______________________________________________________________________
 
-## Before you start: the one thing that makes this different
+## Before you start
 
 `.status/` is gitignored in every one of these repos. There is **no `git checkout`, no `git stash`, and nothing on GitHub.** A wrong `Move-Item` is a permanent loss of the only copy.
 
@@ -14,7 +14,7 @@ Everything below follows from that:
 
 - The script **never deletes**. Noise goes to `archive/<year>/_quarantine/`, and you delete that one directory by hand after living without it for a week.
 - The script **never overwrites**. A destination collision becomes `name_2.md`.
-- You snapshot first. Not optional.
+- Your snapshot first. Not optional.
 
 ```powershell
 # From the repo root. Adjust the name.
@@ -85,22 +85,32 @@ ls .status
 # expect: archive, notes, plans, prompts, README.md, decisions.md, local-environment.md, scratch
 ```
 
-### Step 4 - harvest the decisions (the part that matters)
+### Step 4 - keep only the decisions that still govern (agent work; you skim)
 
-This is the only step a script cannot do, and it is the step that makes the whole exercise worth the afternoon. Read the files marked `harvest`, plus the plans that survived step 2, and pull each real decision into `decisions.md` as four lines:
+The `harvest` rows are old files whose names say "decision". Most of them no longer matter: a decision that no longer governs how the code or data is handled *today* is history, and history goes to `archive/` unread. The reorganization itself is housekeeping and gets no `decisions.md` entry at all - `decisions.md` records rulings, not tidying.
 
-```markdown
-## 2026-04-28 - Stable cache keys for lookups, not date-bucketed
+The one thing worth extracting is the ruling a future session would otherwise re-litigate, and extracting it is agent work, not yours:
 
-Date-bucketed keys meant a re-run on a new day re-fetched everything and the
-"immutable cache" guarantee did nothing for lookups.
+```
+Read the files under .status/notes/ that came from action=harvest rows, plus
+the plans that survived step 2. For each, answer one question: does this still
+govern how the code or data is handled today? If no, propose moving it to
+archive/. If yes, draft a decisions.md entry - date, what was decided, why,
+what it supersedes - four lines, like:
 
-Consequence: lookup caches key on the identifier alone. Response caches stay
-date-bucketed.
-Superseded: notes/2026-04-28_stable_cache_for_lookups.md (kept; do not act on it).
+  ## 2026-04-28 - Stable cache keys for lookups, not date-bucketed
+
+  Date-bucketed keys meant a re-run on a new day re-fetched everything and the
+  "immutable cache" guarantee did nothing for lookups.
+
+  Consequence: lookup caches key on the identifier alone. Response caches stay
+  date-bucketed.
+  Superseded: notes/2026-04-28_stable_cache_for_lookups.md (kept; do not act on it).
+
+Show me the drafts and the archive list. Do not write any file.
 ```
 
-Date, what was decided, why, what it supersedes. Every `harvest` row is a paragraph that currently exists only in a file you will never open again - and it is exactly the background that otherwise gets re-typed into prompts.
+Your part is skimming the drafts and saying which go in - minutes, not an afternoon. Expect most candidates to be archived.
 
 ### Step 5 - write the index and wire it up
 
@@ -147,7 +157,7 @@ ______________________________________________________________________
 
 ## Doing it with Claude instead
 
-The script exists so this does not need a conversation, but the judgment steps (2 and 4) are a reasonable thing to hand over. A prompt that works:
+The script exists so this does not need a conversation, but the judgment reads in step 2 are also a reasonable thing to hand over (step 4's prompt is already in step 4). A prompt that works:
 
 ```
 Read 06_status_migration.md in <path to claude-advice>.
@@ -157,15 +167,6 @@ action=review or action=plan, read the file and tell me the correct destination
 in a table: source, proposed, your recommendation, one-line justification.
 
 Do not move anything. Do not read anything with action=archive.
-```
-
-Then, after applying:
-
-```
-Read the files under .status/notes/ that came from action=harvest rows and draft
-decisions.md entries for them: date, what was decided, why, what it supersedes.
-Four lines each, append-only order, oldest first. Show me the draft; do not write
-the file yet.
 ```
 
 The "do not read anything with action=archive" line matters - without it the context window goes to stray build logs.
@@ -178,7 +179,7 @@ ______________________________________________________________________
 - [ ] Dry run; read the summary and sanity-check the counts
 - [ ] Correct every `review` row and confirm every `plan` row
 - [ ] `--apply`; verify the top level has exactly the eight expected entries (nine with the optional `config.md`)
-- [ ] Harvest the `harvest` rows and the surviving plans into `decisions.md`
+- [ ] Have the agent draft `decisions.md` entries for what still governs; skim, accept, archive the rest
 - [ ] Write `README.md` with the "Active right now" list
 - [ ] Add the two `Read(.status/...)` deny rules to `.claude/settings.json`
 - [ ] Add the "Where the thinking lives" block to `AGENTS.md`

@@ -1,4 +1,4 @@
-# File naming
+# File naming and placement
 
 ## 1. CLAUDE.md or Claude.md?
 
