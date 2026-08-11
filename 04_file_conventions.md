@@ -97,8 +97,6 @@ your-repo/
     |       `-- checklist.md                  supporting file
     |-- agents/                   committed   custom subagents: each .md defines a named
     |   `-- code-reviewer.md                  helper that works in its own context window
-    |-- commands/                 committed   PREDECESSOR of skills/ - still read so old
-    |                                         repos keep working; never create new ones
     |-- workflows/                committed   scripts that orchestrate many subagents
     |                                         deterministically; advanced, rarely needed
     `-- agent-memory/                         notes subagents write for themselves,
@@ -116,7 +114,6 @@ And the user level:
     |-- keybindings.json          custom keyboard shortcuts
     |-- rules/                    user-level rules, apply everywhere
     |-- skills/                   personal skills, available everywhere
-    |-- commands/                 personal single-file commands
     |-- agents/                   personal subagents
     |-- workflows/                personal workflows
     |-- output-styles/            system-prompt sections that adjust how Claude works
