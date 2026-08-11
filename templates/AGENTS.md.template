@@ -87,8 +87,8 @@ never in a fresh clone or worktree.
   `[ ]` / `[x]` markers before starting work.
 - `.status/local-environment.md` - this machine's paths, interpreter, and
   quirks. Tool-agnostic. Never copy its contents into a committed file.
-- IMPORTANT: do not read `.status/archive/` or `.status/scratch/` unless a
-  file is named for you. Nothing new is created at the `.status/` root.
+- IMPORTANT: do not read `.status/archive/` unless a file is named for you.
+  Nothing new is created at the `.status/` root.
 
 ## Working agreements
 
@@ -96,6 +96,9 @@ never in a fresh clone or worktree.
   summary - three or four sentences, at the very top: what the file is and
   what a person needs to take from it. The same applies to a long answer in a
   session: lead with the conclusion.
+- IMPORTANT: temporary scripts, experiments, and one-off test files go in
+  `.status/scratch/` - **never the repository root**. Delete them when the
+  experiment ends; anything in `scratch/` may be deleted unread.
 - IMPORTANT: never delete or rewrite a file under `.status/` without asking
   first. Appending is fine.
 - For a change spanning more than three files, write a plan to

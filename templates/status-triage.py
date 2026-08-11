@@ -95,8 +95,10 @@ def classify(rel: Path, full: Path, today: dt.date, stale_days: int) -> tuple[st
         return ("archive", f"archive/{year}/{'/'.join(parts)}",
                 f"inside junk-drawer directory '{parts[0]}/'")
 
-    # 2. Obvious noise.
-    if full.suffix.lower() in JUNK_SUFFIXES or any(b in name for b in JUNK_NAME_BITS):
+    # 2. Obvious noise - except under scratch/, which may hold any file type
+    #    and expires unread.
+    if parts[0] != "scratch" and (
+            full.suffix.lower() in JUNK_SUFFIXES or any(b in name for b in JUNK_NAME_BITS)):
         return ("quarantine", f"archive/{year}/_quarantine/{'/'.join(parts)}",
                 f"noise ({full.suffix or 'name pattern'})")
 

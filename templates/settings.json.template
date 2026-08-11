@@ -64,7 +64,6 @@
       "Read(.env)",
       "Read(.envrc)",
       "Read(.status/archive/**)",
-      "Read(.status/scratch/**)",
       "Bash(rm -rf *)",
       "Bash(rm -r *)",
       "Bash(git push)",

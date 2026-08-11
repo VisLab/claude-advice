@@ -55,14 +55,14 @@ ______________________________________________________________________
     2026-07-23_crlf_lineending_fix.md
   archive/                <- finished. Never read unless explicitly asked.
     2026/
-  scratch/                <- throwaway. Deletable without reading. No exceptions.
+  scratch/                <- the workbench: any file type. Deleted unread after scratch_days.
 ```
 
 Eight entries at the top level (nine with the optional `config.md`), forever. `ls .status/` stays useful no matter how much history accumulates, because history lives in `archive/`, and `archive/` is something Claude is told not to read.
 
 **Rules that make it work, in order of how much they matter:**
 
-1. **`.status/` holds markdown only.** No `.py`, `.log`, `.xml`, `.tsv`, `.json`, `.css`, `.yaml`, `.pdf`, `.backup`. In the survey this one rule accounted for 1,565 of the 2,229 files. Everything non-markdown has a real home: live code -> `scripts/` or `src/`, test data -> `tests/data/`, CI config -> `.github/workflows/`, logs and backups -> delete. The only exception is a small fixture a note is meaningless without, and it goes in `notes/` beside the note.
+1. **`.status/` holds markdown only - except `scratch/`, which holds anything.** No `.py`, `.log`, `.xml`, `.tsv`, `.json`, `.css`, `.yaml`, `.pdf`, `.backup` anywhere else. In the survey this one rule accounted for 1,565 of the 2,229 files. Everything non-markdown that is *kept* has a real home: live code -> `scripts/` or `src/`, test data -> `tests/data/`, CI config -> `.github/workflows/`. Everything non-markdown that is *throwaway* - the `test.py` an agent writes to try something, a downloaded sample, a one-off script - goes in `scratch/`, **never the repository root**, and expires unread after `scratch_days`. (One more exception: a small fixture a note is meaningless without goes in `notes/` beside the note.)
 
 2. **The filename never encodes status.** Not `_complete`, not `_final`, not `_status`, not `_progress`, not `FINAL_v2`. Status is expressed by **which directory the file is in** and by a `Status:` line in its header. When a plan finishes it *moves* to `archive/2026/`; it is not renamed.
 
@@ -86,9 +86,9 @@ ______________________________________________________________________
 
 An agent never reads this document. A rule that matters to agent behaviour exists only if it is carried by one of three channels - and a rule in none of them does not exist, however clearly it is stated here:
 
-1. **`AGENTS.md`, loaded at the start of every session.** Its "Where the thinking lives" block and working agreements carry the few behavioural rules an agent actually needs: read `.status/README.md` first, `decisions.md` is append-only, do not read `archive/` or `scratch/`, create nothing at the `.status/` root, open every `.status/` file with a `For humans:` summary, never delete or rewrite without asking. `templates/AGENTS.md.template` contains all of them.
+1. **`AGENTS.md`, loaded at the start of every session.** Its "Where the thinking lives" block and working agreements carry the few behavioural rules an agent actually needs: read `.status/README.md` first, `decisions.md` is append-only, do not read `archive/`, create nothing at the `.status/` root, temporary scripts and experiments go in `.status/scratch/` and never the repository root, open every `.status/` file with a `For humans:` summary, never delete or rewrite without asking. `templates/AGENTS.md.template` contains all of them.
 2. **`.status/README.md`, read on arrival.** Thirty lines is enough because it does not have to teach the scheme - it says what is where *in this repo*, what is active right now, and repeats the two or three prohibitions beside the directory they protect.
-3. **`.claude/settings.json` deny rules and hooks, enforced regardless.** The `archive/` and `scratch/` read-walls hold whether or not the agent read anything.
+3. **`.claude/settings.json` deny rules and hooks, enforced regardless.** The `archive/` read-wall holds whether or not the agent read anything. (`scratch/` is deliberately *not* read-denied: it is the workbench, and an agent cannot iterate on a script it is forbidden to read back.)
 
 Everything else in this document - the survey figures, the naming rationale, the exit times, the migration procedure - is for the person setting the scheme up and tidying it, not for the agent. If an agent violates a rule that matters, the fix is to add it to one of the three channels (or promote it from instruction to hook), not to write more prose here.
 
@@ -245,14 +245,13 @@ And back the important half of that with a rule rather than a request. In the **
 {
   "permissions": {
     "deny": [
-      "Read(.status/archive/**)",
-      "Read(.status/scratch/**)"
+      "Read(.status/archive/**)"
     ]
   }
 }
 ```
 
-That is a real wall for Claude's file tools and for the Bash file commands it recognizes, and it means an archive can grow to 10,000 files without ever costing you a token. If you want the same for `notes/`, add it - but notes are often what you actually want found, so I would leave that one readable.
+That is a real wall for Claude's file tools and for the Bash file commands it recognizes, and it means an archive can grow to 10,000 files without ever costing you a token. If you want the same for `notes/`, add it - but notes are often what you actually want found, so I would leave that one readable. Do **not** deny `scratch/`: it is the agents' workbench, and an agent that cannot read a script back will not iterate on it there - it will fall back to leaving `test.py` in the repository root.
 
 ______________________________________________________________________
 
@@ -298,7 +297,7 @@ ______________________________________________________________________
 
 - [ ] Snapshot `.status/` to a zip outside the repo - it is not in git
 - [ ] Skeleton: `README.md`, `decisions.md`, `plans/`, `prompts/`, `notes/`, `archive/YYYY/`, `scratch/` - plus `config.md` if this repo needs non-default retention
-- [ ] `.status/` holds markdown only; everything else moved to a real home or deleted
+- [ ] `.status/` holds markdown only outside `scratch/`; everything else moved to a real home or deleted
 - [ ] No filename contains `complete`, `final`, `status`, `progress`, or `summary`
 - [ ] Every note is `YYYY-MM-DD_slug.md`, date first; every plan is `<slug>.md`, no date
 - [ ] Every plan has a `Status:` header line
@@ -307,7 +306,8 @@ ______________________________________________________________________
 - [ ] Nothing older than this repo's `stale_days` (default 90) sits outside `archive/`
 - [ ] `README.md` exists and lists what is active
 - [ ] `decisions.md` has at least one real entry harvested from the old files
-- [ ] `Read(.status/archive/**)` and `Read(.status/scratch/**)` denied in `.claude/settings.json`
+- [ ] `Read(.status/archive/**)` denied in `.claude/settings.json`; `scratch/` left readable
+- [ ] `AGENTS.md` says temporary scripts go in `.status/scratch/`, never the repository root
 - [ ] `AGENTS.md` points at `.status/README.md`, `.status/decisions.md`, `.status/plans/` - and says what not to read
 - [ ] `.status/` is gitignored - `git ls-files .status` prints nothing
 - [ ] Lowercase, ASCII, no spaces, no case-only differences anywhere

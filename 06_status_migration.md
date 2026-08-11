@@ -107,7 +107,7 @@ Date, what was decided, why, what it supersedes. Every `harvest` row is a paragr
 1. `.status/README.md` from `templates/status-README.md.template`, including the "Active right now" list. Three lines, and it is worth more than everything you just archived.
 2. Add the deny rules to the repo's **committed** `.claude/settings.json` - the patterns are repo-relative, so they are portable and inert for anyone without a `.status/`:
    ```json
-   "deny": ["Read(.status/archive/**)", "Read(.status/scratch/**)"]
+   "deny": ["Read(.status/archive/**)"]
    ```
 3. Add the "Where the thinking lives" block to `AGENTS.md` (see `05_status_directory.md`).
 4. If `.status/` is not gitignored in this repo, add it - `git ls-files .status` should print nothing.
@@ -125,7 +125,7 @@ First match wins. This is the whole of the script's judgment, stated so you can 
 | #   | Test                                                                                                                               | Action                                                   |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | 1   | inside a junk-drawer directory (`temp`, `working*`, `original*`, `old*`, `leftovers`, `unused`, `removed`, `merged`, `chat*`, ...) | whole tree -> `archive/<year>/`, unopened                |
-| 2   | `.log` `.bak` `.backup` `.tmp` `.orig` `.swp` `.pyc`, or `" copy"` in the name                                                     | -> `archive/<year>/_quarantine/`                         |
+| 2   | `.log` `.bak` `.backup` `.tmp` `.orig` `.swp` `.pyc`, or `" copy"` in the name - except under `scratch/`                           | -> `archive/<year>/_quarantine/`                         |
 | 3   | root `README.md`, `decisions.md`, `local-environment.md`, `config.md`                                                              | keep                                                     |
 | 4   | already under `plans/`, `prompts/`, `notes/`, `archive/`, `scratch/`                                                               | keep                                                     |
 | 5   | not markdown                                                                                                                       | **review** - human routes it                             |

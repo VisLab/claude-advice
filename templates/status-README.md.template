@@ -26,7 +26,8 @@ and absent from fresh clones and `claude --worktree` worktrees.
 - `notes/` - dated records of what happened, `YYYY-MM-DD_slug.md`. Write-once;
   reference material, not instructions.
 - `archive/<year>/` - finished work. **Do not read unless asked for a named file.**
-- `scratch/` - throwaway. Anything here may be deleted without being read.
+- `scratch/` - the workbench: temporary scripts and experiments, any file type.
+  **Throwaway files go here, never the repository root.** May be deleted unread.
 - `local-environment.md` - this machine's paths, interpreter, and quirks.
 - `config.md` - this repo's retention settings (optional; defaults apply).
 
