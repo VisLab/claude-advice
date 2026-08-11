@@ -51,6 +51,19 @@ file exists so the rules below apply automatically to any session started here.
   forward. Do not silently rewrite the old document - the reasoning is worth keeping even when the conclusion changed.
 
 - Markdown formatting is `mdformat`, with the settings in `.mdformat.toml` (wrap at 120, matching the ruff line-length).
-  Run `python -m mdformat --check *.md sample_prompts/*.md templates/README.md` before finishing. Do not pass anything
-  under `templates/` to it except `templates/README.md`: the JSON templates are not markdown, and the markdown templates
-  carry frontmatter and placeholders that mdformat would mangle. Markdown headers in sentence case.
+  It is installed in the system Python - no venv, and always `python -m mdformat`, since the bare `mdformat` command is
+  not on PATH. Check before finishing (drop `--check` to fix):
+
+  ```bash
+  # bash - the shell expands the globs
+  python -m mdformat --check *.md sample_prompts/*.md templates/README.md
+  ```
+
+  ```powershell
+  # PowerShell - globs must be expanded by Get-ChildItem, not the command line
+  python -m mdformat --check (Get-ChildItem *.md, sample_prompts\*.md).FullName templates\README.md
+  ```
+
+  Do not pass anything under `templates/` to it except `templates/README.md`: the JSON templates are not markdown, and
+  the markdown templates carry frontmatter and placeholders that mdformat would mangle. Markdown headers in sentence
+  case.
