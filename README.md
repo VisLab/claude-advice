@@ -26,6 +26,12 @@ committed, and which document explains it. Templates are named `NAME.template.EX
 extension - so viewers render them as their real type while a session run in this folder does not pick them up as live
 config.
 
+## Formatting this repo
+
+```
+python -m mdformat --check (Get-ChildItem *.md, sample_prompts\*.md).FullName templates\README.md
+```
+
 ## Sources
 
 All from the official documentation. First checked 2026-08-03; the memory, setup, and Copilot custom-instructions pages
