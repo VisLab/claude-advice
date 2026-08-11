@@ -84,13 +84,14 @@ ______________________________________________________________________
 
 ## How an agent learns these rules
 
-An agent never reads this document. A rule that matters to agent behaviour exists only if it is carried by one of three channels - and a rule in none of them does not exist, however clearly it is stated here:
+An agent never reads this document. A rule that matters to agent behaviour exists only if it is carried by one of four channels - and a rule in none of them does not exist, however clearly it is stated here:
 
 1. **`AGENTS.md`, loaded at the start of every session.** Its "Where the thinking lives" block and working agreements carry the few behavioural rules an agent actually needs: read `.status/README.md` first, `decisions.md` is append-only, do not read `archive/`, create nothing at the `.status/` root, temporary scripts and experiments go in `.status/scratch/` and never the repository root, open every `.status/` file with a `For humans:` summary, never delete or rewrite without asking. `templates/AGENTS.md.template` contains all of them.
-2. **`.status/README.md`, read on arrival.** Thirty lines is enough because it does not have to teach the scheme - it says what is where *in this repo*, what is active right now, and repeats the two or three prohibitions beside the directory they protect.
-3. **`.claude/settings.json` deny rules and hooks, enforced regardless.** The `archive/` read-wall holds whether or not the agent read anything. (`scratch/` is deliberately *not* read-denied: it is the workbench, and an agent cannot iterate on a script it is forbidden to read back.)
+2. **Path-scoped rules, loaded the moment the agent touches `.status/`.** `.claude/rules/status_conduct.md`, with `paths: [".status/**"]` in its frontmatter, re-injects the full conduct list exactly when it becomes relevant - including after `/compact`, when session-start instructions have faded. This is the channel for the detail that would bloat `AGENTS.md`. `templates/status_conduct.rules.md.template` is the copy-paste start; `templates/status_conduct.instructions.md.template` is the GitHub Copilot twin (`.github/instructions/status_conduct.instructions.md`, honored by the Copilot cloud agent and code review).
+3. **`.status/README.md`, read on arrival.** Thirty lines is enough because it does not have to teach the scheme - it says what is where *in this repo*, what is active right now, and repeats the two or three prohibitions beside the directory they protect.
+4. **`.claude/settings.json` deny rules and hooks, enforced regardless.** The `archive/` read-wall holds whether or not the agent read anything. (`scratch/` is deliberately *not* read-denied: it is the workbench, and an agent cannot iterate on a script it is forbidden to read back.)
 
-Everything else in this document - the survey figures, the naming rationale, the exit times, the migration procedure - is for the person setting the scheme up and tidying it, not for the agent. If an agent violates a rule that matters, the fix is to add it to one of the three channels (or promote it from instruction to hook), not to write more prose here.
+Everything else in this document - the survey figures, the naming rationale, the exit times, the migration procedure - is for the person setting the scheme up and tidying it, not for the agent. If an agent violates a rule that matters, the fix is to add it to one of the four channels (or promote it from instruction to hook), not to write more prose here. And bringing a repository up to this standard is a procedure, not a rule: `sample_prompts/conform_repo.md` runs the audit against the checklists.
 
 ______________________________________________________________________
 
@@ -308,6 +309,7 @@ ______________________________________________________________________
 - [ ] `decisions.md` has at least one real entry harvested from the old files
 - [ ] `Read(.status/archive/**)` denied in `.claude/settings.json`; `scratch/` left readable
 - [ ] `AGENTS.md` says temporary scripts go in `.status/scratch/`, never the repository root
+- [ ] `.claude/rules/status_conduct.md` present, with its `.github/instructions/` twin
 - [ ] `AGENTS.md` points at `.status/README.md`, `.status/decisions.md`, `.status/plans/` - and says what not to read
 - [ ] `.status/` is gitignored - `git ls-files .status` prints nothing
 - [ ] Lowercase, ASCII, no spaces, no case-only differences anywhere
