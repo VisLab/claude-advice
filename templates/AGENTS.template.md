@@ -3,7 +3,7 @@
 
   COMMITTED AND PUBLIC, and the single source of instructions for every AI
   assistant working in the repo. Claude Code reads it through the @AGENTS.md
-  import in CLAUDE.md (see CLAUDE.md.template); Copilot reads it directly.
+  import in CLAUDE.md (see CLAUDE.template.md); Copilot reads it directly.
 
   Write only what a reader needs going forward:
   - No project history: no dates, no "this was changed", no phase, session, or

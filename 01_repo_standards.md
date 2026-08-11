@@ -152,7 +152,7 @@ Two gotchas:
 
 ## `.claude/settings.json`
 
-Committed, so relative paths only. The shape that works: allow the repo's own test, lint, and read-only git commands; ask before `git add`, `git commit`, and content-destroying restores; deny `Read(.env)`, `Read(.status/archive/**)`, `git push`, package installs, and network fetchers. (`.status/scratch/` stays readable - it is the agents' workbench for throwaway scripts; see `05_status_directory.md`.) `templates/settings.json.template` is the copy-paste starting point.
+Committed, so relative paths only. The shape that works: allow the repo's own test, lint, and read-only git commands; ask before `git add`, `git commit`, and content-destroying restores; deny `Read(.env)`, `Read(.status/archive/**)`, `git push`, package installs, and network fetchers. (`.status/scratch/` stays readable - it is the agents' workbench for throwaway scripts; see `05_status_directory.md`.) `templates/settings.template.json` is the copy-paste starting point.
 
 Gotcha: project settings load only from the directory Claude Code is started in - they are not inherited from parent directories the way `CLAUDE.md` files are.
 

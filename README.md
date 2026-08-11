@@ -18,26 +18,7 @@ Cross-repo conventions for working with AI coding assistants: what each reposito
 
 ## Templates
 
-| File                                      | Copy to                                                      | Commit?                       |
-| ----------------------------------------- | ------------------------------------------------------------ | ----------------------------- |
-| `AGENTS.md.template`                      | `<repo>/AGENTS.md`                                           | Yes                           |
-| `CLAUDE.md.template`                      | `<repo>/CLAUDE.md`                                           | Yes                           |
-| `copilot-instructions.md.template`        | `<repo>/.github/copilot-instructions.md`                     | Yes                           |
-| `settings.json.template`                  | `<repo>/.claude/settings.json`                               | Yes                           |
-| `vscode-settings.json.template`           | `<repo>/.vscode/settings.json`                               | Yes                           |
-| `gitignore-snippet.txt`                   | append to `<repo>/.gitignore`                                | Yes                           |
-| `hub-REPOS.md.template`                   | `<hub-repo>/REPOS.md`                                        | Yes                           |
-| `skill-example-SKILL.md`                  | `<repo>/.claude/skills/status-update/SKILL.md`               | Yes                           |
-| `CLAUDE.local.md.template`                | `<repo>/CLAUDE.local.md`                                     | **No** - gitignored           |
-| `settings.local.json.template`            | `<repo>/.claude/settings.local.json`                         | **No** - gitignored           |
-| `plan-doc.template.md`                    | `<repo>/.status/plans/<slug>.md`                             | No - `.status/` is gitignored |
-| `status-README.md.template`               | `<repo>/.status/README.md`                                   | No - same reason              |
-| `status_config.md.template`               | `<repo>/.status/config.md` (optional)                        | No - same reason              |
-| `status_conduct.rules.md.template`        | `<repo>/.claude/rules/status_conduct.md`                     | Yes                           |
-| `status_conduct.instructions.md.template` | `<repo>/.github/instructions/status_conduct.instructions.md` | Yes                           |
-| `status-triage.py`                        | run in place; not copied into repos                          | n/a                           |
-
-**No absolute path, drive letter, or personal repository name belongs in any file marked "Yes"** - and this repository holds itself to the same rule. Templates are named `*.template` deliberately, so a session run in this folder does not pick them up as live config.
+`templates/README.md` is the index: one row per template - what it is, where the copy goes, whether the copy is committed, and which document explains it. Templates are named `NAME.template.EXT` - `template` before the final extension - so viewers render them as their real type while a session run in this folder does not pick them up as live config.
 
 ## Sources
 

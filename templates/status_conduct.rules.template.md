@@ -10,7 +10,7 @@ paths:
   context elsewhere - and it re-arrives after /compact, when session-start
   instructions have faded. Keep it consistent with the "Where the thinking
   lives" block in AGENTS.md; this file carries the detail, AGENTS.md the
-  headlines. The Copilot twin is status_conduct.instructions.md.template.
+  headlines. The Copilot twin is status_conduct.instructions.template.md.
 -->
 
 # Working in .status/

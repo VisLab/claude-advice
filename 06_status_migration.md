@@ -114,7 +114,7 @@ Your part is skimming the drafts and saying which go in - minutes, not an aftern
 
 ### Step 5 - write the index and wire it up
 
-1. `.status/README.md` from `templates/status-README.md.template`, including the "Active right now" list. Three lines, and it is worth more than everything you just archived.
+1. `.status/README.md` from `templates/status_README.template.md`, including the "Active right now" list. Three lines, and it is worth more than everything you just archived.
 2. Add the deny rules to the repo's **committed** `.claude/settings.json` - the patterns are repo-relative, so they are portable and inert for anyone without a `.status/`:
    ```json
    "deny": ["Read(.status/archive/**)"]
@@ -122,9 +122,9 @@ Your part is skimming the drafts and saying which go in - minutes, not an aftern
 3. Add the "Where the thinking lives" block to `AGENTS.md` (see `05_status_directory.md`).
 4. If `.status/` is not gitignored in this repo, add it - `git ls-files .status` should print nothing.
 
-### Step 6 - a week later
+### Step 6 - when ready to cleanup
 
-Delete `archive/<year>/_quarantine/`. If you have not missed it in a week, it was noise, which is what the classification said.
+Delete `archive/<year>/_quarantine/`.
 
 ______________________________________________________________________
 

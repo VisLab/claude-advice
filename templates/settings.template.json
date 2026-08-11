@@ -5,7 +5,7 @@
 //   - No secrets, tokens, or API keys.
 //   - Nothing that is true only of your checkout.
 // Anything machine-specific goes in .claude/settings.local.json instead
-// (see settings.local.json.template).
+// (see settings.local.template.json).
 //
 // Reminder: this file loads ONLY from the directory you start Claude in. It is
 // NOT inherited from parent directories the way CLAUDE.md files are. If you

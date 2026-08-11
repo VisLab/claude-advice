@@ -6,7 +6,7 @@ This repository holds the cross-repo conventions for AI-assisted work. It is doc
 
 - `01`-`06` numbered documents: the advice, read in order. `README.md` indexes them. (There is no `00`: the personal adoption roadmap moved to the toolkit repo's `.status/plans/`, because working plans about specific repos do not belong in shared advice.)
 - `sample_prompts/`: paste-ready prompts, one per file - illustrative and general, tracked as content.
-- `templates/`: copy-paste starting points. Named `*.template` on purpose so a session started here does not mistake them for live config.
+- `templates/`: copy-paste starting points, indexed in `templates/README.md`. Named `NAME.template.EXT` - `template` before the final extension - so viewers render them as their real type while a session started here does not mistake them for live config.
 - `.status/` (gitignored): working state. Read `.status/README.md` first. **`.status/decisions.md` is the authority: if an advice file contradicts it, the file is wrong.**
 
 ## Rules for editing anything in this folder
@@ -31,4 +31,4 @@ This repository holds the cross-repo conventions for AI-assisted work. It is doc
 
 - When a later document overturns an earlier one, add a short block quote at the top of the superseded section pointing forward. Do not silently rewrite the old document - the reasoning is worth keeping even when the conclusion changed.
 
-- Markdown formatting is `mdformat`, with the settings in `.mdformat.toml`. Run `python -m mdformat --check *.md sample_prompts/*.md` before finishing; do not pass the JSON templates to it. Markdown headers in sentence case.
+- Markdown formatting is `mdformat`, with the settings in `.mdformat.toml`. Run `python -m mdformat --check *.md sample_prompts/*.md` before finishing. Do not pass anything under `templates/` to it except `templates/README.md`: the JSON templates are not markdown, and the markdown templates carry frontmatter and placeholders that mdformat would mangle. Markdown headers in sentence case.

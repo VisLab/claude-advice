@@ -230,7 +230,7 @@ Three practical notes:
 A universal style rule - "ASCII only in prose, code, comments, and filenames" - belongs in three places, and the reasoning for each is the general case:
 
 1. `~/.claude/CLAUDE.md` on each machine - it applies to every project, so this is its real home.
-2. `templates/AGENTS.md.template` - so every repo set up from the template inherits it, and public repos state it for collaborators who do not have your user-level file.
+2. `templates/AGENTS.template.md` - so every repo set up from the template inherits it, and public repos state it for collaborators who do not have your user-level file.
 3. The instruction file of any folder where drift is likely - a folder with no instruction file at all is precisely where violations accumulate uncaught.
 
 And any blanket character rule needs **an exception clause**: a citation library legitimately contains accented surnames and non-Latin titles as test fixtures, because folding them is what the code under test does. A rule with no data exception would have someone "fix" the fixtures and break the tests. Write the carve-out into the rule rather than leaving it to judgment.
