@@ -81,6 +81,18 @@ Eight entries at the top level, forever. `ls .status/` stays useful no matter ho
 
 ______________________________________________________________________
 
+## How an agent learns these rules
+
+An agent never reads this document. A rule that matters to agent behaviour exists only if it is carried by one of three channels - and a rule in none of them does not exist, however clearly it is stated here:
+
+1. **`AGENTS.md`, loaded at the start of every session.** Its "Where the thinking lives" block and working agreements carry the few behavioural rules an agent actually needs: read `.status/README.md` first, `decisions.md` is append-only, do not read `archive/` or `scratch/`, create nothing at the `.status/` root, open every `.status/` file with a `For humans:` summary, never delete or rewrite without asking. `templates/AGENTS.md.template` contains all of them.
+2. **`.status/README.md`, read on arrival.** Thirty lines is enough because it does not have to teach the scheme - it says what is where *in this repo*, what is active right now, and repeats the two or three prohibitions beside the directory they protect.
+3. **`.claude/settings.json` deny rules and hooks, enforced regardless.** The `archive/` and `scratch/` read-walls hold whether or not the agent read anything.
+
+Everything else in this document - the survey figures, the naming rationale, the exit times, the migration procedure - is for the person setting the scheme up and tidying it, not for the agent. If an agent violates a rule that matters, the fix is to add it to one of the three channels (or promote it from instruction to hook), not to write more prose here.
+
+______________________________________________________________________
+
 ## Naming
 
 One scheme, no exceptions:
@@ -105,7 +117,7 @@ ______________________________________________________________________
 
 ## How files leave
 
-This is the part that was missing, and it is the whole difference between a notes directory and a landfill. Each location gets one exit rule:
+Each location gets one exit rule:
 
 | Location               | Exit rule                                                                                                                                                                                              |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -117,7 +129,7 @@ This is the part that was missing, and it is the whole difference between a note
 | `local-environment.md` | Never; it is edited in place.                                                                                                                                                                          |
 | `archive/`             | Never read unless you name a file explicitly. Never pruned either - it is cheap, it is markdown, and it is the only history you have.                                                                  |
 
-Two consequences worth stating plainly:
+Consequences:
 
 **`.status/` is gitignored in every one of these repos** - verify in yours with `git ls-files .status`, which should print nothing. So **`git` will not save you from a bad prune** - there is no `git checkout` to undo it, and no copy on GitHub. Before any cleanup, snapshot the directory (see the migration section). This is also the strongest argument for `archive/` over deletion: moving is reversible, deleting is not.
 
@@ -125,9 +137,9 @@ Two consequences worth stating plainly:
 
 ______________________________________________________________________
 
-## `README.md` - the file that makes the rest work
+## `.status/README.md` orients agents to `.status`
 
-Almost no `.status/` directory grows one on its own - in the survey, 3 of 25 had one. It should be in all of them, it should be under 30 lines, and it is the only `.status/` file `AGENTS.md` needs to point at by name. It exists so that a session can orient in a single read instead of a glob.
+Every repository should have a `.status/README` (ideally under 30 lines) that is the only `.status/` file `AGENTS.md` needs to point at by name. It exists so that a session can orient in a single read instead of a glob.
 
 ```markdown
 # Status directory - <repo-name>
