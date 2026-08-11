@@ -95,11 +95,14 @@ your-repo/
     |   `-- security-review/
     |       |-- SKILL.md                      entrypoint
     |       `-- checklist.md                  supporting file
-    |-- agents/                   committed   subagents with their own context window
-    |   `-- code-reviewer.md
-    |-- commands/                 committed   legacy single-file commands (use skills/)
-    |-- workflows/                committed   scripts orchestrating many subagents
-    `-- agent-memory/                         subagent memory, written by Claude
+    |-- agents/                   committed   custom subagents: each .md defines a named
+    |   `-- code-reviewer.md                  helper that works in its own context window
+    |-- commands/                 committed   PREDECESSOR of skills/ - still read so old
+    |                                         repos keep working; never create new ones
+    |-- workflows/                committed   scripts that orchestrate many subagents
+    |                                         deterministically; advanced, rarely needed
+    `-- agent-memory/                         notes subagents write for themselves,
+                                              machine-local, written by Claude not you
 ```
 
 And the user level:
