@@ -15,7 +15,7 @@ claims were checked.
 | `04_file_conventions.md` | File naming, `.claude/`, committed versus gitignored, and the cross-tool `AGENTS.md` landscape                                                             |
 | `05_status_directory.md` | How `.status/` is organized: the eight-entry layout, naming, and the exit rule for every location                                                          |
 | `06_status_migration.md` | How to get an existing `.status/` there - one pass per repo, driven by `templates/status-triage.py`                                                        |
-| `CLAUDE.md`              | House style for this folder. Loads automatically in any session started here                                                                               |
+| `AGENTS.md`              | House style for this folder - the instruction set every assistant reads. `CLAUDE.md` imports it                                                            |
 | `sample_prompts/`        | Paste-ready prompts, one per file, general enough to adapt anywhere                                                                                        |
 | `templates/`             | Copy-paste starting points                                                                                                                                 |
 
