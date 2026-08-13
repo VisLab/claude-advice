@@ -12,12 +12,12 @@ Markdown formatting is `mdformat`, with the settings in `.mdformat.toml` (`wrap 
 
 ```bash
 # bash - the shell expands the globs
-python -m mdformat --check *.md sample_prompts/*.md templates/README.md
+python -m mdformat --check *.md sample_prompts/*.md .github/*.md .github/instructions/*.md .claude/rules/*.md templates/README.md
 ```
 
 ```powershell
 # PowerShell - globs must be expanded by Get-ChildItem, not the command line
-python -m mdformat --check (Get-ChildItem *.md, sample_prompts\*.md).FullName templates\README.md
+python -m mdformat --check (Get-ChildItem *.md, sample_prompts\*.md, .github\*.md, .github\instructions\*.md, .claude\rules\*.md).FullName templates\README.md
 ```
 
 Do not pass anything under `templates/` to it except `templates/README.md`: the JSON templates are not markdown, and the markdown templates carry frontmatter and placeholders that mdformat would mangle.

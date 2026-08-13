@@ -33,4 +33,5 @@ jobs:
         run: >
           uvx --with mdformat-gfm --with mdformat-front-matters
           --with mdformat-footnote --with mdformat-myst
-          mdformat --check *.md sample_prompts/*.md templates/README.md
+          mdformat --check *.md sample_prompts/*.md .github/*.md
+          .github/instructions/*.md .claude/rules/*.md templates/README.md
