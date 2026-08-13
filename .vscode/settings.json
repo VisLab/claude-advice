@@ -1,0 +1,8 @@
+{
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  "python.testing.pytestEnabled": false,
+  "python.testing.unittestEnabled": false
+}

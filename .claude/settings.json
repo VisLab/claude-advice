@@ -4,8 +4,7 @@
     "deny": [
       "Read(.env)",
       "Read(.envrc)",
-      "Read(.status/archive/**)",
-      "Read(.status/scratch/**)"
+      "Read(.status/archive/**)"
     ]
   }
 }
