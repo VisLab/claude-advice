@@ -11,9 +11,9 @@ may be read while writing, but the committed text never names it.
 
 Test framework: none - documentation repository, no test suite.
 
-Markdown formatting is `mdformat`, with the settings in `.mdformat.toml` (wrap at 120, matching the ruff line-length).
-It is installed in the system Python - no venv, and always `python -m mdformat`, since the bare `mdformat` command is
-not on PATH. Check before finishing (drop `--check` to fix):
+Markdown formatting is `mdformat`, with the settings in `.mdformat.toml` (`wrap = "no"` - paragraphs are single lines,
+the convention across the HED repositories). It is installed in the system Python - no venv, and always
+`python -m mdformat`, since the bare `mdformat` command is not on PATH. Check before finishing (drop `--check` to fix):
 
 ```bash
 # bash - the shell expands the globs
