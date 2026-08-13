@@ -1,23 +1,18 @@
 # Migrating an existing `.status/` directory
 
-`05_status_directory.md` describes the target layout and why. This document is the procedure for getting a directory
-that already has hundreds of files in it to that layout, and it is deliberately separate because the two get read at
-different times: the target once, the procedure once per repo.
+`05_status_directory.md` describes the target layout and why. This document is the procedure for getting a directory that already has hundreds of files in it to that layout, and it is deliberately separate because the two get read at different times: the target once, the procedure once per repo.
 
-The classification rules live in `templates/status-triage.py`, which **proposes** a plan and changes nothing unless you
-pass `--apply`.
+The classification rules live in `templates/status-triage.py`, which **proposes** a plan and changes nothing unless you pass `--apply`.
 
 ______________________________________________________________________
 
 ## Before you start
 
-`.status/` is gitignored in every one of these repos. There is **no `git checkout`, no `git stash`, and nothing on
-GitHub.** A wrong `Move-Item` is a permanent loss of the only copy.
+`.status/` is gitignored in every one of these repos. There is **no `git checkout`, no `git stash`, and nothing on GitHub.** A wrong `Move-Item` is a permanent loss of the only copy.
 
 Everything below follows from that:
 
-- The script **never deletes**. Noise goes to `archive/<year>/_quarantine/`, and you delete that one directory by hand
-  after living without it for a week.
+- The script **never deletes**. Noise goes to `archive/<year>/_quarantine/`, and you delete that one directory by hand after living without it for a week.
 - The script **never overwrites**. A destination collision becomes `name_2.md`.
 - Your snapshot first. Not optional.
 
@@ -35,11 +30,7 @@ ______________________________________________________________________
 
 ## Which repo first
 
-Do the small ones first. Not for safety - for calibration. You want to find out whether you actually like the scheme on
-a 5-file directory, not discover it on the one with 457. A sensible order: a tiny repo that is already otherwise in
-shape (it becomes the reference example), then one whose files are mostly well-named dated notes (tests the `notes/`
-renaming without much judgment), then the hub with real active plans (tests the plan/harvest distinction), then
-everything else, and the near-pure-archive giants last - boring by the time you get there, which is the goal.
+Do the small ones first. Not for safety - for calibration. You want to find out whether you actually like the scheme on a 5-file directory, not discover it on the one with 457. A sensible order: a tiny repo that is already otherwise in shape (it becomes the reference example), then one whose files are mostly well-named dated notes (tests the `notes/` renaming without much judgment), then the hub with real active plans (tests the plan/harvest distinction), then everything else, and the near-pure-archive giants last - boring by the time you get there, which is the goal.
 
 ______________________________________________________________________
 
@@ -52,8 +43,7 @@ ______________________________________________________________________
 python <path to claude-advice>/templates/status-triage.py <path to the repo>
 ```
 
-It walks `.status/`, classifies every file, writes a tab-separated plan next to the repo, and prints a summary. Nothing
-is moved. Real output from one of the directories the script was tested on:
+It walks `.status/`, classifies every file, writes a tab-separated plan next to the repo, and prints a summary. Nothing is moved. Real output from one of the directories the script was tested on:
 
 ```
 ### <repo> - 170 files
@@ -65,26 +55,18 @@ is moved. Real output from one of the directories the script was tested on:
       1  quarantine  noise -> archive/<year>/_quarantine/
 ```
 
-Read those numbers as the answer to "is this worth doing": that repo goes from a 170-file listing to **7 plans and 29
-notes in view**. The most extreme directory tested went from 457 files to 2 in view.
+Read those numbers as the answer to "is this worth doing": that repo goes from a 170-file listing to **7 plans and 29 notes in view**. The most extreme directory tested went from 457 files to 2 in view.
 
 ### Step 2 - read the plan and correct it
 
-The plan is a TSV with `action`, `source`, `destination`, `kb`, `modified`, `reason`. Open it in Excel or VS Code. The
-columns you care about:
+The plan is a TSV with `action`, `source`, `destination`, `kb`, `modified`, `reason`. Open it in Excel or VS Code. The columns you care about:
 
-- **`action = review`** - the script refuses to guess where non-markdown belongs. These are yours to route. For each:
-  does anything still run or import it? Then `scripts/` or `src/` or `tests/data/`, and commit it. Otherwise accept the
-  `archive/` destination it proposed. A code-heavy directory can have dozens of these; that is where most of the
-  correction time goes.
-- **`action = plan`** - candidate *active* work, and the script says CONFIRM for a reason. It only knows the file is
-  recent and named like a plan. Read each one. Half will turn out to be finished; change their destination to
-  `archive/<year>/`.
+- **`action = review`** - the script refuses to guess where non-markdown belongs. These are yours to route. For each: does anything still run or import it? Then `scripts/` or `src/` or `tests/data/`, and commit it. Otherwise accept the `archive/` destination it proposed. A code-heavy directory can have dozens of these; that is where most of the correction time goes.
+- **`action = plan`** - candidate *active* work, and the script says CONFIRM for a reason. It only knows the file is recent and named like a plan. Read each one. Half will turn out to be finished; change their destination to `archive/<year>/`.
 - **`action = harvest`** - decision records. Leave the destination alone; the work is step 4.
 - **Everything else** - `archive`, `note`, `quarantine`, `keep` - is rule-driven and rarely needs a correction.
 
-Editing the `destination` cell is how you override. The script honors whatever the column says, so an edited plan is the
-source of truth on apply. Anything you delete the row for is simply left where it is.
+Editing the `destination` cell is how you override. The script honors whatever the column says, so an edited plan is the source of truth on apply. Anything you delete the row for is simply left where it is.
 
 ### Step 3 - apply
 
@@ -93,8 +75,7 @@ source of truth on apply. Anything you delete the row for is simply left where i
 python <path to claude-advice>/templates/status-triage.py <path to the repo> --apply
 ```
 
-It creates directories as needed, moves each file, refuses to overwrite, and removes directories the moves left empty.
-It re-derives the plan by default; pass `--plan <path>` to apply the exact file you edited.
+It creates directories as needed, moves each file, refuses to overwrite, and removes directories the moves left empty. It re-derives the plan by default; pass `--plan <path>` to apply the exact file you edited.
 
 Verify:
 
@@ -106,12 +87,9 @@ ls .status
 
 ### Step 4 - keep only the decisions that still govern (agent work; you skim)
 
-The `harvest` rows are old files whose names say "decision". Most of them no longer matter: a decision that no longer
-governs how the code or data is handled *today* is history, and history goes to `archive/` unread. The reorganization
-itself is housekeeping and gets no `decisions.md` entry at all - `decisions.md` records rulings, not tidying.
+The `harvest` rows are old files whose names say "decision". Most of them no longer matter: a decision that no longer governs how the code or data is handled *today* is history, and history goes to `archive/` unread. The reorganization itself is housekeeping and gets no `decisions.md` entry at all - `decisions.md` records rulings, not tidying.
 
-The one thing worth extracting is the ruling a future session would otherwise re-litigate, and extracting it is agent
-work, not yours:
+The one thing worth extracting is the ruling a future session would otherwise re-litigate, and extracting it is agent work, not yours:
 
 ```
 Read the files under .status/notes/ that came from action=harvest rows, plus
@@ -132,15 +110,12 @@ what it supersedes - four lines, like:
 Show me the drafts and the archive list. Do not write any file.
 ```
 
-Your part is skimming the drafts and saying which go in - minutes, not an afternoon. Expect most candidates to be
-archived.
+Your part is skimming the drafts and saying which go in - minutes, not an afternoon. Expect most candidates to be archived.
 
 ### Step 5 - write the index and wire it up
 
-1. `.status/README.md` from `templates/status_README.template.md`, including the "Active right now" list. Three lines,
-   and it is worth more than everything you just archived.
-2. Add the deny rules to the repo's **committed** `.claude/settings.json` - the patterns are repo-relative, so they are
-   portable and inert for anyone without a `.status/`:
+1. `.status/README.md` from `templates/status_README.template.md`, including the "Active right now" list. Three lines, and it is worth more than everything you just archived.
+2. Add the deny rules to the repo's **committed** `.claude/settings.json` - the patterns are repo-relative, so they are portable and inert for anyone without a `.status/`:
    ```json
    "deny": ["Read(.status/archive/**)"]
    ```
@@ -155,8 +130,7 @@ ______________________________________________________________________
 
 ## The classification rules, in order
 
-First match wins. This is the whole of the script's judgment, stated so you can argue with it rather than
-reverse-engineer it.
+First match wins. This is the whole of the script's judgment, stated so you can argue with it rather than reverse-engineer it.
 
 | #   | Test                                                                                                                               | Action                                                   |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -172,26 +146,18 @@ reverse-engineer it.
 | 10  | name carries a date                                                                                                                | -> `notes/YYYY-MM-DD_<slug>.md`, date moved to the front |
 | 11  | anything left (recent, undated, unlabelled)                                                                                        | -> `plans/<slug>.md`, flagged CONFIRM                    |
 
-Two of those orderings were bugs hit while testing on real directories, and they are worth knowing because they are the
-same mistake in two places:
+Two of those orderings were bugs hit while testing on real directories, and they are worth knowing because they are the same mistake in two places:
 
-- **Rule 9 must precede rule 10.** Otherwise `plan_<date>_<slug>.md` matches "has a date" and lands in `notes/` as a
-  session record. The first version did exactly that to one repo's only real plan.
-- **Rule 6 must precede rule 8.** Otherwise a five-month-old `decision_<date>_*.md` is archived unread as "stale", and
-  the rationale it holds - the whole reason you write decision records - is lost. Fixing the order took one directory
-  from 1 harvest to 8.
+- **Rule 9 must precede rule 10.** Otherwise `plan_<date>_<slug>.md` matches "has a date" and lands in `notes/` as a session record. The first version did exactly that to one repo's only real plan.
+- **Rule 6 must precede rule 8.** Otherwise a five-month-old `decision_<date>_*.md` is archived unread as "stale", and the rationale it holds - the whole reason you write decision records - is lost. Fixing the order took one directory from 1 harvest to 8.
 
-The day threshold comes from the repo's `.status/config.md` (`stale_days`, default 90 - see `05_status_directory.md`).
-Adjust `VAGUE_DIR_RE` and `DONE_NAME_RE` at the top of the script if your repos disagree. `VAGUE_DIR_RE` is deliberately
-aggressive - it treats `scripts`, `config`, `data`, and `documentation` as junk drawers when they appear *inside*
-`.status/`, because there that is what they usually are.
+The day threshold comes from the repo's `.status/config.md` (`stale_days`, default 90 - see `05_status_directory.md`). Adjust `VAGUE_DIR_RE` and `DONE_NAME_RE` at the top of the script if your repos disagree. `VAGUE_DIR_RE` is deliberately aggressive - it treats `scripts`, `config`, `data`, and `documentation` as junk drawers when they appear *inside* `.status/`, because there that is what they usually are.
 
 ______________________________________________________________________
 
 ## Doing it with Claude instead
 
-The script exists so this does not need a conversation, but the judgment reads in step 2 are also a reasonable thing to
-hand over (step 4's prompt is already in step 4). A prompt that works:
+The script exists so this does not need a conversation, but the judgment reads in step 2 are also a reasonable thing to hand over (step 4's prompt is already in step 4). A prompt that works:
 
 ```
 Read 06_status_migration.md in <path to claude-advice>.

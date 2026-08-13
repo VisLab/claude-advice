@@ -8,8 +8,9 @@
 # the JSON templates are not markdown, and the markdown templates carry
 # frontmatter and placeholders that mdformat would mangle.
 
-# 120 matches the ruff line-length for the one Python file here. Changing it
+# wrap = "no" is the convention across the HED repositories: paragraphs are
+# single lines, so a one-word edit is a one-line diff. Changing this setting
 # reflows every markdown file in one diff, so do that alone.
-wrap = 120
+wrap = "no"
 number = true
 end_of_line = "lf"

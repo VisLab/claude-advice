@@ -1,8 +1,6 @@
 # Interview to a spec
 
-For when the goal is still fuzzy - the tell is your own prompt trailing off or admitting the problem is complicated.
-Invert the questioning: have the assistant interview you, then write the answers down as a spec. Run it in plan mode;
-when the spec exists, /clear and execute against it in a fresh session.
+For when the goal is still fuzzy - the tell is your own prompt trailing off or admitting the problem is complicated. Invert the questioning: have the assistant interview you, then write the answers down as a spec. Run it in plan mode; when the spec exists, /clear and execute against it in a fresh session.
 
 ```
 I want to build [one-sentence statement of the durable goal].

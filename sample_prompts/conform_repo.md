@@ -1,8 +1,6 @@
 # Conform a repository to the standard
 
-For bringing any repository up to the shared configuration standard: the AGENTS.md wiring, the committed/local split,
-and the `.status/` layout. Run it from the repository being conformed, with the claude-advice checkout reachable. It
-audits first and changes nothing until the plan is approved.
+For bringing any repository up to the shared configuration standard: the AGENTS.md wiring, the committed/local split, and the `.status/` layout. Run it from the repository being conformed, with the claude-advice checkout reachable. It audits first and changes nothing until the plan is approved.
 
 ```
 Read, in <path to claude-advice>: 01_repo_standards.md (the per-repo checklist

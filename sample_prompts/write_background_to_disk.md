@@ -1,8 +1,6 @@
 # Write the background to disk
 
-For any project where you keep retyping history at the start of a session. Everything you have explained twice is a
-durable fact: give it a file once, and every later prompt shrinks to a pointer. Fill in the bracketed parts before
-sending.
+For any project where you keep retyping history at the start of a session. Everything you have explained twice is a durable fact: give it a file once, and every later prompt shrinks to a pointer. Fill in the bracketed parts before sending.
 
 ```
 GOAL: Stop re-explaining project history every session.

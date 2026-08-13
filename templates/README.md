@@ -1,12 +1,8 @@
 # Templates
 
-Copy-paste starting points, one per target file. The naming pattern is `NAME.template.EXT` - `template` sits before the
-final extension so viewers render the file as its real type, while the marker still keeps a session run in this folder
-from mistaking it for live config. To use one: copy it to the target path below, drop `.template` from the name, and
-fill in the placeholders.
+Copy-paste starting points, one per target file. The naming pattern is `NAME.template.EXT` - `template` sits before the final extension so viewers render the file as its real type, while the marker still keeps a session run in this folder from mistaking it for live config. To use one: copy it to the target path below, drop `.template` from the name, and fill in the placeholders.
 
-**No absolute path, drive letter, or personal repository name belongs in any template marked "Yes"** - they are
-committed into public repositories, and this repository holds itself to the same rule.
+**No absolute path, drive letter, or personal repository name belongs in any template marked "Yes"** - they are committed into public repositories, and this repository holds itself to the same rule.
 
 | Template                                  | Copy to                                                      | Committed?                    | Explained in             |
 | ----------------------------------------- | ------------------------------------------------------------ | ----------------------------- | ------------------------ |
@@ -27,5 +23,4 @@ committed into public repositories, and this repository holds itself to the same
 | `status_config.template.md`               | `<repo>/.status/config.md` (optional)                        | No - same reason              | `05_status_directory.md` |
 | `status-triage.py`                        | run in place; not copied into repos                          | n/a                           | `06_status_migration.md` |
 
-Two files here are not templates: `status-triage.py` is the migration script `06_status_migration.md` drives, and this
-README is the index.
+Two files here are not templates: `status-triage.py` is the migration script `06_status_migration.md` drives, and this README is the index.
