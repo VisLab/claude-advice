@@ -166,6 +166,17 @@ The testing keys must match the repo's declared framework: `python.testing.pytes
 
 Also set `files.eol` to `"\n"`, `files.trimTrailingWhitespace`, and `files.insertFinalNewline` - the editor half of the line-ending defence, with `.gitattributes` (`* text=auto eol=lf`) as the backstop at commit time. `templates/vscode-settings.template.json` is the starting point.
 
+## The ruff lint block
+
+One rule set for every repo that lints, so ruff behaves identically in every session and every repo: select E, W, F, I, N, B, C4, UP; ignore E501, N802, N803, N806. `templates/ruff-lint-snippet.toml` is the paste-in block. The families beyond the flake8 baseline earn their place: I makes import order deterministic and is fully auto-fixable, which removes a whole class of diff noise in repos that several assistants write in; UP keeps syntax at the repo's declared Python floor and is nearly all auto-fixable; N catches naming errors in public APIs, with the three ignores covering legacy camelCase test methods and scientific naming (`df`-style locals and arguments).
+
+Two rules that come from how these configs actually drift:
+
+- A committed doc never restates the rule list - it points at `pyproject.toml`. A restated list and the config it restates will disagree eventually, and the doc is the one that will be wrong.
+- Delete dead config on sight: an ignore for a family that is not selected, or a mccabe setting without C90 selected, does nothing but mislead the next reader into thinking it is policy.
+
+A repo whose only Python is a single utility script gets no ruff config; the overhead is not worth it for one file.
+
 ## Per-repo checklist
 
 - [ ] `AGENTS.md` under 200 lines, with the `Test framework:` line
@@ -176,6 +187,7 @@ Also set `files.eol` to `"\n"`, `files.trimTrailingWhitespace`, and `files.inser
 - [ ] `.gitignore` covers `.status/`, `.env`, `CLAUDE.local.md`, `.claude/settings.local.json`
 - [ ] `.env.example` documents every variable `.env` needs
 - [ ] `.gitattributes` normalizes line endings
+- [ ] Repos with a ruff config: lint block matches `templates/ruff-lint-snippet.toml`, no dead config; single-utility-script repos have no ruff config
 - [ ] No drive letter, no project history, no `.status/` pointer in any committed file
 - [ ] Every command in `AGENTS.md` verified to actually run
 

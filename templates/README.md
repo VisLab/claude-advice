@@ -12,6 +12,7 @@ Copy-paste starting points, one per target file. The naming pattern is `NAME.tem
 | `settings.template.json`                  | `<repo>/.claude/settings.json`                               | Yes                           | `01_repo_standards.md`   |
 | `vscode-settings.template.json`           | `<repo>/.vscode/settings.json`                               | Yes                           | `01_repo_standards.md`   |
 | `gitignore-snippet.txt`                   | append to `<repo>/.gitignore`                                | Yes                           | `01_repo_standards.md`   |
+| `ruff-lint-snippet.toml`                  | paste into `<repo>/pyproject.toml`                           | Yes                           | `01_repo_standards.md`   |
 | `status_conduct.rules.template.md`        | `<repo>/.claude/rules/status_conduct.md`                     | Yes                           | `05_status_directory.md` |
 | `status_conduct.instructions.template.md` | `<repo>/.github/instructions/status_conduct.instructions.md` | Yes                           | `05_status_directory.md` |
 | `skill_example_SKILL.template.md`         | `<repo>/.claude/skills/<name>/SKILL.md`                      | Yes                           | `04_file_conventions.md` |
