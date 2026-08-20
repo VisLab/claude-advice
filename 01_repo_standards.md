@@ -175,6 +175,8 @@ Two rules that come from how these configs actually drift:
 - A committed doc never restates the rule list - it points at `pyproject.toml`. A restated list and the config it restates will disagree eventually, and the doc is the one that will be wrong.
 - Delete dead config on sight: an ignore for a family that is not selected, or a mccabe setting without C90 selected, does nothing but mislead the next reader into thinking it is policy.
 
+`__init__.py` files are exempt from both F401 (unused imports are re-exports) and I001 (their import order is often curated by hand to dodge circular imports - an auto-sort can turn a working package into an ImportError at import time). Never let a lint autofix reorder an `__init__.py`; if one is reordered and imports break, restore the original order rather than restructuring the package.
+
 A repo whose only Python is a single utility script gets no ruff config; the overhead is not worth it for one file.
 
 ## Per-repo checklist
