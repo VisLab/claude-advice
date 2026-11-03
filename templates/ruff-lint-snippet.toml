@@ -1,6 +1,7 @@
 # ---------------------------------------------------------------------------
 # The standard ruff lint block - paste into each repo's pyproject.toml,
-# replacing any existing [tool.ruff.lint] select/ignore lists.
+# replacing any existing [tool.ruff.lint] select/ignore lists. It also sets
+# the formatter's line ending to LF.
 #
 # Keep the repo's own excludes and any extra per-file-ignores; set
 # known-first-party to the repo's import package. While here, delete dead
@@ -36,3 +37,7 @@ ignore = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["REPO_PACKAGE"]
+
+# LF on every OS. The default, "auto", keeps whatever ending a file already has.
+[tool.ruff.format]
+line-ending = "lf"

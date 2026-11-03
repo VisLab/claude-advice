@@ -49,11 +49,15 @@ git ls-files -z | python -c "import pathlib,sys; files=sys.stdin.buffer.read().d
 
 ## Where the thinking lives
 
-`.status/` is gitignored, so it exists only on this machine and never in a fresh clone or worktree. Read `.status/README.md` first; it is the index and lists what is active.
+`.status/` is gitignored, so it exists only on this machine and never in a fresh clone or worktree.
 
+- `.status/README.md` - current state, unfinished work, and an ordered `Next` list. Read this first.
+- `.status/development_history.md` - what has shipped, newest first, with pointers to the records. History only; append at the top when work lands.
 - `.status/decisions.md` - **the authority: if an advice file contradicts it, the file is wrong.** Read before proposing structural changes. Append entries; never rewrite one.
-- `.status/plans/*.md` - active plans. Check the `Status:` header and the `[ ]` / `[x]` markers before starting work.
-- IMPORTANT: do not read `.status/archive/` unless a file is named for you. Nothing new is created at the `.status/` root.
+- `.status/plans/*.md` - unfinished plans only. Check the `Status:` header and the `[ ]` / `[x]` markers before starting work. A finished plan moves to `.status/archive/completed_plans/`, renamed `archived_YYYY-MM-DD_<name>` with the day it was archived; split any still-open boxes into a new plan first.
+- `.status/notes/` - dated records, always named `YYYY-MM-DD_<slug>.md`. Write-once.
+- `.status/local-environment.md` - this machine's paths and quirks. Tool-agnostic. Never copy its contents into a committed file.
+- IMPORTANT: do not read `.status/archive/` unless a file is named for you. The `.status/` root holds only `README.md`, `decisions.md`, `development_history.md`, and `local-environment.md`; nothing else is created there.
 
 ## Working agreements
 

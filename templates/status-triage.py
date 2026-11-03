@@ -12,7 +12,7 @@ Usage:
 
 Why "never delete": .status/ is gitignored in every one of these repos, so a
 wrong move has no `git checkout` to undo it. Junk is quarantined in
-archive/<year>/_quarantine/ instead. Delete that one directory by hand once you
+archive/other/<year>/_quarantine/ instead. Delete that one directory by hand once you
 have lived without it for a week.
 
 Stdlib only, ASCII only, works on Windows and POSIX.
@@ -41,7 +41,7 @@ JUNK_SUFFIXES = {".log", ".bak", ".backup", ".tmp", ".orig", ".swp", ".pyc"}
 JUNK_NAME_BITS = (" copy", ".md copy", "~")
 
 # Root filenames that are part of the target layout and stay put.
-KEEP_AT_ROOT = {"README.md", "decisions.md", "local-environment.md", "config.md"}
+KEEP_AT_ROOT = {"README.md", "decisions.md", "development_history.md", "local-environment.md", "config.md"}
 
 # Markdown whose name advertises that the work is over.
 DONE_NAME_RE = re.compile(
@@ -92,17 +92,17 @@ def classify(rel: Path, full: Path, today: dt.date, stale_days: int) -> tuple[st
     # 1. Anything inside a subdirectory that is already a junk drawer: move the
     #    whole tree, preserving its internal shape, and do not look inside.
     if len(parts) > 1 and VAGUE_DIR_RE.match(parts[0]):
-        return ("archive", f"archive/{year}/{'/'.join(parts)}",
+        return ("archive", f"archive/other/{year}/{'/'.join(parts)}",
                 f"inside junk-drawer directory '{parts[0]}/'")
 
     # 2. Obvious noise - except under scratch/, which may hold any file type
     #    and expires unread.
     if parts[0] != "scratch" and (
             full.suffix.lower() in JUNK_SUFFIXES or any(b in name for b in JUNK_NAME_BITS)):
-        return ("quarantine", f"archive/{year}/_quarantine/{'/'.join(parts)}",
+        return ("quarantine", f"archive/other/{year}/_quarantine/{'/'.join(parts)}",
                 f"noise ({full.suffix or 'name pattern'})")
 
-    # 3. The three root files that belong to the target layout.
+    # 3. The fixed root files that belong to the target layout.
     if len(parts) == 1 and name in KEEP_AT_ROOT:
         return ("keep", str(rel).replace("\\", "/"), "part of the target layout")
 
@@ -113,7 +113,7 @@ def classify(rel: Path, full: Path, today: dt.date, stale_days: int) -> tuple[st
     # 5. Non-markdown needs a human: it either has a real home in the repo or it
     #    is history. The script will not guess between src/, scripts/, and tests/.
     if full.suffix.lower() not in MARKDOWN:
-        return ("review", f"archive/{year}/{'/'.join(parts)}",
+        return ("review", f"archive/other/{year}/{'/'.join(parts)}",
                 f"non-markdown ({full.suffix or 'no suffix'}): move to a real home "
                 f"in the repo, or accept the archive destination")
 
@@ -134,13 +134,13 @@ def classify(rel: Path, full: Path, today: dt.date, stale_days: int) -> tuple[st
 
     # 7. Markdown named after its own completion state.
     if DONE_NAME_RE.search(name):
-        return ("archive", f"archive/{year}/{name}",
+        return ("archive", f"archive/other/{year}/{name}",
                 "filename advertises the work is finished")
 
     # 8. Stale markdown. A plan that has not been touched in this long is not
     #    active work, whatever it is called, so this precedes the plan rule.
     if age > stale_days:
-        return ("archive", f"archive/{year}/{name}", f"untouched for {age} days")
+        return ("archive", f"archive/other/{year}/{name}", f"untouched for {age} days")
 
     # 9. A name that says "plan" is a plan even when it carries a date. This has
     #    to come before the date rule, or every plan_<date>_<slug>.md lands in
@@ -254,9 +254,9 @@ def main() -> int:
         "plan": "candidate ACTIVE work - read these, they are the whole point",
         "harvest": "decision records - copy their substance into decisions.md",
         "note": "dated record -> notes/, renamed date-first",
-        "archive": "finished or stale -> archive/",
-        "review": "non-markdown - YOUR CALL: a real home in the repo, or archive/",
-        "quarantine": "noise -> archive/<year>/_quarantine/, delete by hand later",
+        "archive": "finished or stale -> archive/other/<year>/",
+        "review": "non-markdown - YOUR CALL: a real home in the repo, or archive/other/<year>/",
+        "quarantine": "noise -> archive/other/<year>/_quarantine/, delete by hand later",
     }
     print(f"\n{len(rows)} files under {status}\n")
     for a in order:
@@ -275,7 +275,7 @@ def main() -> int:
     moved, skipped = apply_plan(status, rows)
     print(f"\nMoved {moved}, left in place {skipped}.")
     print("Now do the parts no script can: harvest decisions.md, write README.md")
-    print("with the 'Active right now' list, and confirm each file in plans/.")
+    print("with its Next list, and confirm each file in plans/.")
     return 0
 
 

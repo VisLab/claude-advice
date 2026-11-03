@@ -18,3 +18,6 @@ ignore = [
     "E501", # line too long - the formatter handles what it can; URLs and long
     # strings it cannot split are allowed to stay long
 ]
+
+[format]
+line-ending = "lf"

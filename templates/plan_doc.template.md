@@ -3,8 +3,9 @@
 
   No date and no "-plan" suffix in the filename: it lives in plans/, so the kind
   is already known, and its creation date stops being interesting on day two.
-  When it finishes, MOVE it to .status/archive/<year>/ - never rename it to
-  <slug>_complete.md.
+  When it finishes, MOVE it to .status/archive/completed_plans/, renamed
+  archived_YYYY-MM-DD_<slug>.md (the day it was archived), and add a
+  development_history.md entry. Never rename an active plan <slug>_complete.md.
 
   Why a file and not chat: long sessions compact their context and lose detail.
   A file on disk survives compaction, /clear, and next week.

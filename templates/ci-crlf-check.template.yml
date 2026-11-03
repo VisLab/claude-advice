@@ -1,0 +1,25 @@
+# Copy the step below into the repo's main CI workflow, under `steps:`, after
+# the checkout step and before the install step. COMMITTED.
+#
+# Fails when any tracked text file has CRLF or mixed line endings.
+# .gitattributes (* text=auto eol=lf) keeps new commits LF, but a file
+# committed before .gitattributes existed keeps its CRLF until it is
+# renormalized. So in a repo with committed CRLF, first run
+#
+#     git add --renormalize .
+#
+# commit that alone, check that `git status --short` is empty, and only then
+# add this step.
+#
+# Files with the binary attribute (attr/-text in `git ls-files --eol`) are
+# excluded: a binary file can contain \r\n bytes, and that is content, not a
+# line ending.
+#
+# Explained in 01_repo_standards.md.
+
+      - name: No CRLF line endings in tracked files
+        run: |
+          if git ls-files --eol | grep -E '^i/(crlf|mixed)' | grep -v 'attr/-text'; then
+            echo "CRLF found in the files above; .gitattributes requires LF."
+            exit 1
+          fi

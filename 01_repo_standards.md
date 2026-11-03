@@ -76,6 +76,7 @@ your-repo/
 |-- .status/                     # gitignored - plans, notes, decisions, working prompts
 |-- .env.example                 # committed - documents every variable .env needs
 |-- .env                         # gitignored - real tokens and machine values
+|-- .editorconfig                # committed - LF and whitespace defaults for every editor
 `-- .gitattributes               # committed - line-ending normalization
 ```
 
@@ -143,7 +144,7 @@ Layout, naming, and retention rules: `05_status_directory.md`.
 | `.claude/settings.json`                                     | `.claude/settings.local.json`     |
 | `.vscode/settings.json` (portable settings only)            | `.status/`                        |
 | `.env.example`                                              | `.env`                            |
-| `.gitattributes`, `README.md`                               | `.venv/` and everything generated |
+| `.gitattributes`, `.editorconfig`, `README.md`              | `.venv/` and everything generated |
 
 The test for the left column: would this line be true on a colleague's laptop and on Linux CI? If not, it goes on the right, or into `.status/local-environment.md`.
 
@@ -154,7 +155,9 @@ Two gotchas:
 
 ## `.claude/settings.json`
 
-Committed, so relative paths only. The shape that works: allow the repo's own test, lint, and read-only git commands; ask before `git add`, `git commit`, and content-destroying restores; deny `Read(.env)`, `Read(.status/archive/**)`, `git push`, package installs, and network fetchers. (`.status/scratch/` stays readable - it is the agents' workbench for throwaway scripts; see `05_status_directory.md`.) `templates/settings.template.json` is the copy-paste starting point.
+Committed, so relative paths only. The shape that works: allow the repo's own test and lint commands; ask before `git add`, `git commit`, and content-destroying restores; deny `Read(.env)`, `Read(.status/archive/**)`, `git push`, package installs, and network fetchers. (`.status/scratch/` stays readable - it is the agents' workbench for throwaway scripts; see `05_status_directory.md`.) `templates/settings.template.json` is the copy-paste starting point.
+
+Read-only shell commands (`cat`, `head`, `tail`, `grep`, `find`, `wc`, read-only `git`) need no allow rule: Claude Code runs its built-in read-only set without a prompt in every mode.
 
 Gotcha: project settings load only from the directory Claude Code is started in - they are not inherited from parent directories the way `CLAUDE.md` files are.
 
@@ -164,11 +167,24 @@ Committed, portable settings only - workspace settings override user settings, s
 
 The testing keys must match the repo's declared framework: `python.testing.pytestEnabled` true and `python.testing.unittestEnabled` false in a pytest repo, the reverse in a unittest repo. The wrong pair makes test discovery silently show nothing.
 
-Also set `files.eol` to `"\n"`, `files.trimTrailingWhitespace`, and `files.insertFinalNewline` - the editor half of the line-ending defence, with `.gitattributes` (`* text=auto eol=lf`) as the backstop at commit time. `templates/vscode-settings.template.json` is the starting point.
+Also set `files.eol` to `"\n"`, `files.trimTrailingWhitespace`, and `files.insertFinalNewline` - the VS Code layer of the line-ending defence described next. `templates/vscode-settings.template.json` is the starting point.
+
+## Line endings: .editorconfig and the CRLF check
+
+Every repository is LF only, on every OS, and four layers keep it that way:
+
+- **`.editorconfig`** (`end_of_line = lf`) - every editor that reads EditorConfig, for every file, including gitignored working files.
+- **`.vscode/settings.json`** (`files.eol`) - VS Code, for new files in that workspace.
+- **`.gitattributes`** (`* text=auto eol=lf`) - what git stores, at commit time.
+- **A CI check** that fails when `git ls-files --eol` reports a tracked text file as CRLF or mixed - anything that reached a commit by another route.
+
+`.gitattributes` and the CI check never see gitignored files; only the editor layers reach them. A file committed before `.gitattributes` existed keeps its CRLF until renormalized, so in a repo with committed CRLF run `git add --renormalize .` as a commit of its own before adding the check.
+
+`templates/editorconfig.template` is the floor, not the ceiling: a repo may add sections (indent rules per file type, for example) but does not override the `[*]` keys. It trims trailing whitespace in Markdown too, so write a hard line break as a trailing backslash rather than two spaces - which is what mdformat produces anyway. `templates/ci-crlf-check.template.yml` is the CI step.
 
 ## The ruff lint block
 
-One rule set for every repo that lints, so ruff behaves identically in every session and every repo: select E, W, F, I, N, B, C4, UP; ignore E501, N802, N803, N806. `templates/ruff-lint-snippet.toml` is the paste-in block. The families beyond the flake8 baseline earn their place: I makes import order deterministic and is fully auto-fixable, which removes a whole class of diff noise in repos that several assistants write in; UP keeps syntax at the repo's declared Python floor and is nearly all auto-fixable; N catches naming errors in public APIs, with the three ignores covering legacy camelCase test methods and scientific naming (`df`-style locals and arguments).
+One rule set for every repo that lints, so ruff behaves identically in every session and every repo: select E, W, F, I, N, B, C4, UP; ignore E501, N802, N803, N806. `templates/ruff-lint-snippet.toml` is the paste-in block; it also sets `[tool.ruff.format] line-ending = "lf"`, because the default, `auto`, keeps whatever ending a file already has. The families beyond the flake8 baseline earn their place: I makes import order deterministic and is fully auto-fixable, which removes a whole class of diff noise in repos that several assistants write in; UP keeps syntax at the repo's declared Python floor and is nearly all auto-fixable; N catches naming errors in public APIs, with the three ignores covering legacy camelCase test methods and scientific naming (`df`-style locals and arguments).
 
 Two rules that come from how these configs actually drift:
 
@@ -184,11 +200,13 @@ A repo whose only Python is a single utility script gets no ruff config; the ove
 - [ ] `AGENTS.md` under 200 lines, with the `Test framework:` line
 - [ ] `CLAUDE.md` is `@AGENTS.md` plus Claude-specific notes; `/context` shows both under **Memory files**
 - [ ] `.github/copilot-instructions.md` points at `AGENTS.md`, duplicates nothing
-- [ ] `.claude/settings.json` committed; `Read(.env)` denied; relative paths only
+- [ ] `.claude/settings.json` committed; `Read(.env)` denied; no allow rules for read-only shell commands; relative paths only
 - [ ] `.vscode/settings.json` committed; testing keys match the declared framework
 - [ ] `.gitignore` covers `.status/`, `.env`, `CLAUDE.local.md`, `.claude/settings.local.json`
 - [ ] `.env.example` documents every variable `.env` needs
-- [ ] `.gitattributes` normalizes line endings
+- [ ] `.gitattributes` normalizes line endings, and no tracked text file is CRLF (`git ls-files --eol | grep -E '^i/(crlf|mixed)' | grep -v attr/-text` prints nothing)
+- [ ] `.editorconfig` committed (LF, final newline, trailing whitespace trimmed, UTF-8); extra sections allowed, `[*]` keys not overridden
+- [ ] Where the repo has CI, the main workflow runs the CRLF check from `templates/ci-crlf-check.template.yml`
 - [ ] Repos with a ruff config: lint block matches `templates/ruff-lint-snippet.toml`, no dead config; single-utility-script repos have no ruff config
 - [ ] No drive letter, no project history, no `.status/` pointer in any committed file
 - [ ] Every command in `AGENTS.md` verified to actually run
@@ -200,3 +218,7 @@ Checked 2026-08-09:
 - [Memory - AGENTS.md and imports](https://code.claude.com/docs/en/memory) - the `@AGENTS.md` recommendation quoted above, and the Windows symlink caveat
 - [Settings](https://code.claude.com/docs/en/settings) - settings files, precedence, and the load-from-starting-directory behaviour
 - [GitHub Copilot - repository custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions) - native `AGENTS.md` support alongside `copilot-instructions.md`
+
+Checked 2026-11-03:
+
+- [Permissions](https://code.claude.com/docs/en/permissions) - the built-in read-only command set, and that `Read` deny rules do not cover commands that read files without naming them

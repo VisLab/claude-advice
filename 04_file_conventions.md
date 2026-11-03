@@ -49,6 +49,7 @@ The split, using the official committed/gitignored designations:
 | `.env.example`                                   | committed       | Documents every variable `.env` needs                                                                                                      |
 | `.env`                                           | **gitignored**  | Real tokens and machine values                                                                                                             |
 | `.gitattributes`                                 | committed       | Line-ending normalization (`* text=auto eol=lf`)                                                                                           |
+| `.editorconfig`                                  | committed       | LF, final newline, trimmed trailing whitespace, UTF-8 for every editor; the template is the floor                                          |
 | `.status/`                                       | **gitignored**  | Plans, notes, decisions, working prompts - layout in `05_status_directory.md`                                                              |
 | `~/.claude/CLAUDE.md`, `~/.claude/settings.json` | never in a repo | Your preferences across all projects                                                                                                       |
 

@@ -3,7 +3,7 @@
 #
 # Everything NOT listed here is meant to be committed:
 #   AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, .mcp.json,
-#   .vscode/settings.json, .env.example, .gitattributes,
+#   .vscode/settings.json, .env.example, .gitattributes, .editorconfig,
 #   .claude/settings.json, .claude/rules/, .claude/skills/, .claude/agents/
 # ---------------------------------------------------------------------------
 

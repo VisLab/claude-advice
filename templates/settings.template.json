@@ -21,7 +21,9 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
 
   "permissions": {
-    // Read-only, repo-relative commands a session uses constantly.
+    // The repo's own test, lint, and format commands. Read-only shell commands
+    // (cat, head, tail, grep, find, wc, read-only git) need no rule: Claude Code
+    // runs its built-in read-only set without a prompt in every mode.
     "allow": [
       "Bash(python -m pytest *)",
       "Bash(python -m pytest)",
@@ -36,15 +38,10 @@
       "Bash(git log *)",
       "Bash(git diff)",
       "Bash(git diff *)",
-      "Bash(git show *)",
       "Bash(git branch)",
       "Bash(git ls-files *)",
-      "Bash(grep *)",
       "Bash(ls)",
       "Bash(ls *)",
-      "Bash(head *)",
-      "Bash(tail *)",
-      "Bash(cat *)",
       "Bash(wc *)"
     ],
 
