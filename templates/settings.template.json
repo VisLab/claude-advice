@@ -29,7 +29,9 @@
     //
     // A rule without "*" matches one exact command: "Bash(npm test)" does not
     // match "npm test -- --watch". A trailing " *" also matches the bare
-    // command, so "Bash(git log *)" covers "git log" too.
+    // command, so "Bash(git log *)" covers "git log" too. Give a wildcard only
+    // to commands that are read-only whatever their arguments: "git branch *"
+    // would also approve "git branch -D", so git branch gets exact forms.
     //
     // The repo's own test, lint, and format commands. Read-only shell commands
     // (cat, head, tail, grep, find, wc, read-only git) need no rule: Claude Code
@@ -44,7 +46,11 @@
       "Bash(git status *)",
       "Bash(git log *)",
       "Bash(git diff *)",
-      "Bash(git branch *)",
+      "Bash(git branch)",
+      "Bash(git branch --show-current)",
+      "Bash(git branch -a)",
+      "Bash(git branch -r)",
+      "Bash(git branch -vv)",
       "Bash(git ls-files *)"
     ],
 
