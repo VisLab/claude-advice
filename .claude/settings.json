@@ -3,8 +3,7 @@
   "permissions": {
     "deny": [
       "Read(.env)",
-      "Read(.envrc)",
-      "Read(.status/archive/**)"
+      "Read(.envrc)"
     ]
   }
 }

@@ -19,7 +19,6 @@ Copy-paste starting points, one per target file. The naming pattern is `NAME.tem
 | `status_conduct.instructions.template.md` | `<repo>/.github/instructions/status_conduct.instructions.md`  | Yes                           | `05_status_directory.md` |
 | `skill_example_SKILL.template.md`         | `<repo>/.claude/skills/<name>/SKILL.md`                       | Yes                           | `04_file_conventions.md` |
 | `hub_REPOS.template.md`                   | `<hub-repo>/REPOS.md`                                         | Yes                           | its own header comment   |
-| `CLAUDE.local.template.md`                | `<repo>/CLAUDE.local.md`                                      | **No** - gitignored           | `04_file_conventions.md` |
 | `settings.local.template.json`            | `<repo>/.claude/settings.local.json`                          | **No** - gitignored           | `04_file_conventions.md` |
 | `plan_doc.template.md`                    | `<repo>/.status/plans/<slug>.md`                              | No - `.status/` is gitignored | `05_status_directory.md` |
 | `status_README.template.md`               | `<repo>/.status/README.md`                                    | No - same reason              | `05_status_directory.md` |

@@ -21,28 +21,31 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
 
   "permissions": {
+    // Every rule here is a Bash-tool rule. A Bash(...) rule does not govern
+    // Claude Code's PowerShell tool, which has its own PowerShell(...) rules,
+    // so a Windows machine with Git Bash turns that tool off
+    // (CLAUDE_CODE_USE_POWERSHELL_TOOL=0 in the user environment) rather than
+    // keeping two copies of every list.
+    //
+    // A rule without "*" matches one exact command: "Bash(npm test)" does not
+    // match "npm test -- --watch". A trailing " *" also matches the bare
+    // command, so "Bash(git log *)" covers "git log" too.
+    //
     // The repo's own test, lint, and format commands. Read-only shell commands
     // (cat, head, tail, grep, find, wc, read-only git) need no rule: Claude Code
     // runs its built-in read-only set without a prompt in every mode.
     "allow": [
       "Bash(python -m pytest *)",
-      "Bash(python -m pytest)",
       "Bash(python -m unittest *)",
       "Bash(python -m ruff *)",
       "Bash(python -m mdformat *)",
       "Bash(python -c *)",
       "Bash(python --version)",
-      "Bash(git status)",
       "Bash(git status *)",
-      "Bash(git log)",
       "Bash(git log *)",
-      "Bash(git diff)",
       "Bash(git diff *)",
-      "Bash(git branch)",
-      "Bash(git ls-files *)",
-      "Bash(ls)",
-      "Bash(ls *)",
-      "Bash(wc *)"
+      "Bash(git branch *)",
+      "Bash(git ls-files *)"
     ],
 
     // Things that change history or the index: fine, but only on request.
@@ -56,11 +59,13 @@
 
     // Secrets, bulk history, deletion, publishing, and the network.
     // .gitignore'd paths are already excluded from searches automatically;
-    // deny rules are for things that exist but must not be touched.
+    // deny rules are for things that exist but must not be touched. A deny
+    // cannot be approved at prompt time, so nothing goes here that AGENTS.md
+    // allows on request - the "do not read .status/archive/ unless named"
+    // guard is an instruction, not a deny.
     "deny": [
       "Read(.env)",
       "Read(.envrc)",
-      "Read(.status/archive/**)",
       "Bash(rm -rf *)",
       "Bash(rm -r *)",
       "Bash(git push)",

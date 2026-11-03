@@ -115,10 +115,7 @@ Your part is skimming the drafts and saying which go in - minutes, not an aftern
 ### Step 5 - write the index and wire it up
 
 1. `.status/README.md` from `templates/status_README.template.md`, ending with its ordered `Next` list - worth more than everything you just archived - and `.status/development_history.md` from `templates/status_development_history.template.md`.
-2. Add the deny rules to the repo's **committed** `.claude/settings.json` - the patterns are repo-relative, so they are portable and inert for anyone without a `.status/`:
-   ```json
-   "deny": ["Read(.status/archive/**)"]
-   ```
+2. Make sure the repo's **committed** `.claude/settings.json` has no `Read(.status/archive/**)` deny; an older setup may carry one, and it blocks the named-file exception (see `05_status_directory.md`).
 3. Add the "Where the thinking lives" block to `AGENTS.md` (see `05_status_directory.md`).
 4. If `.status/` is not gitignored in this repo, add it - `git ls-files .status` should print nothing.
 

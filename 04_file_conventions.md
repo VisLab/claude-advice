@@ -32,31 +32,31 @@ Every configuration file is either **portable** (true on any machine, for any co
 
 The split, using the official committed/gitignored designations:
 
-| File                                             | Status          | What goes in it                                                                                                                            |
-| ------------------------------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `AGENTS.md`                                      | committed       | The single instruction source: commands, layout, conventions, gotchas, agreements. Relative paths only. Sibling repos named, never pathed. |
-| `CLAUDE.md`                                      | committed       | The `@AGENTS.md` import plus Claude-Code-specific notes, nothing else                                                                      |
-| `.github/copilot-instructions.md`                | committed       | A pointer to `AGENTS.md`, duplicating nothing                                                                                              |
-| `CLAUDE.local.md`                                | **gitignored**  | This machine's Claude Code notes; machine facts themselves go in `.status/local-environment.md`, which every tool can read                 |
-| `.claude/settings.json`                          | committed       | Deny rules with relative paths, hooks calling repo-relative scripts, `worktree.sparsePaths`                                                |
-| `.claude/settings.local.json`                    | **gitignored**  | `additionalDirectories`, `claudeMdExcludes`, personal permissions, anything absolute                                                       |
-| `.claude/rules/*.md`                             | committed       | Path-scoped project conventions                                                                                                            |
-| `.claude/skills/*/SKILL.md`                      | committed       | Shared procedures                                                                                                                          |
-| `.claude/agents/*.md`                            | committed       | Custom subagents                                                                                                                           |
-| `.mcp.json`                                      | committed       | Project MCP servers. **No secrets** - per-server `env` for those, and keep tokens out of the repo.                                         |
-| `.worktreeinclude`                               | committed       | Lists gitignored files to copy into new worktrees                                                                                          |
-| `.vscode/settings.json`                          | committed       | Portable editor settings only; the testing keys must match the repo's declared test framework                                              |
-| `.env.example`                                   | committed       | Documents every variable `.env` needs                                                                                                      |
-| `.env`                                           | **gitignored**  | Real tokens and machine values                                                                                                             |
-| `.gitattributes`                                 | committed       | Line-ending normalization (`* text=auto eol=lf`)                                                                                           |
-| `.editorconfig`                                  | committed       | LF, final newline, trimmed trailing whitespace, UTF-8 for every editor; the template is the floor                                          |
-| `.status/`                                       | **gitignored**  | Plans, notes, decisions, working prompts - layout in `05_status_directory.md`                                                              |
-| `~/.claude/CLAUDE.md`, `~/.claude/settings.json` | never in a repo | Your preferences across all projects                                                                                                       |
+| File                                             | Status          | What goes in it                                                                                                                                 |
+| ------------------------------------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md`                                      | committed       | The single instruction source: commands, layout, conventions, gotchas, agreements. Relative paths only. Sibling repos named, never pathed.      |
+| `CLAUDE.md`                                      | committed       | The `@AGENTS.md` and `@.status/local-environment.md` imports plus a one-paragraph orientation, nothing else                                     |
+| `.github/copilot-instructions.md`                | committed       | A pointer to `AGENTS.md`, duplicating nothing                                                                                                   |
+| `CLAUDE.local.md`                                | **gitignored**  | Optional and not part of the standard: a personal file for one machine if someone wants one; machine facts go in `.status/local-environment.md` |
+| `.claude/settings.json`                          | committed       | Deny rules with relative paths, hooks calling repo-relative scripts, `worktree.sparsePaths`                                                     |
+| `.claude/settings.local.json`                    | **gitignored**  | `additionalDirectories`, `claudeMdExcludes`, personal permissions, anything absolute                                                            |
+| `.claude/rules/*.md`                             | committed       | Path-scoped project conventions                                                                                                                 |
+| `.claude/skills/*/SKILL.md`                      | committed       | Shared procedures                                                                                                                               |
+| `.claude/agents/*.md`                            | committed       | Custom subagents                                                                                                                                |
+| `.mcp.json`                                      | committed       | Project MCP servers. **No secrets** - per-server `env` for those, and keep tokens out of the repo.                                              |
+| `.worktreeinclude`                               | committed       | Lists gitignored files to copy into new worktrees                                                                                               |
+| `.vscode/settings.json`                          | committed       | Portable editor settings only; the testing keys must match the repo's declared test framework                                                   |
+| `.env.example`                                   | committed       | Documents every variable `.env` needs                                                                                                           |
+| `.env`                                           | **gitignored**  | Real tokens and machine values                                                                                                                  |
+| `.gitattributes`                                 | committed       | Line-ending normalization (`* text=auto eol=lf`)                                                                                                |
+| `.editorconfig`                                  | committed       | LF, final newline, trimmed trailing whitespace, UTF-8 for every editor; the template is the floor                                               |
+| `.status/`                                       | **gitignored**  | Plans, notes, decisions, working prompts - layout in `05_status_directory.md`                                                                   |
+| `~/.claude/CLAUDE.md`, `~/.claude/settings.json` | never in a repo | Your preferences across all projects                                                                                                            |
 
 Three gotchas that make this easy to get wrong:
 
 1. **`.claude/settings.local.json` is auto-gitignored only when Claude Code saves a setting to it.** Hand-create it and you must gitignore it yourself.
-2. **`CLAUDE.local.md` is missing inside new git worktrees**, because it's gitignored and worktrees are fresh checkouts. Two fixes: list it in `.worktreeinclude` at the repo root, or keep the content in a home-directory file and import it with `@~/.claude/<repo>-local.md`. (A project-level import resolving outside the working directory prompts for approval once.)
+2. **Gitignored files are missing inside new git worktrees**, because worktrees are fresh checkouts; `.status/` and any `CLAUDE.local.md` are absent there. `CLAUDE.md` tolerates this: a missing `@` import is skipped silently. To carry a gitignored file into worktrees anyway, list it in `.worktreeinclude` at the repo root.
 3. **`~/.claude.json` is not `~/.claude/settings.json`.** The first is app state and UI preferences; `permissions`, `hooks`, and `env` set there are ignored. Two different files, one letter apart.
 
 `templates/gitignore-snippet.txt` has the lines to add plus a one-line grep that catches any drive letter that sneaks into a committed file.
@@ -210,15 +210,15 @@ ______________________________________________________________________
 
 The question that comes up every time you notice Claude doing something you did not want. Two axes decide it: **how many projects does this apply to**, and **does it need to hold every time or just usually**.
 
-| The rule is...                                                               | Put it in                                                  | Loads                                  |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------- | -------------------------------------- |
-| True of every project you work on ("ASCII only", "never touch `.status/`")   | `~/.claude/CLAUDE.md`, on every machine                    | every session, every project           |
-| True of one repo, and a collaborator or CI needs it too                      | that repo's `AGENTS.md`, committed                         | every session in that repo             |
-| True of one repo, only on this machine (paths, interpreter, "the slow disk") | that repo's `CLAUDE.local.md`, gitignored                  | every session in that repo, yours only |
-| Only relevant when touching certain files (event files, sidecar JSON)        | `.claude/rules/<topic>.md` with a `paths:` glob, committed | only when Claude opens a matching file |
-| A multi-step procedure you keep retyping                                     | `.claude/skills/<name>/SKILL.md`, committed                | only when invoked                      |
-| Something that must hold every time, no exceptions                           | a hook in `.claude/settings.json`                          | enforced, not requested                |
-| A convention about how these advice documents themselves are written         | this folder's `CLAUDE.md`                                  | any session started in this folder     |
+| The rule is...                                                               | Put it in                                                                       | Loads                                  |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------- |
+| True of every project you work on ("ASCII only", "never touch `.status/`")   | `~/.claude/CLAUDE.md`, on every machine                                         | every session, every project           |
+| True of one repo, and a collaborator or CI needs it too                      | that repo's `AGENTS.md`, committed                                              | every session in that repo             |
+| True of one repo, only on this machine (paths, interpreter, "the slow disk") | that repo's `.status/local-environment.md`, gitignored, imported by `CLAUDE.md` | every session in that repo, yours only |
+| Only relevant when touching certain files (event files, sidecar JSON)        | `.claude/rules/<topic>.md` with a `paths:` glob, committed                      | only when Claude opens a matching file |
+| A multi-step procedure you keep retyping                                     | `.claude/skills/<name>/SKILL.md`, committed                                     | only when invoked                      |
+| Something that must hold every time, no exceptions                           | a hook in `.claude/settings.json`                                               | enforced, not requested                |
+| A convention about how these advice documents themselves are written         | this folder's `CLAUDE.md`                                                       | any session started in this folder     |
 
 Three practical notes:
 

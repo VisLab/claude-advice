@@ -256,19 +256,7 @@ Seven bullets, no more. Point at the index and the files with authority; say exp
 - IMPORTANT: do not read `.status/archive/` unless a file is named for you. The `.status/` root holds only `README.md`, `decisions.md`, `development_history.md`, and `local-environment.md`; nothing else is created there.
 ```
 
-And back the important half of that with a rule rather than a request. In the **committed** `.claude/settings.json` - the pattern is repo-relative, so it is portable, and it is inert for a collaborator who has no `.status/`:
-
-```json
-{
-  "permissions": {
-    "deny": [
-      "Read(.status/archive/**)"
-    ]
-  }
-}
-```
-
-That is a wall for Claude's file tools and for the Bash file commands that name the file, and it means an archive can grow to 10,000 files without ever costing you a token. It is not a complete wall: a deny rule does not apply to a command that reads files without naming them, such as `grep -r pattern .`, or to a program the session runs that opens files itself ([permissions](https://code.claude.com/docs/en/permissions)). Only the sandbox closes those gaps. If you want the same for `notes/`, add it - but notes are often what you actually want found, so I would leave that one readable. Do **not** deny `scratch/`: it is the agents' workbench, and an agent that cannot read a script back will not iterate on it there - it will fall back to leaving `test.py` in the repository root.
+The archive guard stays an instruction; do **not** back it with a `Read(.status/archive/**)` deny in `.claude/settings.json`. A deny rule cannot be approved at prompt time, so it would also block the exception the instruction grants - a named archived file - and the sessions that migrate a `.status/` need to list the archive. The hazard is context flooding, not secrets, and the instruction plus the conduct rule in `.claude/rules/` is what keeps an archive of 10,000 files from costing a token. A deny would not be a complete wall anyway: it does not apply to a command that reads files without naming them, such as `grep -r pattern .`, or to a program the session runs that opens files itself ([permissions](https://code.claude.com/docs/en/permissions)). Do **not** restrict `scratch/` either: it is the agents' workbench, and an agent that cannot read a script back will not iterate on it there - it will fall back to leaving `test.py` in the repository root.
 
 ______________________________________________________________________
 
@@ -325,7 +313,7 @@ ______________________________________________________________________
 - [ ] `development_history.md` exists; shipped work is recorded there, not in `README.md`
 - [ ] No `.status/` file contains a CR byte - each of these prints nothing. bash: `find .status -name '*.md' | while read f; do [ $(tr -cd '\r' <"$f" | wc -c) -gt 0 ] && echo "$f"; done`. PowerShell: `Get-ChildItem .status -Recurse -Filter *.md | Where-Object { (Get-Content -Raw $_.FullName) -match "\r" } | ForEach-Object FullName`
 - [ ] `decisions.md` has at least one real entry harvested from the old files
-- [ ] `Read(.status/archive/**)` denied in `.claude/settings.json`; `scratch/` left readable
+- [ ] No `Read(.status/archive/**)` deny in `.claude/settings.json`; the archive guard is the `AGENTS.md` sentence and the conduct rule; `scratch/` readable
 - [ ] `AGENTS.md` says temporary scripts go in `.status/scratch/`, never the repository root
 - [ ] `.claude/rules/status_conduct.md` present, with its `.github/instructions/` twin
 - [ ] `AGENTS.md` points at `.status/README.md`, `.status/decisions.md`, `.status/plans/` - and says what not to read

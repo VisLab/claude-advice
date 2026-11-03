@@ -54,7 +54,7 @@ Target state:
 - **One repo is the hub.** It carries the map of the repositories and the cross-repo plans.
 - **The working habit:** plan mode first; the plan is written to disk; a fresh session executes it; the result is verified against a check.
 
-More than one assistant works in these repos, so the shared rules live in `AGENTS.md`, a file no single vendor owns. `CLAUDE.md` is the `@AGENTS.md` import plus Claude-Code-specific notes, and `.github/copilot-instructions.md` is a pointer: Claude Code does not read `AGENTS.md` and Copilot does, so this wiring gives every tool the same instructions without duplicating them. Machine facts go in `.status/local-environment.md`, which any tool can read - `CLAUDE.local.md` is loaded only by Claude Code, so it holds nothing another assistant would need. The wiring and the sources are detailed in the rest of this document.
+More than one assistant works in these repos, so the shared rules live in `AGENTS.md`, a file no single vendor owns. `CLAUDE.md` imports it and the machine-facts file, and `.github/copilot-instructions.md` is a pointer: every tool gets the same instructions without duplicating them. Machine facts go in `.status/local-environment.md`, which any tool can read. The wiring and the sources are detailed in the rest of this document.
 
 ## The shape
 
@@ -63,8 +63,7 @@ The standard shape for a repository. Verified against `code.claude.com/docs` and
 ```
 your-repo/
 |-- AGENTS.md                    # committed - THE instruction file, under 200 lines
-|-- CLAUDE.md                    # committed - @AGENTS.md plus Claude-Code-specific notes
-|-- CLAUDE.local.md              # gitignored - this machine's Claude Code notes
+|-- CLAUDE.md                    # committed - imports AGENTS.md and .status/local-environment.md
 |-- README.md                    # committed - for humans browsing GitHub
 |-- .github/
 |   `-- copilot-instructions.md  # committed - a pointer to AGENTS.md, duplicating nothing
@@ -82,27 +81,30 @@ your-repo/
 
 ## One instruction file: AGENTS.md
 
-A repo's instructions live in one committed file, `AGENTS.md`. Two facts, checked against the vendors' documentation rather than assumed, settle the wiring:
+A repo's instructions live in one committed file, `AGENTS.md`. Three facts, checked against the vendors' documentation rather than assumed, settle the wiring:
 
-- **Claude Code does not read `AGENTS.md`.** Its docs prescribe exactly this setup: "create a `CLAUDE.md` that imports it so both tools read the same instructions without duplicating them." A symlink also works but requires Administrator or Developer Mode on Windows, so the `@AGENTS.md` import is the right mechanism here.
+- **Claude Code reads `AGENTS.md` natively (2.1.277 and later), but only when no `CLAUDE.md` or `CLAUDE.local.md` exists** in the working directory or above. A repo that has a `CLAUDE.md` for any other reason must import `AGENTS.md` from it, which its docs also prescribe: "create a `CLAUDE.md` that imports it so both tools read the same instructions without duplicating them."
+- **`CLAUDE.md` is kept for one job: imports.** `@path` imports are a `CLAUDE.md` feature; they are not documented for a natively read `AGENTS.md`. The machine-facts file, `.status/local-environment.md`, has to reach every session, so `CLAUDE.md` imports it alongside `AGENTS.md`. A missing import is skipped silently (measured: a `CLAUDE.md` importing an absent file loaded its other import and started with no warning), so the committed file is safe in a clone that has no `.status/`.
 - **GitHub Copilot reads `AGENTS.md` natively** - in VS Code and in the coding agent - while still supporting `.github/copilot-instructions.md`.
 
-`CLAUDE.md` cannot be the shared instruction file: more than one assistant works in these repos, and the other tools do not read a file named for one vendor. The same reasoning moves machine facts out of `CLAUDE.local.md`, which only Claude Code loads, and into `.status/local-environment.md`, which every tool can read.
+`CLAUDE.md` cannot be the shared instruction file: more than one assistant works in these repos, and the other tools do not read a file named for one vendor. The same reasoning puts machine facts in `.status/local-environment.md`, which every tool can read, rather than in a Claude-only file. `CLAUDE.local.md` is therefore not part of the standard: it stays in `.gitignore` so that a personal file, if someone wants one, never ships, but no repo needs one.
 
 One source, several pointers - a rule stated in two files is a rule that will disagree with itself:
 
-- **`CLAUDE.md`** is the import plus anything Claude-Code-specific, and nothing else:
+- **`CLAUDE.md`** is the two imports plus a one-paragraph orientation, and nothing else. Keep a blank line between the imports: mdformat joins adjacent lines into one paragraph, and whether Claude Code reads two `@` imports from one line is undocumented.
 
   ```markdown
   @AGENTS.md
 
+  @.status/local-environment.md
+
   # Claude Code
 
-  - `CLAUDE.local.md` (gitignored) holds this machine's Claude Code notes and
-    imports `.status/local-environment.md`, where machine facts live for every
-    tool.
-  - After changing an import, run `/context` and confirm the file appears under
-    **Memory files**.
+  `AGENTS.md`, imported above, is the whole instruction set.
+  `.status/local-environment.md`, also imported, holds this machine's paths
+  and quirks for every tool. Path-scoped rules in `.claude/rules/` load when
+  a session touches matching files. After changing an import, run `/context`
+  and confirm the file appears under **Memory files**.
   ```
 
 - **`.github/copilot-instructions.md`** says "read `AGENTS.md` and follow it" and duplicates nothing.
@@ -140,7 +142,7 @@ Layout, naming, and retention rules: `05_status_directory.md`.
 
 | Committed                                                   | Gitignored                        |
 | ----------------------------------------------------------- | --------------------------------- |
-| `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md` | `CLAUDE.local.md`                 |
+| `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md` | `CLAUDE.local.md` (optional)      |
 | `.claude/settings.json`                                     | `.claude/settings.local.json`     |
 | `.vscode/settings.json` (portable settings only)            | `.status/`                        |
 | `.env.example`                                              | `.env`                            |
@@ -155,9 +157,17 @@ Two gotchas:
 
 ## `.claude/settings.json`
 
-Committed, so relative paths only. The shape that works: allow the repo's own test and lint commands; ask before `git add`, `git commit`, and content-destroying restores; deny `Read(.env)`, `Read(.status/archive/**)`, `git push`, package installs, and network fetchers. (`.status/scratch/` stays readable - it is the agents' workbench for throwaway scripts; see `05_status_directory.md`.) `templates/settings.template.json` is the copy-paste starting point.
+Committed, so relative paths only. The shape that works: allow the repo's own test, lint, and format commands; ask before `git add`, `git commit`, and content-destroying restores; deny `Read(.env)`, `git push`, package installs, and network fetchers. `templates/settings.template.json` is the copy-paste starting point.
 
-Read-only shell commands (`cat`, `head`, `tail`, `grep`, `find`, `wc`, read-only `git`) need no allow rule: Claude Code runs its built-in read-only set without a prompt in every mode.
+Three facts about rules that are easy to get wrong:
+
+- **A deny is a wall, not a prompt.** Deny rules are evaluated before ask and allow, and nothing can approve one at prompt time, so a deny must never cover something `AGENTS.md` permits on request. The archive guard ("do not read `.status/archive/` unless a file is named for you") is an instruction in `AGENTS.md` and the conduct rule, not a deny: the hazard is context flooding, not secrets, and a deny would also block the named-file exception. `.status/scratch/` stays readable too - it is the agents' workbench for throwaway scripts; see `05_status_directory.md`.
+- **A rule without `*` matches one exact command.** `Bash(npm test)` does not match `npm test -- --watch`; write `Bash(npm test *)`. A trailing ` *` also matches the bare command, so `Bash(git log *)` covers `git log`.
+- **Rules are per shell tool.** A `Bash(...)` rule does not govern Claude Code's PowerShell tool, which has its own `PowerShell(...)` rules, and on Windows with Git Bash installed Claude Code offers both tools and treats PowerShell as primary. Rather than keep two copies of every list, a Windows machine with Git Bash turns the PowerShell tool off: `CLAUDE_CODE_USE_POWERSHELL_TOOL=0` as a user environment variable (verified: the session's shell tools go from "Bash, PowerShell" to "Bash"). That affects only Claude's tool set, not the person's own terminal. The committed rules are then Bash rules only.
+
+Read-only shell commands (`cat`, `head`, `tail`, `grep`, `find`, `wc`, read-only `git`) need no allow rule: Claude Code runs its built-in read-only set without a prompt in every mode. Explicit `ask` rules prompt in every mode, including auto mode, so the ask list is exactly the set of things that should always stop for a human.
+
+Do not set `permissions.blockReadsOutsideWorkingDirectories`. While it is on, any Bash command the shell parser cannot trace prompts even in auto mode, whether or not it names an outside path, and a running session keeps the block until restarted. Sessions that need a sibling checkout add it with `--add-dir`.
 
 Gotcha: project settings load only from the directory Claude Code is started in - they are not inherited from parent directories the way `CLAUDE.md` files are.
 
@@ -198,9 +208,9 @@ A repo whose only Python is a single utility script gets no ruff config; the ove
 ## Per-repo checklist
 
 - [ ] `AGENTS.md` under 200 lines, with the `Test framework:` line
-- [ ] `CLAUDE.md` is `@AGENTS.md` plus Claude-specific notes; `/context` shows both under **Memory files**
+- [ ] `CLAUDE.md` is `@AGENTS.md` and `@.status/local-environment.md` plus the orientation paragraph; `/context` shows it under **Memory files**; no `CLAUDE.local.md` is needed
 - [ ] `.github/copilot-instructions.md` points at `AGENTS.md`, duplicates nothing
-- [ ] `.claude/settings.json` committed; `Read(.env)` denied; no allow rules for read-only shell commands; relative paths only
+- [ ] `.claude/settings.json` committed; `Read(.env)` denied; no `Read(.status/archive/**)` deny; no allow rules for read-only shell commands; every allow rule for a command that takes arguments ends in ` *`; Bash rules only; no `blockReadsOutsideWorkingDirectories`; relative paths only
 - [ ] `.vscode/settings.json` committed; testing keys match the declared framework
 - [ ] `.gitignore` covers `.status/`, `.env`, `CLAUDE.local.md`, `.claude/settings.local.json`
 - [ ] `.env.example` documents every variable `.env` needs
