@@ -41,6 +41,10 @@
       "Bash(python -m unittest *)",
       "Bash(python -m ruff *)",
       "Bash(python -m mdformat *)",
+      // Only in a repo with no secrets file (.env, config.py): inline Python
+      // reads any file and shells out, so it bypasses every deny below. Drop
+      // this line where such a file exists (hed-server, hed-metadata-toolkit,
+      // nemar-metadata).
       "Bash(python -c *)",
       "Bash(python --version)",
       "Bash(git status *)",
