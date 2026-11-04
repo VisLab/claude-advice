@@ -34,7 +34,7 @@ from pathlib import Path
 
 # Retention defaults. A repo overrides them with `key: days` lines in
 # .status/config.md (see 05_status_directory.md); only stale_days is used here.
-RETENTION_DEFAULTS = {"scratch_days": 30, "plan_days": 60, "stale_days": 90}
+RETENTION_DEFAULTS = {"plan_days": 60, "stale_days": 90}
 
 # Files that are noise no matter what they contain.
 JUNK_SUFFIXES = {".log", ".bak", ".backup", ".tmp", ".orig", ".swp", ".pyc"}
@@ -74,7 +74,7 @@ def load_retention(status: Path) -> dict:
     cfg = dict(RETENTION_DEFAULTS)
     config = status / "config.md"
     if config.is_file():
-        for m in re.finditer(r"^(scratch_days|plan_days|stale_days)\s*[:=]\s*(\d+)\s*$",
+        for m in re.finditer(r"^(plan_days|stale_days)\s*[:=]\s*(\d+)\s*$",
                              config.read_text(encoding="utf-8"), re.MULTILINE):
             cfg[m.group(1)] = int(m.group(2))
     return cfg
