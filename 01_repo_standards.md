@@ -190,7 +190,7 @@ Every repository is LF only, on every OS, and four layers keep it that way:
 
 `.gitattributes` and the CI check never see gitignored files; only the editor layers reach them. A file committed before `.gitattributes` existed keeps its CRLF until renormalized, so in a repo with committed CRLF run `git add --renormalize .` as a commit of its own before adding the check.
 
-`templates/editorconfig.template` is the floor, not the ceiling: a repo may add sections (indent rules per file type, for example) but does not override the `[*]` keys. It trims trailing whitespace in Markdown too, so write a hard line break as a trailing backslash rather than two spaces - which is what mdformat produces anyway. `templates/ci-crlf-check.template.yml` is the CI step.
+`templates/editorconfig.template` is the floor, not the ceiling: a repo may add sections (indent rules per file type, for example) but does not override the `[*]` keys. It trims trailing whitespace in Markdown too, so write a hard line break as a trailing backslash rather than two spaces - which is what mdformat produces anyway. The one override it carries itself is `[*.tsv] trim_trailing_whitespace = false`: a TSV row whose last cell is empty ends in a tab, and trimming it would drop the column. `templates/ci-crlf-check.template.yml` is the CI step.
 
 ## The ruff lint block
 
