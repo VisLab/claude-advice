@@ -11,7 +11,7 @@ one row per checklist item - item, pass or fail, and the evidence (the command
 you ran or the file you inspected). Measure; do not assume, and re-run any
 measurement rather than quoting a cached or remembered result. Write this table to .status/notes/
 
-Then write a plan to .status/plans/conform_repo.md containing only the failing
+Then write a plan to .status/plans/YYYY-MM-DD_conform_repo.md (today's date) containing only the failing
 items, each with its concrete fix and one verification I can run, using
 <path to claude-advice>/templates/ as the starting points. Open the plan with
 a "For humans:" summary.

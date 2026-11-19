@@ -12,7 +12,7 @@
 **For humans:** this repo's retention settings. Defaults apply to anything not
 set here. `stale_days` drives the migration script's stale classification;
 `plan_days` governs the manual tidy pass. There is no `scratch_days`: `scratch/`
-is pruned by hand, obvious junk only, never by age.
+is cleaned only when Kay asks, obvious junk only, never by age.
 
 plan_days: 60
 stale_days: 90

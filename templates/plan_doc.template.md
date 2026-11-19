@@ -1,11 +1,11 @@
 <!--
-  Copy to .status/plans/<slug>.md   (see 05_status_directory.md)
+  Copy to .status/plans/YYYY-MM-DD_<slug>.md   (see 05_status_directory.md)
 
-  No date and no "-plan" suffix in the filename: it lives in plans/, so the kind
-  is already known, and its creation date stops being interesting on day two.
-  When it finishes, MOVE it to .status/archive/completed_plans/, renamed
-  archived_YYYY-MM-DD_<slug>.md (the day it was archived), and add a
-  development_history.md entry. Never rename an active plan <slug>_complete.md.
+  The date is the day the plan was opened - the same as its Opened: line - so
+  plans/ and archive/completed_plans/ both sort by time. No "-plan" suffix: it
+  lives in plans/, so the kind is already known. When it finishes, MOVE it to
+  .status/archive/completed_plans/ with its name unchanged, and add a
+  development_history.md entry. Never rename a plan <slug>_complete.md.
 
   Why a file and not chat: long sessions compact their context and lose detail.
   A file on disk survives compaction, /clear, and next week.

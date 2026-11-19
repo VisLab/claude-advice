@@ -15,4 +15,4 @@
 
 ## YYYY-MM-DD - <PR #n or initiative name>
 
-<One or two sentences: what shipped and why it matters.> Plan: `archive/completed_plans/archived_YYYY-MM-DD_<slug>.md`. Notes: `notes/YYYY-MM-DD_<slug>.md`.
+<One or two sentences: what shipped and why it matters.> Plan: `archive/completed_plans/YYYY-MM-DD_<slug>.md`. Notes: `notes/YYYY-MM-DD_<slug>.md`.

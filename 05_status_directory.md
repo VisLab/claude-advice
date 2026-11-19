@@ -47,32 +47,32 @@ ______________________________________________________________________
   local-environment.md    <- machine specifics, tool-agnostic. Every tool reads it.
   config.md               <- this repo's retention settings. Optional; defaults apply.
   plans/                  <- active initiatives. One file each. THE ONLY HOT DIR.
-    recursive_repo_metadata.md
-    upstream_migration.md
+    2026-06-15_recursive_repo_metadata.md
+    2026-07-30_upstream_migration.md
   prompts/                <- working prompts: how to start or restart one piece of work.
-    kick_off_repo_metadata.md
+    2026-06-15_kick_off_repo_metadata.md
   notes/                  <- dated write-once records. Never edited after the day.
     2026-06-15_recursive_repo_metadata.md
     2026-07-23_crlf_lineending_fix.md
   archive/                <- finished. Never read unless explicitly asked.
-    completed_plans/      <- archived_YYYY-MM-DD_<slug>.md
-    completed_prompts/    <- archived_YYYY-MM-DD_<slug>.md
+    completed_plans/      <- YYYY-MM-DD_<slug>.md, names unchanged
+    completed_prompts/    <- YYYY-MM-DD_<slug>.md, names unchanged
     completed_notes/      <- YYYY-MM-DD_<slug>.md, names unchanged
-    other/2026/           <- anything else, names unchanged
-  scratch/                <- the workbench: any file type. Pruned by hand, junk only; never by age.
+    2026/                 <- anything else, names unchanged. Flat: files only, no subdirectories.
+  scratch/                <- the workbench: any file type. Cleaned when Kay asks; never by age.
 ```
 
 Nine entries at the top level (ten with the optional `config.md`), forever. `ls .status/` stays useful no matter how much history accumulates, because history lives in `archive/`, and `archive/` is something Claude is told not to read.
 
 **Rules that make it work, in order of how much they matter:**
 
-1. **`.status/` holds markdown only - except `scratch/`, which holds anything.** No `.py`, `.log`, `.xml`, `.tsv`, `.json`, `.css`, `.yaml`, `.pdf`, `.backup` anywhere else. In the survey this one rule accounted for 1,565 of the 2,229 files. Everything non-markdown that is *kept* has a real home: live code -> `scripts/` or `src/`, test data -> `tests/data/`, CI config -> `.github/workflows/`. Everything non-markdown that is *throwaway* - the `test.py` an agent writes to try something, a downloaded sample, a one-off script - goes in `scratch/`, **never the repository root**, and is pruned by hand when it is obvious junk, never by age. (One more exception: a small fixture a note is meaningless without goes in `notes/` beside the note.)
+1. **`.status/` holds markdown only - except `scratch/`, which holds anything.** No `.py`, `.log`, `.xml`, `.tsv`, `.json`, `.css`, `.yaml`, `.pdf`, `.backup` anywhere else. In the survey this one rule accounted for 1,565 of the 2,229 files. Everything non-markdown that is *kept* has a real home: live code -> `scripts/` or `src/`, test data -> `tests/data/`, CI config -> `.github/workflows/`. Everything non-markdown that is *throwaway* - the `test.py` an agent writes to try something, a downloaded sample, a one-off script - goes in `scratch/`, **never the repository root**, and is cleaned out when Kay asks - obvious junk only, never by age. Non-markdown never goes to `archive/`: if it is not kept, it is scratch. (One more exception: a small fixture a note is meaningless without goes in `notes/` beside the note.)
 
-2. **The filename never encodes status.** Not `_complete`, not `_final`, not `_status`, not `_progress`, not `FINAL_v2`. Status is expressed by **which directory the file is in** and by a `Status:` line in its header. When a plan finishes it *moves* to `archive/completed_plans/` and gains one prefix, `archived_YYYY-MM-DD_`, the day it was archived. That prefix is the one exception to this rule: the folder says the file is finished, the prefix says when, and year-first makes a listing sort by that date.
+2. **The filename never encodes status.** Not `_complete`, not `_final`, not `_status`, not `_progress`, not `FINAL_v2`. Status is expressed by **which directory the file is in** and by a `Status:` line in its header. When a plan finishes it *moves* to `archive/completed_plans/` with its name unchanged: the folder says the file is finished, and the leading date it has carried since it was opened keeps the listing sorted.
 
 3. **One initiative, one plan file, edited in place.** If you want the history of how the plan changed, that is what the session notes in `notes/` are for. Four files named after one initiative is the disease, not the record.
 
-4. **Only `README.md`, `plans/`, and `prompts/` are edited in place.** `notes/` is write-once: a note records what happened on a day and is never revised, which is exactly why it can be trusted later. `decisions.md` and `development_history.md` are append-only.
+4. **`README.md`, `plans/`, and `prompts/` are living documents; nothing else is edited in place.** An agent edits them freely - a ticked box, a replaced section, a whole-file rewrite - without asking; before rewriting `README.md` wholesale it copies the old one to `scratch/readme_before_YYYY-MM-DD.md`, which is the safety net git does not provide here. What still needs asking is deleting, moving, or renaming. `notes/` is write-once: a note records what happened on a day and is never revised, which is exactly why it can be trusted later. `decisions.md` and `development_history.md` are append-only.
 
 5. **The `.status/` root is a fixed set:** `README.md`, `decisions.md`, `development_history.md`, `local-environment.md`, plus `config.md` where a repo has one. Nothing else is ever created there. New file -> `plans/`, `prompts/`, `notes/`, or `scratch/`. If you cannot tell which, it is `scratch/`.
 
@@ -82,7 +82,7 @@ Nine entries at the top level (ten with the optional `config.md`), forever. `ls 
 
    No throat-clearing, no restating the title, no listing what the document will cover. Extend the same rule to answers in a session: lead with the conclusion.
 
-7. **A plan is the work; a prompt is how to start it.** `plans/<slug>.md` holds the work itself - goal, decisions, steps. `prompts/<slug>.md` holds the words that hand that work to a fresh session, or restart one that has drifted; it is about one piece of work at one moment, and it is local and disposable. The test for where a prompt belongs: would someone else, in another repository, get value from it? If yes, it is illustrative and goes in the tracked `sample_prompts/` at the repo root, part of the repository's content; if it names your current task, it is a working prompt and goes in `.status/prompts/`.
+7. **A plan is the work; a prompt is how to start it.** `plans/YYYY-MM-DD_<slug>.md` holds the work itself - goal, decisions, steps. `prompts/YYYY-MM-DD_<slug>.md` holds the words that hand that work to a fresh session, or restart one that has drifted; it is about one piece of work at one moment, and it is local and disposable. The test for where a prompt belongs: would someone else, in another repository, get value from it? If yes, it is illustrative and goes in the tracked `sample_prompts/` at the repo root, part of the repository's content; if it names your current task, it is a working prompt and goes in `.status/prompts/`.
 
 ______________________________________________________________________
 
@@ -90,7 +90,7 @@ ______________________________________________________________________
 
 An agent never reads this document. A rule that matters to agent behaviour exists only if it is carried by one of four channels - and a rule in none of them does not exist, however clearly it is stated here:
 
-1. **`AGENTS.md`, loaded at the start of every session.** Its "Where the thinking lives" block and working agreements carry the few behavioural rules an agent actually needs: read `.status/README.md` first, `decisions.md` is append-only, do not read `archive/`, create nothing at the `.status/` root, temporary scripts and experiments go in `.status/scratch/` and never the repository root, open every `.status/` file with a `For humans:` summary, never delete or rewrite without asking. `templates/AGENTS.template.md` contains all of them.
+1. **`AGENTS.md`, loaded at the start of every session.** Its "Where the thinking lives" block and working agreements carry the few behavioural rules an agent actually needs: read `.status/README.md` first, `decisions.md` is append-only, do not read `archive/`, create nothing at the `.status/` root, temporary scripts and experiments go in `.status/scratch/` and never the repository root, open every `.status/` file with a `For humans:` summary, ask before deleting, moving, or renaming, and edit `README.md`, `plans/`, and `prompts/` freely. `templates/AGENTS.template.md` contains all of them.
 2. **Path-scoped rules, loaded the moment the agent touches `.status/`.** `.claude/rules/status_conduct.md`, with `paths: [".status/**"]` in its frontmatter, re-injects the full conduct list exactly when it becomes relevant - including after `/compact` (Claude Code's context compression: when the window fills, the conversation is replaced by a summary, and instructions given mid-session survive only as what the summary kept). This is the channel for the detail that would bloat `AGENTS.md`. `templates/status_conduct.rules.template.md` is the copy-paste start; `templates/status_conduct.instructions.template.md` is the GitHub Copilot twin (`.github/instructions/status_conduct.instructions.md`, honored by the Copilot cloud agent and code review).
 3. **`.status/README.md`, read on arrival.** About a hundred lines is enough because it does not have to teach the scheme - it says what is where *in this repo*, the current state, the unfinished work, and an ordered `Next` list, and repeats the two or three prohibitions beside the directory they protect.
 4. **`.claude/settings.json` deny rules and hooks, enforced regardless.** The `archive/` read-wall holds whether or not the agent read anything. (`scratch/` is deliberately *not* read-denied: it is the workbench, and an agent cannot iterate on a script it is forbidden to read back.)
@@ -105,16 +105,16 @@ One scheme, no exceptions:
 
 | Directory                    | Pattern                                                                                       | Example                                                                                             |
 | ---------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `plans/`                     | `<slug>.md` - no date, no status                                                              | `recursive_repo_metadata.md`                                                                        |
-| `prompts/`                   | `<slug>.md` - no date, no status                                                              | `kick_off_repo_metadata.md`                                                                         |
+| `plans/`                     | `YYYY-MM-DD_<slug>.md` - the day it was opened; no status                                     | `2026-06-15_recursive_repo_metadata.md`                                                             |
+| `prompts/`                   | `YYYY-MM-DD_<slug>.md` - the day it was opened; no status                                     | `2026-06-15_kick_off_repo_metadata.md`                                                              |
 | `notes/`                     | `YYYY-MM-DD_<slug>.md` - **date first**; a note without a leading date is renamed, never left | `2026-07-23_crlf_lineending_fix.md`                                                                 |
-| `archive/completed_plans/`   | `archived_YYYY-MM-DD_<slug>.md` - the day it was archived                                     | `archived_2026-08-04_upstream_migration.md`                                                         |
-| `archive/completed_prompts/` | `archived_YYYY-MM-DD_<slug>.md` - the day it was archived                                     | `archived_2026-08-04_kick_off_repo_metadata.md`                                                     |
-| `archive/completed_notes/`   | `YYYY-MM-DD_<slug>.md` - name unchanged                                                       | `2025-11-02_schema_review.md`                                                                       |
-| `archive/other/<year>/`      | name unchanged - anything not a plan, prompt, or note                                         |                                                                                                     |
+| `archive/completed_plans/`   | name unchanged                                                                                | `2026-07-30_upstream_migration.md`                                                                  |
+| `archive/completed_prompts/` | name unchanged                                                                                | `2026-06-15_kick_off_repo_metadata.md`                                                              |
+| `archive/completed_notes/`   | name unchanged                                                                                | `2025-11-02_schema_review.md`                                                                       |
+| `archive/<year>/`            | name unchanged - anything not a plan, prompt, or note; flat, no subdirectories                |                                                                                                     |
 | root                         | fixed set of filenames only                                                                   | `README.md`, `decisions.md`, `development_history.md`, `local-environment.md`, optional `config.md` |
 
-A plan gets no date because it is a living document and its creation date stops being interesting on day two. A note gets a date *first* because that is the only position where sorting by name equals sorting by time. In the survey, 149 of 154 dated filenames had the date in the middle or at the end - flipping that is most of what makes a large `notes/` directory navigable.
+Every plan, prompt, and note starts with a date because that is the only position where sorting by name equals sorting by time - in `plans/` and `notes/`, and again in the archive, where names never change. For a plan or prompt it is the day it was opened, the same date as its `Opened:` header line. Files archived under the older `archived_YYYY-MM-DD_` prefix keep that name; they are not renamed. In the survey, 149 of 154 dated filenames had the date in the middle or at the end - flipping that is most of what makes a large `notes/` directory navigable.
 
 Character rules, which matter because these repos also get touched from Linux:
 
@@ -128,17 +128,17 @@ ______________________________________________________________________
 
 Each location gets one exit rule. The rules say *what* leaves; the day counts say *when*, and they are per-repo settings with defaults - an actively developed library and a slow-moving dataset catalogue should not share a rhythm. A repo that wants non-default counts declares them in `.status/config.md` (format below); everywhere else the defaults apply.
 
-| Location                 | Exit rule                                                                                                                                                                                                                                                                                                                                                         |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `scratch/`               | **Pruned by hand, obvious junk only, and only when Kay asks**: bytecode caches, browser profiles, backup copies, superseded build outputs. Never by age - a file is not junk because it is old (Kay, 2026-11-04). What makes `scratch/` safe to use freely is that it is the one place junk belongs, and that nothing in it needs to be read before it is judged. |
-| `plans/`                 | A plan is *active* or it is gone. When it completes, or when it has had no activity for `plan_days` (default 60), it moves to `archive/completed_plans/`, renamed `archived_YYYY-MM-DD_<name>`. Split any still-open boxes into a new plan first, add a `development_history.md` entry, and add a one-line outcome to `decisions.md` if it decided anything.      |
-| `prompts/`               | Tied to one piece of work: when that work closes, delete the prompt, or move it to `archive/completed_prompts/` with the same `archived_YYYY-MM-DD_` prefix if it captured anything worth keeping.                                                                                                                                                                |
-| `notes/`                 | Stays until the year turns, then the year's notes move to `archive/completed_notes/`, names unchanged.                                                                                                                                                                                                                                                            |
-| `decisions.md`           | Never. It is the point.                                                                                                                                                                                                                                                                                                                                           |
-| `development_history.md` | Never. Append at the top when a PR merges or an initiative closes.                                                                                                                                                                                                                                                                                                |
-| `local-environment.md`   | Never; it is edited in place.                                                                                                                                                                                                                                                                                                                                     |
-| `config.md`              | Never; edited in place when the repo's rhythm changes.                                                                                                                                                                                                                                                                                                            |
-| `archive/`               | Four places only: `completed_plans/`, `completed_prompts/`, `completed_notes/`, and `other/<year>/` for anything that is not a plan, prompt, or note (names unchanged). Never read unless you name a file explicitly. Never pruned either - it is cheap, it is markdown, and it is the only history you have.                                                     |
+| Location                 | Exit rule                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scratch/`               | **Cleaned only when Kay asks, obvious junk only**: bytecode caches, browser profiles, backup copies, superseded build outputs. When she asks, or approves a list, the agent deletes the files itself - it never hands the deletion back to her. Never by age - a file is not junk because it is old. What makes `scratch/` safe to use freely is that it is the one place junk belongs, and that nothing in it needs to be read before it is judged. |
+| `plans/`                 | A plan is *active* or it is gone. When it completes, or when it has had no activity for `plan_days` (default 60), it moves to `archive/completed_plans/`, name unchanged. Split any still-open boxes into a new plan first, add a `development_history.md` entry, and add a one-line outcome to `decisions.md` if it decided anything.                                                                                                               |
+| `prompts/`               | Tied to one piece of work: when that work closes, delete the prompt, or move it to `archive/completed_prompts/`, name unchanged, if it captured anything worth keeping.                                                                                                                                                                                                                                                                              |
+| `notes/`                 | Stays until the year turns, then the year's notes move to `archive/completed_notes/`, names unchanged.                                                                                                                                                                                                                                                                                                                                               |
+| `decisions.md`           | Never. It is the point.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `development_history.md` | Never. Append at the top when a PR merges or an initiative closes.                                                                                                                                                                                                                                                                                                                                                                                   |
+| `local-environment.md`   | Never; it is edited in place.                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `config.md`              | Never; edited in place when the repo's rhythm changes.                                                                                                                                                                                                                                                                                                                                                                                               |
+| `archive/`               | Four places only: `completed_plans/`, `completed_prompts/`, `completed_notes/`, and `<year>/` for anything that is not a plan, prompt, or note (names unchanged, files only - never a subdirectory, never non-markdown). Never read unless you name a file explicitly. Never pruned either - it is cheap, it is markdown, and it is the only history you have.                                                                                       |
 
 Consequences:
 
@@ -189,15 +189,15 @@ Every repository should have a `.status/README.md` (about a hundred lines at mos
 
 ### Waiting on another repository
 
-- `plans/upstream_migration.md` - blocked on the upstream export finishing.
+- `plans/2026-07-30_upstream_migration.md` - blocked on the upstream export finishing.
 
 ### Not scheduled
 
-- `plans/recursive_repo_metadata.md` - step 4 of 7.
+- `plans/2026-06-15_recursive_repo_metadata.md` - step 4 of 7.
 
 ## Next
 
-1. Finish step 4 of `plans/recursive_repo_metadata.md`.
+1. Finish step 4 of `plans/2026-06-15_recursive_repo_metadata.md`.
 2. Re-check the upstream export.
 ```
 
@@ -207,7 +207,7 @@ ______________________________________________________________________
 
 ## Plan and note headers
 
-Every plan file starts with the same four lines, so status is readable without parsing prose (`templates/plan_doc.template.md` is the starting point). A plan file named `plans/recursive_repo_metadata.md` opens like this:
+Every plan file starts with the same four lines, so status is readable without parsing prose (`templates/plan_doc.template.md` is the starting point). A plan file named `plans/2026-06-15_recursive_repo_metadata.md` opens like this:
 
 ```markdown
 # Plan: recursive-tree-based repo metadata
@@ -249,7 +249,7 @@ Seven bullets, no more. Point at the index and the files with authority; say exp
 - `.status/README.md` - current state, unfinished work, and an ordered `Next` list. Read this first.
 - `.status/development_history.md` - what has shipped, newest first, with pointers to the records. History only; append at the top when a PR merges.
 - `.status/decisions.md` - why things are the way they are. Read before proposing structural changes. Append entries; never rewrite one.
-- `.status/plans/*.md` - unfinished plans only. Check the `Status:` header and the `[ ]` / `[x]` markers before starting work. A finished plan moves to `.status/archive/completed_plans/`, renamed `archived_YYYY-MM-DD_<name>` with the day it was archived; split any still-open boxes into a new plan first.
+- `.status/plans/*.md` - unfinished plans only, named `YYYY-MM-DD_<slug>.md` with the day each was opened. Check the `Status:` header and the `[ ]` / `[x]` markers before starting work. A finished plan moves to `.status/archive/completed_plans/`, name unchanged; split any still-open boxes into a new plan first.
 - `.status/notes/` - dated records, always named `YYYY-MM-DD_<slug>.md`. Write-once.
 - `.status/local-environment.md` - this machine's paths, interpreter, and quirks. Tool-agnostic. Never copy its contents into a committed file.
 - IMPORTANT: do not read `.status/archive/` unless a file is named for you. The `.status/` root holds only `README.md`, `decisions.md`, `development_history.md`, and `local-environment.md`; nothing else is created there.
@@ -272,8 +272,8 @@ ______________________________________________________________________
 Three things, in descending order of effect:
 
 1. **The `.status/` root is closed.** A fixed set of filenames, and new material goes in a subdirectory. This is one line in `AGENTS.md` and one habit.
-2. **`scratch/` as the one sanctioned place for junk.** The junk-drawer subdirectories exist because there was no sanctioned place for junk. Give junk a place that is pruned by hand - obvious junk only, never by age - and it stops colonizing everything else.
-3. **A tidy pass when a plan closes, not on a schedule.** Plan completes -> move it to `archive/completed_plans/` with its `archived_YYYY-MM-DD_` prefix, add a `development_history.md` entry and any decision to `decisions.md`, update the README's `Next` list. Three minutes, at the one moment you have the context to do it correctly. Calendar-based cleanups do not happen; the survey's 25 directories prove it.
+2. **`scratch/` as the one sanctioned place for junk.** The junk-drawer subdirectories exist because there was no sanctioned place for junk. Give junk a place that is cleaned when Kay asks - obvious junk only, never by age - and it stops colonizing everything else.
+3. **A tidy pass when a plan closes, not on a schedule.** Plan completes -> move it to `archive/completed_plans/`, add a `development_history.md` entry and any decision to `decisions.md`, update the README's `Next` list. Three minutes, at the one moment you have the context to do it correctly. Calendar-based cleanups do not happen; the survey's 25 directories prove it.
 
 If you want it enforced rather than intended, a `PreToolUse` hook on `Write` can reject any path matching `^\.status/[^/]+\.md$` that is not one of the allowed root filenames. Worth it only if you find yourself drifting back; the rule is cheap to follow by hand.
 
@@ -300,10 +300,10 @@ ______________________________________________________________________
 ## One-page checklist
 
 - [ ] Snapshot `.status/` to a zip outside the repo - it is not in git
-- [ ] Skeleton: `README.md`, `decisions.md`, `development_history.md`, `plans/`, `prompts/`, `notes/`, `archive/` (`completed_plans/`, `completed_prompts/`, `completed_notes/`, `other/<year>/`), `scratch/` - plus `config.md` if this repo needs non-default retention
+- [ ] Skeleton: `README.md`, `decisions.md`, `development_history.md`, `plans/`, `prompts/`, `notes/`, `archive/` (`completed_plans/`, `completed_prompts/`, `completed_notes/`, `<year>/`), `scratch/` - plus `config.md` if this repo needs non-default retention
 - [ ] `.status/` holds markdown only outside `scratch/`; everything else moved to a real home or deleted
 - [ ] No filename contains `complete`, `final`, `status`, `progress`, or `summary`
-- [ ] Every note in `notes/` or `archive/completed_notes/` is named `YYYY-MM-DD_<slug>.md`; a note without a leading date is renamed, never left. Every plan is `<slug>.md`, no date, until it is archived with its `archived_YYYY-MM-DD_` prefix
+- [ ] Every note in `notes/` or `archive/completed_notes/` is named `YYYY-MM-DD_<slug>.md`; a note without a leading date is renamed, never left. Every plan and prompt is `YYYY-MM-DD_<slug>.md`, dated the day it was opened, and keeps that name when archived
 - [ ] Every plan has a `Status:` header line
 - [ ] Working prompts live in `.status/prompts/`; anything general enough for another repository is promoted to the tracked `sample_prompts/` at the repo root
 - [ ] Every file opens with a `For humans:` summary, three or four sentences

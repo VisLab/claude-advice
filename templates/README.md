@@ -20,7 +20,7 @@ Copy-paste starting points, one per target file. The naming pattern is `NAME.tem
 | `skill_example_SKILL.template.md`         | `<repo>/.claude/skills/<name>/SKILL.md`                       | Yes                           | `04_file_conventions.md` |
 | `hub_REPOS.template.md`                   | `<hub-repo>/REPOS.md`                                         | Yes                           | its own header comment   |
 | `settings.local.template.json`            | `<repo>/.claude/settings.local.json`                          | **No** - gitignored           | `04_file_conventions.md` |
-| `plan_doc.template.md`                    | `<repo>/.status/plans/<slug>.md`                              | No - `.status/` is gitignored | `05_status_directory.md` |
+| `plan_doc.template.md`                    | `<repo>/.status/plans/YYYY-MM-DD_<slug>.md`                   | No - `.status/` is gitignored | `05_status_directory.md` |
 | `status_README.template.md`               | `<repo>/.status/README.md`                                    | No - same reason              | `05_status_directory.md` |
 | `status_development_history.template.md`  | `<repo>/.status/development_history.md`                       | No - same reason              | `05_status_directory.md` |
 | `status_config.template.md`               | `<repo>/.status/config.md` (optional)                         | No - same reason              | `05_status_directory.md` |

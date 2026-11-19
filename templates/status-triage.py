@@ -11,9 +11,9 @@ Usage:
     python status-triage.py <repo-root> --apply          # execute a plan you read
 
 Why "never delete": .status/ is gitignored in every one of these repos, so a
-wrong move has no `git checkout` to undo it. Junk is quarantined in
-archive/other/<year>/_quarantine/ instead. Delete that one directory by hand once you
-have lived without it for a week.
+wrong move has no `git checkout` to undo it. Noise and non-markdown go to
+scratch/ instead, flattened, where Kay has them cleaned out once she has
+lived without them for a week. archive/<year>/ is flat and markdown only.
 
 Stdlib only, ASCII only, works on Windows and POSIX.
 """
@@ -80,42 +80,76 @@ def load_retention(status: Path) -> dict:
     return cfg
 
 
+def flat(parts: tuple[str, ...]) -> str:
+    """One filename from a path: old directories become a prefix, not a folder.
+
+    archive/<year>/ and scratch/ are flat - copying a junk drawer's folders
+    into them is how one repo ended up with 52 subdirectories in its archive.
+    """
+    return "_".join(parts)
+
+
+def plan_name(stem: str, full: Path, folder: str = "plans") -> str:
+    """<folder>/YYYY-MM-DD_<slug>.md: the date in the old name, else the file's mtime."""
+    m = DATE_RE.search(full.name)
+    if m:
+        date = f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
+    else:
+        date = dt.date.fromtimestamp(full.stat().st_mtime).isoformat()
+    return f"{folder}/{date}_{stem}.md"
+
+
+LEADING_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}_")
+
+
 def classify(rel: Path, full: Path, today: dt.date, stale_days: int) -> tuple[str, str, str]:
     """Return (action, destination_relative_to_status, reason).
 
-    action is one of: keep, plan, note, archive, quarantine, review
+    action is one of: keep, rename, plan, note, archive, quarantine, review
     """
     year = str(today.year)
     name = rel.name
     parts = rel.parts
+    is_md = full.suffix.lower() in MARKDOWN
 
-    # 1. Anything inside a subdirectory that is already a junk drawer: move the
-    #    whole tree, preserving its internal shape, and do not look inside.
+    # 1. Anything inside a subdirectory that is already a junk drawer: do not
+    #    look inside. Markdown is archived and non-markdown goes to scratch/,
+    #    both flattened - the old folder names become a filename prefix.
     if len(parts) > 1 and VAGUE_DIR_RE.match(parts[0]):
-        return ("archive", f"archive/other/{year}/{'/'.join(parts)}",
+        dest = f"archive/{year}/{flat(parts)}" if is_md else f"scratch/{flat(parts)}"
+        return ("archive" if is_md else "quarantine", dest,
                 f"inside junk-drawer directory '{parts[0]}/'")
 
-    # 2. Obvious noise - except under scratch/, which may hold any file type
-    #    and expires unread.
+    # 2. Obvious noise -> scratch/, except what is already under scratch/.
     if parts[0] != "scratch" and (
             full.suffix.lower() in JUNK_SUFFIXES or any(b in name for b in JUNK_NAME_BITS)):
-        return ("quarantine", f"archive/other/{year}/_quarantine/{'/'.join(parts)}",
+        return ("quarantine", f"scratch/{flat(parts)}",
                 f"noise ({full.suffix or 'name pattern'})")
 
     # 3. The fixed root files that belong to the target layout.
     if len(parts) == 1 and name in KEEP_AT_ROOT:
         return ("keep", str(rel).replace("\\", "/"), "part of the target layout")
 
-    # 4. Already-correct locations are left alone.
+    # 4. Already-correct locations are left alone - except a plan, prompt, or
+    #    note directly in its folder without a leading date, which is renamed
+    #    in place. The archive keeps its names, including old archived_ ones.
+    if (len(parts) == 2 and parts[0] in ("plans", "prompts", "notes") and is_md
+            and not LEADING_DATE_RE.match(name)):
+        stem = DATE_RE.sub("", full.stem)
+        stem = re.sub(r"[^A-Za-z0-9]+", "_", stem).strip("_").lower() or parts[0].rstrip("s")
+        return ("rename", plan_name(stem, full, parts[0]),
+                f"in {parts[0]}/ without a leading date - CONFIRM the date "
+                f"(the day it was opened, or the day a note records)")
     if len(parts) > 1 and parts[0] in ("archive", "scratch", "plans", "prompts", "notes"):
         return ("keep", str(rel).replace("\\", "/"), "already in the target layout")
 
     # 5. Non-markdown needs a human: it either has a real home in the repo or it
-    #    is history. The script will not guess between src/, scripts/, and tests/.
-    if full.suffix.lower() not in MARKDOWN:
-        return ("review", f"archive/other/{year}/{'/'.join(parts)}",
+    #    is throwaway. The script will not guess between src/, scripts/, and
+    #    tests/. It never goes to archive/, which is markdown only.
+    if not is_md:
+        return ("review", f"scratch/{flat(parts)}",
                 f"non-markdown ({full.suffix or 'no suffix'}): move to a real home "
-                f"in the repo, or accept the archive destination")
+                f"in the repo, or accept scratch/")
 
     age = (today - dt.date.fromtimestamp(full.stat().st_mtime)).days
 
@@ -134,13 +168,13 @@ def classify(rel: Path, full: Path, today: dt.date, stale_days: int) -> tuple[st
 
     # 7. Markdown named after its own completion state.
     if DONE_NAME_RE.search(name):
-        return ("archive", f"archive/other/{year}/{name}",
+        return ("archive", f"archive/{year}/{flat(parts)}",
                 "filename advertises the work is finished")
 
     # 8. Stale markdown. A plan that has not been touched in this long is not
     #    active work, whatever it is called, so this precedes the plan rule.
     if age > stale_days:
-        return ("archive", f"archive/other/{year}/{name}", f"untouched for {age} days")
+        return ("archive", f"archive/{year}/{flat(parts)}", f"untouched for {age} days")
 
     # 9. A name that says "plan" is a plan even when it carries a date. This has
     #    to come before the date rule, or every plan_<date>_<slug>.md lands in
@@ -149,7 +183,7 @@ def classify(rel: Path, full: Path, today: dt.date, stale_days: int) -> tuple[st
         stem = PLAN_NAME_RE.sub("", full.stem)
         stem = DATE_RE.sub("", stem)
         stem = re.sub(r"[^A-Za-z0-9]+", "_", stem).strip("_").lower() or "plan"
-        return ("plan", f"plans/{stem}.md",
+        return ("plan", plan_name(stem, full),
                 f"recent ({age}d) and named as a plan - CONFIRM it is still active")
 
     # 10. Recent markdown carrying a date is a dated record -> notes/, date first.
@@ -163,8 +197,9 @@ def classify(rel: Path, full: Path, today: dt.date, stale_days: int) -> tuple[st
 
     # 11. What is left is recent, undated, and unlabelled: candidate active work.
     stem = re.sub(r"[^A-Za-z0-9]+", "_", full.stem).strip("_").lower()
-    return ("plan", f"plans/{stem}.md",
-            f"recent ({age}d), undated: candidate active plan - CONFIRM by reading")
+    return ("plan", plan_name(stem, full),
+            f"recent ({age}d), undated: candidate active plan - CONFIRM by reading "
+            f"and correct the date to the day it was opened")
 
 
 def build_plan(status: Path, today: dt.date) -> list[dict]:
@@ -248,15 +283,16 @@ def main() -> int:
     counts: dict[str, int] = {}
     for r in rows:
         counts[r["action"]] = counts.get(r["action"], 0) + 1
-    order = ["keep", "plan", "harvest", "note", "archive", "review", "quarantine"]
+    order = ["keep", "rename", "plan", "harvest", "note", "archive", "review", "quarantine"]
     blurb = {
         "keep": "already correct, untouched",
+        "rename": "in plans/, prompts/, or notes/ without a leading date - CONFIRM the date",
         "plan": "candidate ACTIVE work - read these, they are the whole point",
         "harvest": "decision records - copy their substance into decisions.md",
         "note": "dated record -> notes/, renamed date-first",
-        "archive": "finished or stale -> archive/other/<year>/",
-        "review": "non-markdown - YOUR CALL: a real home in the repo, or archive/other/<year>/",
-        "quarantine": "noise -> archive/other/<year>/_quarantine/, delete by hand later",
+        "archive": "finished or stale -> archive/<year>/ (flat)",
+        "review": "non-markdown - YOUR CALL: a real home in the repo, or scratch/",
+        "quarantine": "noise and junk-drawer non-markdown -> scratch/",
     }
     print(f"\n{len(rows)} files under {status}\n")
     for a in order:

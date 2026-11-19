@@ -64,10 +64,15 @@
       "Bash(git commit *)",
       "Bash(git checkout -- *)",
       "Bash(git restore *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      // Recursive deletes: ask, never deny. Cleaning .status/scratch/ when
+      // Kay asks means removing directories, and a deny cannot be approved.
+      "Bash(rm -r *)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)"
     ],
 
-    // Secrets, bulk history, deletion, publishing, and the network.
+    // Secrets, bulk history, publishing, and the network.
     // .gitignore'd paths are already excluded from searches automatically;
     // deny rules are for things that exist but must not be touched. A deny
     // cannot be approved at prompt time, so nothing goes here that AGENTS.md
@@ -76,8 +81,6 @@
     "deny": [
       "Read(.env)",
       "Read(.envrc)",
-      "Bash(rm -rf *)",
-      "Bash(rm -r *)",
       "Bash(git push)",
       "Bash(git push *)",
       "Bash(git reset --hard *)",

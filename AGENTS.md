@@ -8,16 +8,16 @@ Not in scope: per-repo reviews and working plans about specific repositories. Th
 
 Test framework: none - documentation repository, no test suite.
 
-Markdown formatting is `mdformat`, with the settings in `.mdformat.toml` (`wrap = "no"` - paragraphs are single lines, the convention across the HED repositories). It is installed in the system Python - no venv, and always `python -m mdformat`, since the bare `mdformat` command is not on PATH. Check before finishing (drop `--check` to fix):
+Markdown formatting is `mdformat`, with the settings in `.mdformat.toml` (`wrap = "no"` - paragraphs are single lines, the convention across the HED repositories). It and `ruff` (settings in `ruff.toml`) are pinned in the `dev` group of `pyproject.toml` and installed in `.venv`; set it up with the three commands at the top of `pyproject.toml`. Run both through the venv interpreter - `.venv/Scripts/python -m mdformat`, `.venv/Scripts/python -m ruff` (`.venv/bin/python` off Windows) - since neither is on PATH. Check before finishing (drop `--check` to fix):
 
 ```bash
 # bash - the shell expands the globs
-python -m mdformat --check *.md sample_prompts/*.md .github/*.md .github/instructions/*.md .claude/rules/*.md templates/README.md
+.venv/Scripts/python -m mdformat --check *.md sample_prompts/*.md .github/*.md .github/instructions/*.md .claude/rules/*.md templates/README.md
 ```
 
 ```powershell
 # PowerShell - globs must be expanded by Get-ChildItem, not the command line
-python -m mdformat --check (Get-ChildItem *.md, sample_prompts\*.md, .github\*.md, .github\instructions\*.md, .claude\rules\*.md).FullName templates\README.md
+.venv\Scripts\python -m mdformat --check (Get-ChildItem *.md, sample_prompts\*.md, .github\*.md, .github\instructions\*.md, .claude\rules\*.md).FullName templates\README.md
 ```
 
 Do not pass anything under `templates/` to it except `templates/README.md`: the JSON templates are not markdown, and the markdown templates carry frontmatter and placeholders that mdformat would mangle.
@@ -54,7 +54,7 @@ git ls-files -z | python -c "import pathlib,sys; files=sys.stdin.buffer.read().d
 - `.status/README.md` - current state, unfinished work, and an ordered `Next` list. Read this first.
 - `.status/development_history.md` - what has shipped, newest first, with pointers to the records. History only; append at the top when work lands.
 - `.status/decisions.md` - **the authority: if an advice file contradicts it, the file is wrong.** Read before proposing structural changes. Append entries; never rewrite one.
-- `.status/plans/*.md` - unfinished plans only. Check the `Status:` header and the `[ ]` / `[x]` markers before starting work. A finished plan moves to `.status/archive/completed_plans/`, renamed `archived_YYYY-MM-DD_<name>` with the day it was archived; split any still-open boxes into a new plan first.
+- `.status/plans/*.md` - unfinished plans only, named `YYYY-MM-DD_<slug>.md` with the day each was opened. Check the `Status:` header and the `[ ]` / `[x]` markers before starting work. A finished plan moves to `.status/archive/completed_plans/`, name unchanged; split any still-open boxes into a new plan first.
 - `.status/notes/` - dated records, always named `YYYY-MM-DD_<slug>.md`. Write-once.
 - `.status/local-environment.md` - this machine's paths and quirks. Tool-agnostic. Never copy its contents into a committed file.
 - IMPORTANT: do not read `.status/archive/` unless a file is named for you. The `.status/` root holds only `README.md`, `decisions.md`, `development_history.md`, and `local-environment.md`; nothing else is created there.
@@ -62,8 +62,8 @@ git ls-files -z | python -c "import pathlib,sys; files=sys.stdin.buffer.read().d
 ## Working agreements
 
 - IMPORTANT: every file written to `.status/` opens with a `For humans:` summary - three or four sentences at the very top: what the file is and what a person needs to take from it. The same applies to a long answer in a session: lead with the conclusion.
-- IMPORTANT: temporary scripts, experiments, and one-off test files go in `.status/scratch/` - never the repository root. Anything in `scratch/` may be deleted unread.
-- IMPORTANT: never delete, move, or rewrite a file under `.status/` without asking first. Appending is fine.
+- IMPORTANT: temporary scripts, experiments, and one-off test files go in `.status/scratch/` - never the repository root. `scratch/` is cleaned when Kay asks; when she does, delete the files yourself.
+- IMPORTANT: ask before deleting, moving, or renaming anything under `.status/`. `README.md`, `plans/`, and `prompts/` are living documents: edit them freely, including whole-file rewrites, without asking (copy `README.md` to `scratch/` before rewriting it wholesale). Notes are write-once; `decisions.md` and `development_history.md` are append-only.
 - For a change spanning more than three files, write a plan to `.status/plans/` and stop for review before editing.
 - When you are guessing about an external API or data format, say so explicitly.
 - Show evidence, not assertions: the command you ran and its actual output.

@@ -23,7 +23,7 @@ Cross-repo conventions for working with AI coding assistants: what each reposito
 ## Formatting this repo
 
 ```
-python -m mdformat --check (Get-ChildItem *.md, sample_prompts\*.md).FullName templates\README.md
+.venv\Scripts\python -m mdformat --check (Get-ChildItem *.md, sample_prompts\*.md).FullName templates\README.md
 ```
 
 ## Sources

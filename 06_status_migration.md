@@ -12,7 +12,7 @@ ______________________________________________________________________
 
 Everything below follows from that:
 
-- The script **never deletes**. Noise goes to `archive/other/<year>/_quarantine/`, and you delete that one directory by hand after living without it for a week.
+- The script **never deletes**. Noise and non-markdown go to `scratch/`, flattened, and are deleted only when Kay asks - after living without them for a week.
 - The script **never overwrites**. A destination collision becomes `name_2.md`.
 - Your snapshot first. Not optional.
 
@@ -50,9 +50,9 @@ It walks `.status/`, classifies every file, writes a tab-separated plan next to 
       7  plan        candidate ACTIVE work - read these, they are the whole point
       8  harvest     decision records - copy their substance into decisions.md
      29  note        dated record -> notes/, renamed date-first
-    121  archive     finished or stale -> archive/
+    121  archive     finished or stale -> archive/<year>/ (flat)
       4  review      non-markdown - YOUR CALL
-      1  quarantine  noise -> archive/other/<year>/_quarantine/
+      1  quarantine  noise and junk-drawer non-markdown -> scratch/
 ```
 
 Read those numbers as the answer to "is this worth doing": that repo goes from a 170-file listing to **7 plans and 29 notes in view**. The most extreme directory tested went from 457 files to 2 in view.
@@ -61,8 +61,8 @@ Read those numbers as the answer to "is this worth doing": that repo goes from a
 
 The plan is a TSV with `action`, `source`, `destination`, `kb`, `modified`, `reason`. Open it in Excel or VS Code. The columns you care about:
 
-- **`action = review`** - the script refuses to guess where non-markdown belongs. These are yours to route. For each: does anything still run or import it? Then `scripts/` or `src/` or `tests/data/`, and commit it. Otherwise accept the `archive/` destination it proposed. A code-heavy directory can have dozens of these; that is where most of the correction time goes.
-- **`action = plan`** - candidate *active* work, and the script says CONFIRM for a reason. It only knows the file is recent and named like a plan. Read each one. Half will turn out to be finished; change their destination to `archive/completed_plans/archived_YYYY-MM-DD_<name>.md`, with the day you archive them.
+- **`action = review`** - the script refuses to guess where non-markdown belongs. These are yours to route. For each: does anything still run or import it? Then `scripts/` or `src/` or `tests/data/`, and commit it. Otherwise accept the `scratch/` destination it proposed - non-markdown never goes to `archive/`. A code-heavy directory can have dozens of these; that is where most of the correction time goes.
+- **`action = plan`** - candidate *active* work, and the script says CONFIRM for a reason. It only knows the file is recent and named like a plan. Read each one. Half will turn out to be finished; change their destination to `archive/completed_plans/`, name unchanged. Check the date the script put in front of each name: it is the date in the old name, else the last-modified time; correct it to the day the plan was opened.
 - **`action = harvest`** - decision records. Leave the destination alone; the work is step 4.
 - **Everything else** - `archive`, `note`, `quarantine`, `keep` - is rule-driven and rarely needs a correction.
 
@@ -121,21 +121,21 @@ Your part is skimming the drafts and saying which go in - minutes, not an aftern
 
 ### Step 6 - when ready to cleanup
 
-Delete `archive/other/<year>/_quarantine/`.
+When Kay asks, the agent deletes the noise and non-markdown the migration moved into `scratch/` itself - after she has lived without it for a week. Obvious junk only.
 
 ______________________________________________________________________
 
-## Adding development_history.md to an already-migrated repo
+## Bringing an already-migrated repo to the current layout
 
-A repo migrated to an earlier version of the layout has `archive/<year>/` folders and keeps its shipped-work record in `README.md`. Bringing it to the current layout is a one-session procedure. Show the owner an old -> new table before each batch of moves, and move nothing until it is approved.
+A repo migrated to an earlier version of the layout may have `archive/<year>/` folders with subdirectories, an `archive/other/<year>/`, undated plans and prompts, and its shipped-work record in `README.md`. Bringing it to the current layout is a one-session procedure. Show the owner an old -> new table before each batch of moves, and move nothing until it is approved.
 
 1. Snapshot `.status/` first, as above.
 2. Read `.status/README.md`, the `Status:` line of every plan, `git status`, and `git log -5`. Verify every "done" claim against the code or the merged PR before moving anything.
 3. Write `.status/development_history.md` from the template: move the README's shipped-work sections into it verbatim, newest first, and add an entry for anything merged since.
-4. Move finished plans to `archive/completed_plans/` and finished prompts to `archive/completed_prompts/`, each renamed `archived_YYYY-MM-DD_<name>` with today's date. Split a plan's still-open boxes into a new plan first, and add a `development_history.md` entry for each.
-5. Already-archived plans and prompts (`archive/<year>/plans/`, `archive/<year>/prompts/`, or unprefixed files in `archive/completed_plans/`): move and rename them the same way, dated by their last-modified time in the oldest snapshot of the directory, or by their current last-modified time when there is no snapshot. Rename before any bulk edit (a line-ending conversion, for example), which would move that time. The `archive/` read deny stops a session from listing these: the owner lists them, or approves a one-off listing.
-6. Notes: rename any note in `notes/` or in an archived year without a leading `YYYY-MM-DD_` (the date it records, from its title or first heading, else as in step 5). Notes from past years move to `archive/completed_notes/`, names otherwise unchanged.
-7. Everything still in `archive/<year>/` after steps 5 and 6, and any finished material outside `plans/`, `prompts/`, and `notes/`, moves to `archive/other/<year>/` (same year), names unchanged. Remove each emptied `archive/<year>/`.
+4. Date every plan and prompt in `plans/` and `prompts/` that lacks a leading `YYYY-MM-DD_`: the day it was opened, from its `Opened:` line, else its last-modified time in the oldest snapshot of the directory, else its current last-modified time. Rename before any bulk edit (a line-ending conversion, for example), which would move that time. Then move finished plans to `archive/completed_plans/` and finished prompts to `archive/completed_prompts/`, names unchanged. Split a plan's still-open boxes into a new plan first, and add a `development_history.md` entry for each.
+5. Already-archived plans and prompts (`archive/<year>/plans/`, `archive/<year>/prompts/`, or undated files in `archive/completed_plans/` and `archive/completed_prompts/`): date them the same way and move them to `completed_plans/` or `completed_prompts/`. Files already named `archived_YYYY-MM-DD_<name>` keep that name.
+6. Notes: rename any note in `notes/` or in an archived year without a leading `YYYY-MM-DD_` (the date it records, from its title or first heading, else as in step 4). Notes from past years move to `archive/completed_notes/`, names otherwise unchanged.
+7. Everything else in `archive/<year>/` or `archive/other/<year>/` ends up in `archive/<year>/`, flat: a file in a subdirectory takes the subdirectory path as a filename prefix (`archive/2026/documentation/cli_update.md` -> `archive/2026/documentation_cli_update.md`). Non-markdown goes to `scratch/`, flattened the same way, never to the archive. Remove the emptied subdirectories and `archive/other/`.
 8. Rewrite `.status/README.md` in the template's shape, `## Next` last.
 9. Bring all three rule carriers to the template wording: the "Where the thinking lives" block in `AGENTS.md`, `.claude/rules/status_conduct.md`, and `.github/instructions/status_conduct.instructions.md`.
 
@@ -145,19 +145,19 @@ ______________________________________________________________________
 
 First match wins. This is the whole of the script's judgment, stated so you can argue with it rather than reverse-engineer it.
 
-| #   | Test                                                                                                                               | Action                                                   |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| 1   | inside a junk-drawer directory (`temp`, `working*`, `original*`, `old*`, `leftovers`, `unused`, `removed`, `merged`, `chat*`, ...) | whole tree -> `archive/other/<year>/`, unopened          |
-| 2   | `.log` `.bak` `.backup` `.tmp` `.orig` `.swp` `.pyc`, or `" copy"` in the name - except under `scratch/`                           | -> `archive/other/<year>/_quarantine/`                   |
-| 3   | root `README.md`, `decisions.md`, `development_history.md`, `local-environment.md`, `config.md`                                    | keep                                                     |
-| 4   | already under `plans/`, `prompts/`, `notes/`, `archive/`, `scratch/`                                                               | keep                                                     |
-| 5   | not markdown                                                                                                                       | **review** - human routes it                             |
-| 6   | name says "decision"                                                                                                               | **harvest** - checked before staleness, on purpose       |
-| 7   | name contains `complete`/`final`/`summary`/`report`/`progress`/`assessment`/`deprecated`                                           | -> `archive/`                                            |
-| 8   | markdown untouched longer than `stale_days` (default 90, set in `.status/config.md`)                                               | -> `archive/`                                            |
-| 9   | name says "plan"/"design"/"roadmap"                                                                                                | -> `plans/<slug>.md`, date stripped                      |
-| 10  | name carries a date                                                                                                                | -> `notes/YYYY-MM-DD_<slug>.md`, date moved to the front |
-| 11  | anything left (recent, undated, unlabelled)                                                                                        | -> `plans/<slug>.md`, flagged CONFIRM                    |
+| #   | Test                                                                                                                               | Action                                                                                              |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| 1   | inside a junk-drawer directory (`temp`, `working*`, `original*`, `old*`, `leftovers`, `unused`, `removed`, `merged`, `chat*`, ...) | markdown -> `archive/<year>/`, non-markdown -> `scratch/`; flattened, unopened                      |
+| 2   | `.log` `.bak` `.backup` `.tmp` `.orig` `.swp` `.pyc`, or `" copy"` in the name - except under `scratch/`                           | -> `scratch/`, flattened                                                                            |
+| 3   | root `README.md`, `decisions.md`, `development_history.md`, `local-environment.md`, `config.md`                                    | keep                                                                                                |
+| 4   | already under `plans/`, `prompts/`, `notes/`, `archive/`, `scratch/`                                                               | keep - except an undated file directly in `plans/`, `prompts/`, or `notes/`: **rename**, date first |
+| 5   | not markdown                                                                                                                       | **review** - human routes it; default `scratch/`                                                    |
+| 6   | name says "decision"                                                                                                               | **harvest** - checked before staleness, on purpose                                                  |
+| 7   | name contains `complete`/`final`/`summary`/`report`/`progress`/`assessment`/`deprecated`                                           | -> `archive/<year>/`, flattened                                                                     |
+| 8   | markdown untouched longer than `stale_days` (default 90, set in `.status/config.md`)                                               | -> `archive/<year>/`, flattened                                                                     |
+| 9   | name says "plan"/"design"/"roadmap"                                                                                                | -> `plans/YYYY-MM-DD_<slug>.md`, date moved to the front (else mtime)                               |
+| 10  | name carries a date                                                                                                                | -> `notes/YYYY-MM-DD_<slug>.md`, date moved to the front                                            |
+| 11  | anything left (recent, undated, unlabelled)                                                                                        | -> `plans/YYYY-MM-DD_<slug>.md` (mtime), flagged CONFIRM                                            |
 
 Two of those orderings were bugs hit while testing on real directories, and they are worth knowing because they are the same mistake in two places:
 
@@ -194,7 +194,7 @@ ______________________________________________________________________
 - [ ] `--apply`; verify the top level has exactly the nine expected entries (ten with the optional `config.md`)
 - [ ] Have the agent draft `decisions.md` entries for what still governs; skim, accept, archive the rest
 - [ ] Write `README.md` with its `Next` list, and `development_history.md`
-- [ ] Add the two `Read(.status/...)` deny rules to `.claude/settings.json`
+- [ ] No `Read(.status/archive/**)` deny in `.claude/settings.json`; recursive `rm` is `ask`, not `deny`
 - [ ] Add the "Where the thinking lives" block to `AGENTS.md`
 - [ ] Confirm `.status/` is gitignored
-- [ ] A week later: delete `archive/other/<year>/_quarantine/`
+- [ ] A week later, when Kay asks: the agent deletes the junk the migration put in `scratch/`

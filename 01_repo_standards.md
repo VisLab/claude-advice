@@ -157,11 +157,11 @@ Two gotchas:
 
 ## `.claude/settings.json`
 
-Committed, so relative paths only. The shape that works: allow the repo's own test, lint, and format commands; ask before `git add`, `git commit`, and content-destroying restores; deny `Read(.env)`, `git push`, package installs, and network fetchers. `templates/settings.template.json` is the copy-paste starting point.
+Committed, so relative paths only. The shape that works: allow the repo's own test, lint, and format commands; ask before `git add`, `git commit`, content-destroying restores, and recursive deletes (`rm -r`, `rm -rf`, `rm -fr`); deny `Read(.env)`, `git push`, package installs, and network fetchers. `templates/settings.template.json` is the copy-paste starting point.
 
 Three facts about rules that are easy to get wrong:
 
-- **A deny is a wall, not a prompt.** Deny rules are evaluated before ask and allow, and nothing can approve one at prompt time, so a deny must never cover something `AGENTS.md` permits on request. The archive guard ("do not read `.status/archive/` unless a file is named for you") is an instruction in `AGENTS.md` and the conduct rule, not a deny: the hazard is context flooding, not secrets, and a deny would also block the named-file exception. `.status/scratch/` stays readable too - it is the agents' workbench for throwaway scripts; see `05_status_directory.md`.
+- **A deny is a wall, not a prompt.** Deny rules are evaluated before ask and allow, and nothing can approve one at prompt time, so a deny must never cover something `AGENTS.md` permits on request. The archive guard ("do not read `.status/archive/` unless a file is named for you") is an instruction in `AGENTS.md` and the conduct rule, not a deny: the hazard is context flooding, not secrets, and a deny would also block the named-file exception. `.status/scratch/` stays readable too - it is the agents' workbench for throwaway scripts; see `05_status_directory.md`. Recursive deletes are `ask`, not `deny`, for the same reason: cleaning `scratch/` when Kay asks means removing directories (`__pycache__`, browser profiles), and a denied `rm -r` turned every approved cleanup into a request for Kay to delete the files herself.
 - **A rule without `*` matches one exact command.** `Bash(npm test)` does not match `npm test -- --watch`; write `Bash(npm test *)`. A trailing ` *` also matches the bare command, so `Bash(git log *)` covers `git log`.
 - **Rules are per shell tool.** A `Bash(...)` rule does not govern Claude Code's PowerShell tool, which has its own `PowerShell(...)` rules, and on Windows with Git Bash installed Claude Code offers both tools and treats PowerShell as primary. Rather than keep two copies of every list, a Windows machine with Git Bash turns the PowerShell tool off: `CLAUDE_CODE_USE_POWERSHELL_TOOL=0` as a user environment variable (verified: the session's shell tools go from "Bash, PowerShell" to "Bash"). That affects only Claude's tool set, not the person's own terminal. The committed rules are then Bash rules only.
 
@@ -181,8 +181,9 @@ Also set `files.eol` to `"\n"`, `files.trimTrailingWhitespace`, and `files.inser
 
 ## Line endings: .editorconfig and the CRLF check
 
-Every repository is LF only, on every OS, and four layers keep it that way:
+Every repository is LF only, on every OS. The rule is that **whatever writes a file writes LF**; git and CI are the backstop, never the mechanism:
 
+- **Code that writes text files** - scripts, generators, converters - opens them with `newline="\n"` (Python; `encoding="utf-8"` too) or the equivalent, so the file is LF on Windows before git sees it. Python's default text mode writes CRLF on Windows. A writer that relies on `.gitattributes` to fix its output is a bug.
 - **`.editorconfig`** (`end_of_line = lf`) - every editor that reads EditorConfig, for every file, including gitignored working files.
 - **`.vscode/settings.json`** (`files.eol`) - VS Code, for new files in that workspace.
 - **`.gitattributes`** (`* text=auto eol=lf`) - what git stores, at commit time.
@@ -216,6 +217,7 @@ A repo whose only Python is a single utility script gets no ruff config; the ove
 - [ ] `.env.example` documents every variable `.env` needs
 - [ ] `.gitattributes` normalizes line endings, and no tracked text file is CRLF (`git ls-files --eol | grep -E '^i/(crlf|mixed)' | grep -v attr/-text` prints nothing)
 - [ ] `.editorconfig` committed (LF, final newline, trailing whitespace trimmed, UTF-8); extra sections allowed, `[*]` keys not overridden
+- [ ] Every committed script that writes a text file opens it with an explicit LF newline (Python: `newline="\n"`); run each one on Windows and check its output has no CR bytes
 - [ ] Where the repo has CI, the main workflow runs the CRLF check from `templates/ci-crlf-check.template.yml`
 - [ ] Repos with a ruff config: lint block matches `templates/ruff-lint-snippet.toml`, no dead config; single-utility-script repos have no ruff config
 - [ ] No drive letter, no project history, no `.status/` pointer in any committed file

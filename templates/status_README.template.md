@@ -20,11 +20,11 @@ Working notes for this repo. Gitignored: local to this machine, not on GitHub, a
 
 - `decisions.md` - why things are the way they are. Append; never rewrite an entry.
 - `development_history.md` - what has shipped, newest first. Append at the top.
-- `plans/` - unfinished plans, one file each, `[ ]`/`[x]` markers.
-- `prompts/` - working prompts for starting or restarting the work in `plans/`. Disposable.
+- `plans/` - unfinished plans, one file each, named `YYYY-MM-DD_slug.md` (the day opened), `[ ]`/`[x]` markers. Edited in place.
+- `prompts/` - working prompts for starting or restarting the work in `plans/`, named like plans. Disposable.
 - `notes/` - dated records, always `YYYY-MM-DD_slug.md`. Write-once.
-- `archive/` - finished work, in four places: `completed_plans/`, `completed_prompts/`, `completed_notes/`, `other/<year>/`. **Do not read unless asked for a named file.**
-- `scratch/` - the workbench: temporary scripts and experiments, any file type. **Throwaway files go here, never the repository root.** May be deleted unread.
+- `archive/` - finished work, in four places: `completed_plans/`, `completed_prompts/`, `completed_notes/`, `<year>/` (flat), all names unchanged. **Do not read unless asked for a named file.**
+- `scratch/` - the workbench: temporary scripts and experiments, any file type. **Throwaway files go here, never the repository root.** Cleaned when Kay asks; obvious junk only, never by age.
 - `local-environment.md` - this machine's paths, interpreter, and quirks.
 - `config.md` - this repo's retention settings (optional; defaults apply).
 
@@ -40,11 +40,11 @@ The root holds only the files listed above. New material goes in `plans/`, `prom
 
 ### Waiting on a ruling
 
-- `plans/<slug>.md` - <the question that needs an answer>
+- `plans/YYYY-MM-DD_<slug>.md` - <the question that needs an answer>
 
 ### Waiting on another repository
 
-- `plans/<slug>.md` - <which repository, and what it must do first>
+- `plans/YYYY-MM-DD_<slug>.md` - <which repository, and what it must do first>
 
 ### Waiting on a release
 
