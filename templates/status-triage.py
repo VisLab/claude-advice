@@ -12,8 +12,8 @@ Usage:
 
 Why "never delete": .status/ is gitignored in every one of these repos, so a
 wrong move has no `git checkout` to undo it. Noise and non-markdown go to
-scratch/ instead, flattened, where Kay has them cleaned out once she has
-lived without them for a week. archive/<year>/ is flat and markdown only.
+scratch/ instead, flattened, where the developer has them cleaned out
+after living without them for a week. archive/<year>/ is flat and markdown only.
 
 Stdlib only, ASCII only, works on Windows and POSIX.
 """

@@ -40,6 +40,7 @@ git ls-files -z | python -c "import pathlib,sys; files=sys.stdin.buffer.read().d
 - **ASCII only, no exceptions.** `-` not em or en dashes, `->` not arrows, `...` not an ellipsis character, straight quotes, and `|--` / `` `-- `` for tree diagrams rather than box-drawing characters. There is no data in this folder, so unlike a repo there is no genuine-data exception.
 - **No absolute path or drive letter in any committed file.** This repository is public and is subject to the same rule it imposes on other repos.
 - **No personal repository names in the advice or templates.**
+- **No person's name in the advice or templates.** Write "the developer" for whoever runs the sessions.
 - **Markdown filenames use `_` as the separator, never `-`** (`01_repo_standards.md`, not `01-repo-standards.md`). Fixed external names are the exception: `.github/copilot-instructions.md` is GitHub's filename and keeps its hyphens.
 - Markdown headers in sentence case: capitalize the first word, proper nouns, and acronyms only.
 - **Both Windows and Linux are first-class.** The advice serves machines of both kinds. Write user-level paths as `~/.claude/...` and give the Windows form (`%USERPROFILE%\.claude\...`) where it matters; when a command differs between PowerShell and bash, show both; a command identical in both shells gets one unlabeled block. Scope genuinely platform-specific facts explicitly ("on Windows, ...").
@@ -62,7 +63,7 @@ git ls-files -z | python -c "import pathlib,sys; files=sys.stdin.buffer.read().d
 ## Working agreements
 
 - IMPORTANT: every file written to `.status/` opens with a `For humans:` summary - three or four sentences at the very top: what the file is and what a person needs to take from it. The same applies to a long answer in a session: lead with the conclusion.
-- IMPORTANT: temporary scripts, experiments, and one-off test files go in `.status/scratch/` - never the repository root. `scratch/` is cleaned when Kay asks; when she does, delete the files yourself.
+- IMPORTANT: temporary scripts, experiments, and one-off test files go in `.status/scratch/` - never the repository root. `scratch/` is cleaned only when the developer asks for a cleanup: list the files that will be deleted and ask whether it is okay to delete them, then delete exactly those files yourself.
 - IMPORTANT: ask before deleting, moving, or renaming anything under `.status/`. `README.md`, `plans/`, and `prompts/` are living documents: edit them freely, including whole-file rewrites, without asking (copy `README.md` to `scratch/` before rewriting it wholesale). Notes are write-once; `decisions.md` and `development_history.md` are append-only.
 - For a change spanning more than three files, write a plan to `.status/plans/` and stop for review before editing.
 - When you are guessing about an external API or data format, say so explicitly.

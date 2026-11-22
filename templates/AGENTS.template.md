@@ -52,6 +52,7 @@ Test framework: <unittest | pytest>. Never convert the suite from one style to t
      only because the repo is public, so a collaborator still sees it. -->
 
 - **ASCII only** in prose, code, comments, and filenames: `-` not em or en dashes, `->` not arrows, `...` not an ellipsis character, straight quotes. Exception: genuine data (author names, dataset titles, recorded API responses) keeps whatever characters it actually contains.
+- Code comments and docstrings state the rule and cite its public source (a specification section, an issue); never a working ruling, a person, or a `.status/` decision or plan.
 - <e.g. "Sidecar JSON is written with 2-space indent and sorted keys.">
 - <e.g. "Column order in events.tsv is significant - never reorder.">
 
@@ -83,7 +84,7 @@ Test framework: <unittest | pytest>. Never convert the suite from one style to t
 ## Working agreements
 
 - IMPORTANT: every file written to `.status/` opens with a `For humans:` summary - three or four sentences, at the very top: what the file is and what a person needs to take from it. The same applies to a long answer in a session: lead with the conclusion.
-- IMPORTANT: temporary scripts, experiments, and one-off test files go in `.status/scratch/` - **never the repository root**. Delete them when the experiment ends. `scratch/` is cleaned when Kay asks; when she does, delete the files yourself.
+- IMPORTANT: temporary scripts, experiments, and one-off test files go in `.status/scratch/` - **never the repository root**. `scratch/` is cleaned only when the developer asks for a cleanup: list the files that will be deleted and ask whether it is okay to delete them, then delete exactly those files yourself.
 - IMPORTANT: ask before deleting, moving, or renaming anything under `.status/`. `README.md`, `plans/`, and `prompts/` are living documents: edit them freely, including whole-file rewrites, without asking (copy `README.md` to `scratch/` before rewriting it wholesale). Notes are write-once; `decisions.md` and `development_history.md` are append-only.
 - For a change spanning more than three files, write a plan to `.status/plans/` and stop for review before editing.
 - When you are guessing about an external API or data format, say so explicitly rather than assuming.

@@ -12,7 +12,7 @@ ______________________________________________________________________
 
 Everything below follows from that:
 
-- The script **never deletes**. Noise and non-markdown go to `scratch/`, flattened, and are deleted only when Kay asks - after living without them for a week.
+- The script **never deletes**. Noise and non-markdown go to `scratch/`, flattened, and are deleted only when the developer asks - after living without them for a week.
 - The script **never overwrites**. A destination collision becomes `name_2.md`.
 - Your snapshot first. Not optional.
 
@@ -121,7 +121,7 @@ Your part is skimming the drafts and saying which go in - minutes, not an aftern
 
 ### Step 6 - when ready to cleanup
 
-When Kay asks, the agent deletes the noise and non-markdown the migration moved into `scratch/` itself - after she has lived without it for a week. Obvious junk only.
+When the developer asks - after living without it for a week - the agent lists the files that will be deleted: the noise and non-markdown the migration moved into `scratch/`, each with its path, size, and why it is junk. It asks whether it is okay to delete them, and once the developer says yes, it deletes exactly those files itself. Obvious junk only.
 
 ______________________________________________________________________
 
@@ -197,4 +197,4 @@ ______________________________________________________________________
 - [ ] No `Read(.status/archive/**)` deny in `.claude/settings.json`; recursive `rm` is `ask`, not `deny`
 - [ ] Add the "Where the thinking lives" block to `AGENTS.md`
 - [ ] Confirm `.status/` is gitignored
-- [ ] A week later, when Kay asks: the agent deletes the junk the migration put in `scratch/`
+- [ ] A week later, when the developer asks: the agent lists the junk the migration put in `scratch/`, asks whether it is okay to delete it, and deletes it on a yes

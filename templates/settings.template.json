@@ -64,7 +64,7 @@
       "Bash(git restore *)",
       "Bash(git stash *)",
       // Recursive deletes: ask, never deny. Cleaning .status/scratch/ when
-      // Kay asks means removing directories, and a deny cannot be approved.
+      // the developer asks means removing directories, and a deny cannot be approved.
       "Bash(rm -r *)",
       "Bash(rm -rf *)",
       "Bash(rm -fr *)"
