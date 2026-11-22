@@ -24,7 +24,7 @@ Working notes for this repo. Gitignored: local to this machine, not on GitHub, a
 - `prompts/` - working prompts for starting or restarting the work in `plans/`, named like plans. Disposable.
 - `notes/` - dated records, always `YYYY-MM-DD_slug.md`. Write-once.
 - `archive/` - finished work, in four places: `completed_plans/`, `completed_prompts/`, `completed_notes/`, `<year>/` (flat), all names unchanged. **Do not read unless asked for a named file.**
-- `scratch/` - the workbench: temporary scripts and experiments, any file type. **Throwaway files go here, never the repository root.** Cleaned when the developer asks for a cleanup, after approving a list of the files; obvious junk only, never by age.
+- `scratch/` - the workbench: temporary scripts and experiments, any file type. **Throwaway files go here, never the repository root.** Cleaned when the developer asks for a cleanup and approves the list of files to delete; obvious junk only, never by age.
 - `local-environment.md` - this machine's paths, interpreter, and quirks.
 - `config.md` - this repo's retention settings (optional; defaults apply).
 
