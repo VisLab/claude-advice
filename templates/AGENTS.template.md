@@ -52,7 +52,7 @@ Test framework: <unittest | pytest>. Never convert the suite from one style to t
      only because the repo is public, so a collaborator still sees it. -->
 
 - **ASCII only** in prose, code, comments, and filenames: `-` not em or en dashes, `->` not arrows, `...` not an ellipsis character, straight quotes. Exception: genuine data (author names, dataset titles, recorded API responses) keeps whatever characters it actually contains.
-- Code comments and docstrings state the rule and cite its public source (a specification section, an issue); never a working ruling, a person, or a `.status/` decision or plan.
+- A code comment or docstring that explains a rule cites its public source (a specification section, an issue). No comment or docstring cites a working ruling, a person, or a `.status/` decision or plan.
 - <e.g. "Sidecar JSON is written with 2-space indent and sorted keys.">
 - <e.g. "Column order in events.tsv is significant - never reorder.">
 
